@@ -20,9 +20,9 @@ function Map:new(levelName, tilesetPath, o)
   o.MapHeight = levelData.height
   o.Layers = {}
   local layerId = 1
-  for key, layer in ipairs(levelData.layers) do
-    table.insert(o.Layers, Layer:new(layer, layerId))
-    layerId = layerId + 1
+  for _, layer in ipairs(levelData.layers) do
+    local l = Layer:new(layer, layerId)
+    o.Layers[l.Name] = l
   end
   o.Tileset = Tileset:new(tilesetPath, levelData.tilewidth, levelData.tileheight)
   return o
