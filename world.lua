@@ -1,3 +1,6 @@
+require "graphics.camera"
+require "world.map.map"
+
 world = {
   level = 0,
   weather = 1,
