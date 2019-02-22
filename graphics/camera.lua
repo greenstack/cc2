@@ -1,8 +1,8 @@
 Camera = {
   -- (number) The X position on the map the camera is on.
-  MapX,
+  MapX = 0,
   -- (number) The Y position on the map the camera is on.
-  MapY,
+  MapY = 0,
   -- (map) The map the camera should be drawing.
   Map,
   -- (tilesetbatch) The batch that the camera will draw in the :draw method.
@@ -44,6 +44,10 @@ function Camera:Move(dx, dy)
   if math.floor(self.MapX) ~= math.floor(oldX) or math.floor(self.MapY) ~= math.floor(oldY) then
     self:UpdateTilesetBatch()
   end
+end
+
+function Camera:SetPos(x,y)
+  
 end
 
 -- Causes the camera to render to the screen everything it sees.

@@ -7,7 +7,8 @@ player = {
   screen = Screen:new("gameScreen"),
   obedience = 100,
   maxObedience = 100,
-  paused = false
+  paused = false,
+  movement = {x=0,y=0}
 }
 
 function player:init()
@@ -24,6 +25,9 @@ function player:update(dt,input)
   end
   
   if not paused then
+  
+    self.movement.x,self.movement.y = input:get('move')
+  
     --temporary way to change obediometer for testing
     if input:down("action") then
       self.obedience = self.obedience - 0.4
