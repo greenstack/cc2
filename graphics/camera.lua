@@ -1,31 +1,48 @@
 Camera = {
+  -- (number) The X position on the map the camera is on.
   MapX,
+  -- (number) The Y position on the map the camera is on.
   MapY,
+  -- (number) The X component of the zoom.
   ZoomX,
+  -- (number) The Y component of the zoom.
   ZoomY,
+  -- (map) The map the camera should be drawing.
   Map,
-  TilesetBatch
+  -- (tilesetbatch) The batch that the camera will draw in the :draw method.
+  -- TODO: Turn this into a table of tilesetbatches.
+  TilesetBatch,
+  -- (number) How many tiles to display horizontally.
+  TileDisplayWidth = 30,
+  -- (number) How many tiles to display vertically.
+  TileDisplayHeight = 15
 }
 
 function Camera:UpdateTilesetBatch()
   self.TilesetBatch:clear()
-  for x = 0, self.Map.MapWidth - 1 do
-    for y = 0, self.Map.MapHeight - 1 do
+  for y = 1, self.TileDisplayHeight - 1 do
+    for x = 1, self.TileDisplayWidth - 1 do
       --print (x .. " " .. y .. "-->" .. self.Map.Layers[1].Grid[x][y].TileId)
-      self.TilesetBatch:add(
-        self.Map.Tileset:GetTile(self.Map.Layers[1]:GetTile(x+1, y+1).TileId),
-        self.Map.Tileset.TileWidth * x,
-        self.Map.Tileset.TileHeight * y
-      )
+      if not self.Map.Layers[1]:IsTileEmpty(x, y) then  
+        self.TilesetBatch:add(
+          self.Map.Tileset:GetTile(self.Map.Layers[1]:GetTile(x, y).TileId),
+          self.Map.Tileset.TileWidth * (x - 1),
+          self.Map.Tileset.TileHeight * (y - 1)
+        )
+      end
     end
   end
   self.TilesetBatch:flush()
 end
 
 function Camera:MoveMap(dx, dy)
-  local oldX = self.TilePositionX
-  local oldY = self.TilePositionY
-  self.TilePositionX = math.max(math.min(self.TilePositionX + dx / self.Map.TileWidth, self.Tile))
+  local oldX = self.MapX
+  local oldY = self.MapY
+  self.MapX = math.max(math.min(self.MapX + dx, self.Map.MapWidth - self.TileDisplayWidth), 1)
+  self.MapY = math.max(math.min(self.MapY + dy, self.Map.MapHeight - self.TileDisplayHeight), 1)
+  if math.floor(self.MapX) ~= math.floor(oldX) or math.floor(self.MapY) ~= math.floor(oldY) then
+    self:UpdateTilesetBatch()
+  end
 end
 
 function Camera:Update(dt)
