@@ -49,7 +49,9 @@ end
 -- Causes the camera to render to the screen everything it sees.
 function Camera:Render()
   for _, batch in pairs(self.TilesetBatch) do
-    love.graphics.draw(batch)
+    if batch ~= nil then 
+      love.graphics.draw(batch)
+    end
   end
 end
 
