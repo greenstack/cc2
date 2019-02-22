@@ -47,7 +47,7 @@ function Camera:Move(dx, dy)
 end
 
 -- Causes the camera to render to the screen everything it sees.
-function Camera:Render()
+function Camera:Draw()
   for _, batch in pairs(self.TilesetBatch) do
     if batch ~= nil then 
       love.graphics.draw(batch)
