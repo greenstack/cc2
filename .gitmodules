@@ -1,3 +1,3 @@
-[submodule "vendor/baton"]
-	path = vendor/baton
+[submodule "baton"]
+	path = baton
 	url = https://github.com/tesselode/baton.git
