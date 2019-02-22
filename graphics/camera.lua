@@ -35,28 +35,30 @@ function Camera:UpdateTilesetBatch()
   end
 end
 
--- Moves the camera through the world.
+-- Moves the camera through the world, relative to tiles.
 -- (number) dx: the delta x position of the camera.
 -- (number) dy: the delta y position of the camera.
 function Camera:Move(dx, dy)
-  local oldX = self.MapX
-  local oldY = self.MapY
-  self.MapX = math.max(math.min(self.MapX + dx, self.Map.MapWidth - self.TileDisplayWidth), 0)
-  self.MapY = math.max(math.min(self.MapY + dy, self.Map.MapHeight - self.TileDisplayHeight), 0)
-  if math.floor(self.MapX) ~= math.floor(oldX) or math.floor(self.MapY) ~= math.floor(oldY) then
-    self:UpdateTilesetBatch()
-  end
+  self:SetPosition(
+    self.MapX + dx,
+    self.MapY + dy
+  )
 end
 
 
--- Moves the camera to the specified world position.
+-- Moves the camera to the specified world pixel position.
 function Camera:SetPosition(x, y)
-  self.MapX = x / self.Map.Tileset.TileWidth
-  self.MapY = y / self.Map.Tileset.TileHeight
-  self.MapX = math.max(math.min(x / self.Map.Tileset.TileWidth, self.Map.MapWidth - self.TileDisplayWidth), 0)
-  self.MapY = math.max(math.min(y / self.Map.Tileset.TileHeight, self.Map.MapHeight - self.TileDisplayHeight), 0)
+  local oldX = self.MapX
+  local oldY = self.MapY
   
-  self:UpdateTilesetBatch()
+  self.MapX = x
+  self.MapY = y
+  self.MapX = math.max(math.min(x, self.Map.MapWidth - self.TileDisplayWidth), 0)
+  self.MapY = math.max(math.min(y, self.Map.MapHeight - self.TileDisplayHeight), 0)
+  
+  if math.floor(self.MapX) ~= math.floor(oldX) or math.floor(self.MapY) ~= math.floor(oldY) then
+    self:UpdateTilesetBatch()
+  end
 end
 
 -- Causes the camera to render to the screen everything it sees.
