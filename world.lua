@@ -20,6 +20,7 @@ function world:update(dt,playerController)
   local dy = playerController.movement.y * dt
   self.player.position.x = self.player.position.x + dx
   self.player.position.y = self.player.position.y + dy
+  
   self.camera:Move(dx,dy)
   print(self.player.position.x,self.player.position.y)
 end
