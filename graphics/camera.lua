@@ -43,7 +43,6 @@ function Camera:Move(dx, dy)
   local oldY = self.MapY
   self.MapX = math.max(math.min(self.MapX + dx, self.Map.MapWidth - self.TileDisplayWidth), 0)
   self.MapY = math.max(math.min(self.MapY + dy, self.Map.MapHeight - self.TileDisplayHeight), 0)
-  print(oldX); print(self.MapX)
   if math.floor(self.MapX) ~= math.floor(oldX) or math.floor(self.MapY) ~= math.floor(oldY) then
     self:UpdateTilesetBatch()
   end
