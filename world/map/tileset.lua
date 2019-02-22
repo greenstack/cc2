@@ -11,6 +11,26 @@ Tileset = {
   end,
 }
 
+function Tileset:Display(xPos, yPos)
+  local tsb = love.graphics.newSpriteBatch(self.Image, self.ImageWidth * self.ImageHeight)
+  tsb:clear()
+
+  for x = 0, self.ImageWidth / self.TileWidth - 1 do
+    for y = 0, self.ImageHeight / self.TileHeight - 1 do
+      tsb:add(
+        self.TileQuads[(y * (self.ImageWidth/self.TileWidth) + x) + 1],
+        self.TileWidth * (x-1),
+        self.TileHeight * (y-1)
+      )
+    end
+  end
+  tsb:flush()
+  love.graphics.push()
+  love.graphics.scale(2, 2)
+  love.graphics.draw(tsb, xPos or 0, yPos or 0)
+  love.graphics.pop()
+end
+
 function Tileset:new(path, tilewidth, tileheight, o)
   o = o or {}
   setmetatable(o, self)
@@ -24,9 +44,10 @@ function Tileset:new(path, tilewidth, tileheight, o)
   o.ImageWidth = imgWidth
   o.ImageHeight = imgHeight
   o.TileQuads = {}
-  for i = 0, imgWidth / tilewidth do
-    for j = 0, imgHeight / tileheight do
-      o.TileQuads[(i * (imgHeight/tileheight) + j) + 1] = 
+  for i = 0, imgWidth / tilewidth - 1 do
+    for j = 0, imgHeight / tileheight - 1 do
+      o.TileQuads[(j * (imgWidth/tilewidth) + i) + 1] =
+      --o.TileQuads[(i * (imgHeight/tileheight) + j) + 1] = 
         love.graphics.newQuad(
           i * tilewidth,
           j * tileheight,
@@ -35,7 +56,6 @@ function Tileset:new(path, tilewidth, tileheight, o)
           imgWidth,
           imgHeight
         )
-      --print("Loading tile quad " .. (i * (imgHeight/tileheight) + j) + 1)
     end
   end
   print(#o.TileQuads .. " tilequads loaded.")
