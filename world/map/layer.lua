@@ -1,15 +1,32 @@
 require "world.map.tile"
 
 Layer = {
-  LayerId = 0,
-  Grid = {},
-  type = "Tile"
+  Name = "",
+  Grid,
+  type = "Tile",
+  IsTileEmpty = function(self, x, y)
+    return self.Grid[x][y].TileId == 0
+  end,
+  GetTile = function (self, x, y)
+    return self.Grid[x][y]
+  end
 }
 
-function Layer:new(layerNo, data)
+function Layer:new(data, layerId, o)
   o = o or {}
   setmetatable(o, self)
   self.__index = self
-  o.LayerId = layerNo
+  o.Name = data.name
+  o.Grid = {}
+  local layerWidth = data.width
+  local layerHeight = data.height
+  local x, y
+  for x = 1, layerWidth do
+    o.Grid[x] = {}
+    for y = 1, layerHeight do
+      --print(x * layerHeight + y)
+      o.Grid[x][y] = Tile:new(data.data[x * layerHeight + y], layerId)
+    end
+  end
   return o
 end
