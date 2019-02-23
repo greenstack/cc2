@@ -8,6 +8,7 @@ input = baton.new {
     down = {'key:down', 'key:s', 'axis:lefty+', 'button:dpdown'},
     action = {'key:x', 'button:a'},
     talk = {'key:space'},
+    menu = {'key:escape','button:start'}
   },
   pairs = {
     move = {'left','right','up','down'}

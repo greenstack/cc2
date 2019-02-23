@@ -16,15 +16,16 @@ function player:init()
 end
 
 function player:update(dt,input)
-  if input:pressed('talk') and not paused then
-    paused = true
+  if input:pressed('menu') and not self.paused then
+    self.paused = true
+    print("pausing")
     self.screen:addElement(PauseElement:new("pauseMenu",260,70))
-  elseif input:pressed('talk') and paused then
-    paused = false
-    self.screen:removeElement("pauseMenu")
+  --elseif input:pressed('menu') and paused then
+    --paused = false
+    --self.screen:removeElement("pauseMenu")
   end
   
-  if not paused then
+  if not self.paused then
   
     self.movement.x,self.movement.y = input:get('move')
   
@@ -40,6 +41,6 @@ function player:update(dt,input)
     
   end
   
-  
+  --input:update()
   self.screen:update(dt,input,self)
 end

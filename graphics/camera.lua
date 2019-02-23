@@ -61,13 +61,26 @@ function Camera:SetPosition(x, y)
   end
 end
 
+function Camera:SetPositionCentered(x,y)
+  self:SetPosition(
+    x - (self.TileDisplayWidth / 2),
+    y - (self.TileDisplayHeight / 2)
+  )
+end
+
 -- Causes the camera to render to the screen everything it sees.
-function Camera:Draw()
+function Camera:Draw(playerPosition)
   for _, batch in pairs(self.TilesetBatch) do
     if batch ~= nil then 
       love.graphics.draw(batch, math.floor(-(self.MapX%1)*self.Map.Tileset.TileWidth), math.floor(-(self.MapY%1)*self.Map.Tileset.TileHeight))
     end
   end
+  
+  
+  --temporary player indicator
+  love.graphics.setColor(.7,0,.7)
+  love.graphics.circle("fill",(playerPosition.x - self.MapX - 1)*self.Map.Tileset.TileWidth,(playerPosition.y - self.MapY - 1)*self.Map.Tileset.TileHeight,4)
+
 end
 
 -- Sets the map the camera is rendering.

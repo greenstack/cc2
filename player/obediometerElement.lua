@@ -18,7 +18,7 @@ function ObediometerElement:draw()
   local elementWidth = windowWidth - 30
   local elementHeight = 15
   
-  local maxObediometerLength = elementWidth - 110
+  local maxObediometerLength = elementWidth - 120
   local obediometerHeight = 20
   
   local obediometerLength = (self.obedience/self.maxObedience) * maxObediometerLength
@@ -38,12 +38,12 @@ function ObediometerElement:draw()
   
   --black background of obediometer bar
   love.graphics.setColor(0,0,0)
-  love.graphics.rectangle("fill",self.position.x + 100,self.position.y + 2,maxObediometerLength,10,10,10)
+  love.graphics.rectangle("fill",self.position.x + 110,self.position.y + 2,maxObediometerLength,10,10,10)
   
   --obediometer bar
   love.graphics.setColor(r, g, b)
   if(obediometerLength > 0) then
-    love.graphics.rectangle("fill",self.position.x + 100,self.position.y + 2,obediometerLength,10,10,10) 
+    love.graphics.rectangle("fill",self.position.x + 110,self.position.y + 2,obediometerLength,10,10,10) 
   end
   
 end
