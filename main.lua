@@ -5,21 +5,20 @@ require "world"
 require "input"
 require "interactions"
 
+
 -- resources
 beep = love.audio.newSource("assets/sound/selection_beep.wav", "static")
 font = love.graphics.newImageFont("assets/font/luafont.png",
-    " abcdefghijklmnopqrstuvwxyz" ..
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZ0" ..
-    "123456789.,!?-+/():;%&`'*#=[]\"")
+  " abcdefghijklmnopqrstuvwxyz" ..
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZ0" ..
+  "123456789.,!?-+/():;%&`'*#=[]\"><{}")
 arrow = love.graphics.newImage("assets/img/arrow.png")
-    
-    
 
 function love.load()
   player:init()
   world:init()
   love.graphics.setBackgroundColor(0.5,0.5,0.5)
-  
+  love.keyboard.setKeyRepeat(true)
 end
 
 function love.update(dt)
@@ -34,4 +33,14 @@ function love.draw()
   world:draw()
   player.screen:draw()
   love.graphics.reset()
+end
+
+function love.textinput(text)
+  player:textinput(text)
+end
+
+function love.keypressed(key)
+  if key == "backspace" then
+    player:backspace()
+  end
 end

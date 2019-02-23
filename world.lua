@@ -20,6 +20,7 @@ function world:init()
 end
 
 function world:update(dt,playerController)
+  if playerController.paused then return end
   local dx = playerController.movement.x * dt * 5
   local dy = playerController.movement.y * dt * 5
   self.player.position.x = self.player.position.x + dx
@@ -35,7 +36,7 @@ function world:draw()
   
   local w,h = love.graphics.getDimensions()
   
-  love.graphics.setColor(.7,0,.7)
+  love.graphics.setColor(.7,0,.7,0.6)
   love.graphics.line(w/2,0,w/2,h)
   love.graphics.line(0,h/2,w,h/2)
   love.graphics.setColor(1,1,1)

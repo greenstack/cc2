@@ -1,7 +1,9 @@
 Element = {
   type = "Element",
   name = "An element",
-  position = nil
+  position = nil,
+  enabled = true,
+  visible = true
 }
 
 -- Creates a new instance of a element object.
@@ -14,6 +16,8 @@ function Element:new(name,x,y,o)
   self.__index = self
   o.name = name
   o.position = {x = x or 0, y = y or 0}
+  o.enabled = true
+  o.visible = true
   return o
 end
 
@@ -22,5 +26,13 @@ function Element:update(dt,input,player)
 end
 
 function Element:draw()
+
+end
+
+function Element:textinput(text)
+
+end
+
+function Element:backspace()
 
 end

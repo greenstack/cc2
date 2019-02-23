@@ -35,12 +35,28 @@ end
 
 function Screen:update(dt,input,player)
   for k,v in pairs(self.elements) do
-    v:update(dt,input,player)
+    if v.enabled then
+      v:update(dt,input,player)
+    end
   end
 end
 
 function Screen:draw()
   for k,v in pairs(self.elements) do
-    v:draw()
+    if v.visible then
+      v:draw()
+    end
+  end
+end
+
+function Screen:textinput(text)
+  for k,v in pairs(self.elements) do
+    v:textinput(text)
+  end
+end
+
+function Screen:backspace()
+  for k,v in pairs(self.elements) do
+    v:backspace()
   end
 end
