@@ -3,6 +3,7 @@ require "player.element"
 require "player.obediometerElement"
 require "player.pauseElement"
 require "player.consoleElement"
+require "player.mainMenuElement"
 
 player = {
   obedience = 100,
@@ -10,6 +11,7 @@ player = {
   paused = false,
   movement = {x=0,y=0},
   debugMode = false,
+  inPlay = false,
   screen = {},
   screens = {}
 }
@@ -19,16 +21,19 @@ function player:init()
   gameScreen:addElement(ObediometerElement:new("obediometer",10,10,true,true))
   gameScreen:addElement(ConsoleElement:new("console",0,0,false,false))
   gameScreen:addElement(PauseElement:new("pauseMenu",300,150,false,false))
+  local mainMenuScreen = Screen:new("mainMenuScreen")
+  mainMenuScreen:addElement(MainMenuElement:new("mainMenu",0,0,true,true))
   self.screens = {
-    gameScreen
+    gameScreen,
+    mainMenuScreen
   }
   
-  self.screen = self:getScreen("gameScreen")
+  self.screen = self:getScreen("mainMenuScreen")
 end
 
 function player:update(dt,input)
 
-  if input:pressed('debug') and not self.debugMode and not self.paused then
+  if self.inPlay and input:pressed('debug') and not self.debugMode and not self.paused then
     
     local consoleElement = self.screen:getElement("console")
     consoleElement.oldPaused = self.paused
@@ -39,13 +44,13 @@ function player:update(dt,input)
   end
 
 
-  if input:pressed('menu') and not self.paused then
+  if self.inPlay and input:pressed('menu') and not self.paused then
     self.paused = true
     local pauseElement = self.screen:getElement("pauseMenu")
     pauseElement:open()
   end
   
-  if not self.paused then
+  if self.inPlay and not self.paused then
   
     self.movement.x,self.movement.y = input:get('move')
   
