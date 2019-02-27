@@ -36,9 +36,17 @@ end
 
 function world:draw()
   self.camera:Draw(self.player.position)
-  
   local w,h = love.graphics.getDimensions()
-  
+
+  -- Fog Shader for testing
+  -- weatherShader = love.graphics.newShader("graphics/shaders/fog.frag")
+  -- love.graphics.setShader(weatherShader)
+  -- weatherShader:send("player_position", self.camera.PlayerPosition)
+  -- weatherShader:send("fog_distance", 256)
+  -- weatherShader:send("fog_distance_min", 128)
+  -- love.graphics.rectangle("fill", 1, 1, w, h)
+  -- love.graphics.setShader()
+
   love.graphics.setColor(.7,0,.7,0.6)
   love.graphics.line(w/2,0,w/2,h)
   love.graphics.line(0,h/2,w,h/2)

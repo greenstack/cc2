@@ -13,7 +13,10 @@ Camera = {
   TileDisplayWidth = 27,
   -- (number) How many tiles to display vertically.
   TileDisplayHeight = 21,
-  type = "Camera"
+  type = "Camera",
+
+  -- Screen coordiantes for use in shaders
+  PlayerPosition = { 1,1 }
 }
 
 -- Causes the camera to update the part of the world it is to be rendering.
@@ -81,6 +84,8 @@ function Camera:Draw(playerPosition)
   love.graphics.setColor(.7,0,.7)
   love.graphics.circle("fill",(playerPosition.x - self.MapX - 1)*self.Map.Tileset.TileWidth,(playerPosition.y - self.MapY - 1)*self.Map.Tileset.TileHeight,4)
 
+  --Store the screen coordinates for later use
+  self.PlayerPosition = {(playerPosition.x - self.MapX - 1)*self.Map.Tileset.TileWidth,(playerPosition.y - self.MapY - 1)*self.Map.Tileset.TileHeight}
 end
 
 -- Sets the map the camera is rendering.
