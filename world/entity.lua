@@ -14,10 +14,14 @@ function Entity:new(name,x,y,o)
   return o
 end
 
-function Eneity:update(dt)
+function Entity:update(dt)
 
 end
 
 function Entity:draw()
 
+end
+
+function Entity:getPosVec()
+  return { self.position.x, self.position.y }
 end
