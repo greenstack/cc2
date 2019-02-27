@@ -10,15 +10,29 @@ Element = {
 -- (string) the name of the element
 -- (int) the x position of the element
 -- (int) the y position of the element
-function Element:new(name,x,y,o)
+function Element:new(name,x,y,enabled,visible,o)
   o = o or {}
   setmetatable(o, self)
   self.__index = self
   o.name = name
   o.position = {x = x or 0, y = y or 0}
-  o.enabled = true
-  o.visible = true
+  o.enabled = enabled
+  o.visible = visible
   return o
+end
+
+function Element:setVisible(visible)
+  self.visible = visible
+end
+
+function Element:setEnabled(enabled)
+  self.enabled = enabled
+end
+
+function Element:open()
+  self.wait = true
+  self:setVisible(true)
+  self:setEnabled(true)
 end
 
 function Element:update(dt,input,player)

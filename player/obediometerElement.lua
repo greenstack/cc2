@@ -1,7 +1,7 @@
 ObediometerElement = Element:new("obediometer")
 
-function ObediometerElement:new(name,x,y,o)
-  local o = Element.new(self,name,x,y,o)
+function ObediometerElement:new(name,x,y,enabled,visible,o)
+  local o = Element.new(self,name,x,y,enabled,visible,o)
   o.obedience = 100;
   o.maxObedience = 100;
   return o;

@@ -8,6 +8,7 @@ world = {
   player = {
     position = {x = 5, y = 5}
   },
+  entities = {},
   camera = {},
   map = {}
 }
@@ -27,8 +28,10 @@ function world:update(dt,playerController)
   self.player.position.y = self.player.position.y + dy
   
   self.camera:SetPositionCentered(self.player.position.x,self.player.position.y)
-  --self.camera:Move(dx,dy)
-  --print(self.player.position.x,self.player.position.y)
+  
+  for _,entity in pairs(self.entities) do
+    entity:update(dt)
+  end
 end
 
 function world:draw()

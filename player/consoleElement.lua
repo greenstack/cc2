@@ -2,8 +2,8 @@ local utf8 = require "utf8"
 
 ConsoleElement = Element:new("obediometer")
 
-function ConsoleElement:new(name,x,y,o)
-  local o = Element.new(self,name,x,y,o)
+function ConsoleElement:new(name,x,y,enabled,visible,o)
+  local o = Element.new(self,name,x,y,enabled,visible,o)
   o.text = ""
   o.lineText = ""
   o.wait = true -- wait until the next tick so we don't close the element using the same input that opened it
@@ -18,10 +18,16 @@ function ConsoleElement:update(dt,input,player)
   if input:pressed('debug') and not self.wait then
     player.paused = self.oldPaused
     player.debugMode = false
-    player.screen:removeElement("console")
+    self:setEnabled(false)
+    self:setVisible(false)
   elseif input:pressed('enter') then
     table.insert(self.history,self.lineText)
     self.historyIndex = #self.history + 1
+    if(self.lineText == "clear") then
+      self.text = ""
+      self.lineText = ""
+      return
+    end
     local f,err = loadstring('return ' .. self.lineText)
     if not f then
       f,err = loadstring(self.lineText)
@@ -61,7 +67,7 @@ function ConsoleElement:draw()
 end
 
 function ConsoleElement:textinput(text)
-  --self.text = self.text .. text
+  if(text == '`') then return end
   self.lineText = self.lineText .. text
 end
 

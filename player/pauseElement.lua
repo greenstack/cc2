@@ -1,7 +1,7 @@
 PauseElement = Element:new("pauseMenu")
 
-function PauseElement:new(name,x,y,o)
-  local o = Element.new(self,name,x,y,o)
+function PauseElement:new(name,x,y,enabled,visible,o)
+  local o = Element.new(self,name,x,y,enabled,visible,o)
   o.options = {
     {text="Pokedex",f=PauseElement.option1}, --temporary stuff for fun because why not
     {text="Pokemon",f=PauseElement.option2},
@@ -17,7 +17,8 @@ end
 function PauseElement:update(dt,input,player)
   if not self.wait and input:pressed('menu') then
     player.paused = false
-    player.screen:removeElement("pauseMenu")
+    self:setEnabled(false)
+    self:setVisible(false)
   end
   
   if input:pressed('down') then
@@ -37,7 +38,7 @@ function PauseElement:update(dt,input,player)
   end
   
   if input:pressed('talk') then
-    self.options[self.selected].f()
+    self.options[self.selected].f(player)
   end
   
   self.wait = false
@@ -67,13 +68,16 @@ function PauseElement:draw()
   end
 end
 
-function PauseElement.option1()
+--static menu item handler functions
+
+function PauseElement.option1(player)
   print("option 1")
 end
-function PauseElement.option2()
-  print("option 2")
+function PauseElement.option2(player)
+  print("option 2",player:getScreen("gameScreen"))
+  player:getScreen("gameScreen"):getElement("console"):log("option 2")
 end
-function PauseElement.mainMenu()
+function PauseElement.mainMenu(player)
   print("This should take you to the main menu eventually")
 end
 function PauseElement.quit()

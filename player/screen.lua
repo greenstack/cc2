@@ -33,6 +33,14 @@ function Screen:removeElement(elementName)
   end
 end
 
+function Screen:getElement(elementName)
+  for k,v in pairs(self.elements) do
+    if v.name == elementName then
+      return v
+    end
+  end
+end
+
 function Screen:update(dt,input,player)
   for k,v in pairs(self.elements) do
     if v.enabled then
@@ -51,12 +59,16 @@ end
 
 function Screen:textinput(text)
   for k,v in pairs(self.elements) do
-    v:textinput(text)
+    if v.enabled then
+      v:textinput(text)
+    end
   end
 end
 
 function Screen:backspace()
   for k,v in pairs(self.elements) do
-    v:backspace()
+    if v.enabled then
+      v:backspace()
+    end
   end
 end
