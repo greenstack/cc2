@@ -1,13 +1,8 @@
 language: c
 
 env:
-  matrix:
-    - LUA=lua5.1
+  global:
     - LUA=lua5.2
-    - LUA=lua5.3
-    - LUA=luajit     # latest stable version (2.0.4)
-    - LUA=luajit2.0  # current head of 2.0 branch
-    - LUA=luajit2.1  # current head of 2.1 branch
 
 branches:
   only:
