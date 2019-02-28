@@ -1,10 +1,6 @@
 language: c
 
-sudo: false
-
 env:
-  global:
-    - LUAROCKS=2.3.0
   matrix:
     - LUA=lua5.1
     - LUA=lua5.2
@@ -17,24 +13,15 @@ branches:
   only:
     - master
 
-before_install:
-  - source .travis/setenv_lua.sh
-  - pip install --user cpp-coveralls
-  - luarocks install Lua-cURL         --server=https://luarocks.org/dev
-  - luarocks install luacov-coveralls --server=https://luarocks.org/dev
-  - luarocks install lunitx
-
 install:
-  - luarocks make rockspecs/foo-scm-0.rockspec CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage"
+  - sudo apt-get install $LUA
 
 script:
   - lua tests.lua
 
-after_success:
-  - coveralls -b .. -r .. -i ./src --dump c.report.json
-  - luacov-coveralls -j c.report.json -v
-
 notifications:
+  recipients:
+    - derekmines@gmail.com
   email:
     on_success: change
     on_failure: always
