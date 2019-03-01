@@ -104,9 +104,11 @@ function Camera:Draw(playerPosition)
   --Store the screen coordinates for later use
   
   love.graphics.setColor(1, 1, 1)
-  for _, obj in ipairs(self.Map.Hitboxes) do
-    local objPos = self:GetScreenPosition(obj.xPos, obj.yPos)
-    love.graphics.rectangle("line", objPos[1], objPos[2], obj.pixelWidth, obj.pixelHeight)
+  if dbg.ShowHitboxes then
+    for _, obj in ipairs(self.Map.Hitboxes) do
+      local objPos = self:GetScreenPosition(obj.xPos, obj.yPos)
+      love.graphics.rectangle("line", objPos[1], objPos[2], obj.pixelWidth, obj.pixelHeight)
+    end
   end
   if dbg.ShadowsEnabled then
     love.graphics.setShader(self.Shadows)

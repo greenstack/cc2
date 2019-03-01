@@ -52,7 +52,7 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
         tempRect.xy += translate;
         if (LineIntersectsRect(toPlayer, tempRect)) {
             transp = 1;
-            return vec4(.5, .5, .5, .5);
+            return vec4(.1, .1, .1, .5);
         }
     }
 
