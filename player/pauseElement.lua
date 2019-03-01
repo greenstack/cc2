@@ -78,7 +78,7 @@ function PauseElement.option2(player)
   player:getScreen("gameScreen"):getElement("console"):log("option 2")
 end
 function PauseElement.mainMenu(player)
-  print("This should take you to the main menu eventually")
+  player.screen = player:getScreen("mainMenuScreen")
 end
 function PauseElement.quit()
   love.event.quit()

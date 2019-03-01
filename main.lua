@@ -35,10 +35,12 @@ function love.draw()
   love.graphics.reset()
 end
 
+-- this event handles actual text input, as opposed to raw keyboard input. it handles capital letters and other special characters automatically
 function love.textinput(text)
   player:textinput(text)
 end
 
+--handles backspace input for the context of typing
 function love.keypressed(key)
   if key == "backspace" then
     player:backspace()

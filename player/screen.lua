@@ -2,6 +2,7 @@ Screen = {
   type = "Screen",
   name = "A screen",
   elements = nil,
+  background = {0.75,0.75,0.75}
 }
 
 -- Creates a new instance of a screen object.

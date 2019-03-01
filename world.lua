@@ -21,7 +21,7 @@ function world:init()
 end
 
 function world:update(dt,playerController)
-  if playerController.paused then return end
+  if playerController.paused or not playerController.inPlay then return end
   local dx = playerController.movement.x * dt * 5
   local dy = playerController.movement.y * dt * 5
   self.player.position.x = self.player.position.x + dx
@@ -39,13 +39,14 @@ function world:draw()
   local w,h = love.graphics.getDimensions()
 
   -- Fog Shader for testing
-  -- weatherShader = love.graphics.newShader("graphics/shaders/fog.frag")
-  -- love.graphics.setShader(weatherShader)
-  -- weatherShader:send("player_position", self.camera.PlayerPosition)
-  -- weatherShader:send("fog_distance", 256)
-  -- weatherShader:send("fog_distance_min", 128)
-  -- love.graphics.rectangle("fill", 1, 1, w, h)
-  -- love.graphics.setShader()
+   weatherShader = love.graphics.newShader("graphics/shaders/fog.frag")
+   love.graphics.setShader(weatherShader)
+   weatherShader:send("player_position", self.camera.PlayerPosition)
+   weatherShader:send("screen_position", {self.camera.Map.Tileset.TileWidth * self.camera.MapX,self.camera.Map.Tileset.TileHeight * self.camera.MapY})
+   weatherShader:send("fog_distance", 256)
+   weatherShader:send("fog_distance_min", 128)
+   love.graphics.rectangle("fill", 1, 1, w, h)
+   love.graphics.setShader()
 
   love.graphics.setColor(.7,0,.7,0.6)
   love.graphics.line(w/2,0,w/2,h)

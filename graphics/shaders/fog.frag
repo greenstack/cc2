@@ -2,6 +2,7 @@ extern int octaves = 1;
 extern vec2 speed = vec2(0.0, 2.0);
 extern float time;
 extern vec2 player_position;
+extern vec2 screen_position;
 extern float fog_distance;
 extern float fog_distance_min;
 
@@ -28,9 +29,9 @@ float fbm(vec2 coord) //fractal brownian motion
   float scale = 0.5;
   for (int i = 0; i < octaves; i++)
   {
-    value += noise(coord) * scale;
+    value += noise(coord + screen_position) * scale;
     coord *= 2.0;
-   scale *= 0.5;
+    scale *= 0.5;
   }
   return value;
 }
@@ -42,7 +43,7 @@ float distance(vec2 player, vec2 frag)
 
 vec4 effect(vec4 color, Image texture, vec2 tc, vec2 sc)
 {
-  vec2 motion = vec2(fbm(sc + vec2(time * speed.x, time * speed.y)));
+  vec2 motion = vec2(fbm(tc + vec2(time * speed.x, time * speed.y)));
   float final = fbm(sc + motion);
 
   float dist = distance(player_position, sc);
