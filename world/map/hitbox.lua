@@ -33,10 +33,8 @@ function Hitbox:new(xPos, yPos, width, height, tileset, o)
   o = o or {}
   setmetatable(o, self)
   self.__index = self
-  -- If I don't add one here, it's off by one tile.
   o.xPos = xPos / tileset.TileWidth + 1
-  -- If I add one here, it's off by one tile. WHY??
-  o.yPos = yPos / tileset.TileHeight
+  o.yPos = yPos / tileset.TileHeight + 1
   o.width = width / tileset.TileWidth
   o.height = height / tileset.TileHeight
   o.pixelX = xPos

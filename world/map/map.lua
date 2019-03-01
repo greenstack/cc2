@@ -37,9 +37,11 @@ function Map:new(levelName, tilesetPath, o)
         end
       end
       o.Hitboxes = objects
-    elseif layer.type == "tilelayer" then
+    elseif layer.type == "tilelayer" and layer.visible then
       local l = Layer:new(layer, layerId)
       o.Layers[l.Name] = l
+    elseif not layer.visible then
+      print("Skipping invisible layer " .. layer.name)
     else
       print("Unsupported layer type: " .. layer.type)
     end
