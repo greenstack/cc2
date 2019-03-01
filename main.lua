@@ -12,18 +12,28 @@ font = love.graphics.newImageFont("assets/font/luafont.png",
   "123456789.,!?-+/():;%&`'*#=[]\"><{}")
 arrow = love.graphics.newImage("assets/img/arrow.png")
 
-dbg = {
-  ShadowsEnabled = true,
-  ShowHitboxes = true
-}
+-- debug variables
+ShadowsEnabled = true
+FogEnabled = true
+ShowHitboxes = false
+ShowScreenCenter = false
 
-function dbg:ToggleShadow()
-  self.ShadowsEnabled = not self.ShadowsEnabled
+function ToggleShadow()
+  ShadowsEnabled = not ShadowsEnabled
 end
 
-function dbg:ToggleHitboxes()
-  self.ShowHitboxes = not self.ShowHitboxes
+function ToggleFog()
+  FogEnabled = not FogEnabled
 end
+
+function ToggleHitboxes()
+  ShowHitboxes = not ShowHitboxes
+end
+
+function ToggleScreenCenter()
+  ShowScreenCenter = not ShowScreenCenter
+end
+
 
 function love.load()
   player:init()

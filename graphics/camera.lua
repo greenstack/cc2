@@ -70,7 +70,7 @@ function Camera:SetPosition(x, y)
   if math.floor(self.MapX) ~= math.floor(oldX) or math.floor(self.MapY) ~= math.floor(oldY) then
     self:UpdateTilesetBatch()
   end
-  if dbg.ShadowsEnabled then
+  if ShadowsEnabled then
     self.Shadows:send("translate", {-self.MapX * self.Map.Tileset.TileWidth, -self.MapY * self.Map.Tileset.TileHeight})
   end
 end
@@ -83,7 +83,7 @@ function Camera:SetPositionCentered(x,y)
 end
 
 function Camera:updatePlayerPos()
-  if dbg.ShadowsEnabled then
+  if ShadowsEnabled then
     self.Shadows:send("playerPos", self.PlayerPosition)
   end
 end
@@ -104,13 +104,13 @@ function Camera:Draw(playerPosition)
   --Store the screen coordinates for later use
   
   love.graphics.setColor(1, 1, 1)
-  if dbg.ShowHitboxes then
+  if ShowHitboxes then
     for _, obj in ipairs(self.Map.Hitboxes) do
       local objPos = self:GetScreenPosition(obj.xPos, obj.yPos)
       love.graphics.rectangle("line", objPos[1], objPos[2], obj.pixelWidth, obj.pixelHeight)
     end
   end
-  if dbg.ShadowsEnabled then
+  if ShadowsEnabled then
     love.graphics.setShader(self.Shadows)
     love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
     love.graphics.setShader()
@@ -129,14 +129,19 @@ function Camera:SetMap(map)
   end
   self:UpdateTilesetBatch()
 
+  
   -- Update the shadows shader to contain the right objects.
   local hitboxes = {}
   for _, box in ipairs(self.Map.Hitboxes) do
     table.insert(hitboxes, box:getVec4Definition())
   end
-  if dbg.ShadowsEnabled then
-    self.Shadows:send("rects", unpack(hitboxes))
-  end
+  
+  local shader = love.filesystem.read("graphics/shaders/shadows.frag")
+  -- This ensures that we have exactly as much space
+  -- as we need in our fragment shader. Nothing more.
+  shader = shader:gsub('_HITBOX_TOTAL_', #hitboxes)
+  self.Shadows = love.graphics.newShader(shader)
+  self.Shadows:send("rects", unpack(hitboxes))
 end
 
 -- Creates a new camera instance. This should rarely, if ever, be done.
@@ -144,7 +149,5 @@ function Camera:new(o)
   o = o or {}
   setmetatable(o, self)
   self.__index = self
-  local shader = love.filesystem.read("graphics/shaders/shadows.frag")
-  o.Shadows = love.graphics.newShader(shader)
   return o
 end
