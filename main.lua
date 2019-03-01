@@ -1,10 +1,8 @@
 require "loading"
-
 require "player"
 require "world"
 require "input"
 require "interactions"
-
 
 -- resources
 beep = love.audio.newSource("assets/sound/selection_beep.wav", "static")
@@ -13,6 +11,14 @@ font = love.graphics.newImageFont("assets/font/luafont.png",
   "ABCDEFGHIJKLMNOPQRSTUVWXYZ0" ..
   "123456789.,!?-+/():;%&`'*#=[]\"><{}")
 arrow = love.graphics.newImage("assets/img/arrow.png")
+
+dbg = {
+  ShadowsEnabled = true
+}
+
+function dbg:ToggleShadow()
+  self.ShadowsEnabled = not self.ShadowsEnabled
+end
 
 function love.load()
   player:init()
