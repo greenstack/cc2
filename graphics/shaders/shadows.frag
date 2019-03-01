@@ -10,14 +10,14 @@ struct Line {
     vec2 p2;
 };
 
-bool LineIntersectsLine(Line l1, Line l2) {
-    number q = (l1.p1.y - l2.p1.y) * (l2.p2.x - l2.p1.x) - (l1.p1.x - l2.p1.x) * (l2.p2.y - l2.p1.y);
-    number d = (l1.p2.x - l1.p1.x) * (l2.p2.y - l2.p1.y) - (l1.p2.y - l1.p1.y) * (l2.p2.x - l2.p1.x);
+bool LineIntersectsLine(vec4 l1, vec4 l2) {
+    number q = (l1.y - l2.y) * (l2.z - l2.x) - (l1.x - l2.x) * (l2.w - l2.y);
+    number d = (l1.z - l1.x) * (l2.w - l2.y) - (l1.w - l1.y) * (l2.z - l2.x);
 
     if (d == 0) return false;
 
     number r = q / d;
-    q = (l1.p1.y - l2.p1.y) * (l1.p2.x - l1.p1.x) - (l1.p1.x - l2.p1.x) * (l1.p2.y - l1.p1.y);
+    q = (l1.y - l2.y) * (l1.z - l1.x) - (l1.x - l2.x) * (l1.w - l1.y);
     number s = q / d;
 
     if (r < 0 || r > 1 || s < 0 || s > 1)
@@ -26,36 +26,25 @@ bool LineIntersectsLine(Line l1, Line l2) {
     return true;
 }
 
-bool LineIntersectsRect(Line l, vec4 rect) {
+bool LineIntersectsRect(vec4 l, vec4 rect) {
     vec2 bottomRight = rect.xy + rect.zw;
     vec2 topRight = vec2(rect.x + rect.z, rect.y);
     vec2 topLeft = rect.xy;
     vec2 bottomLeft = vec2(rect.x, rect.y + rect.w);
-    return LineIntersectsLine(l, Line(topLeft, topRight)) ||
-        LineIntersectsLine(l, Line(topLeft, bottomLeft)) ||
-        LineIntersectsLine(l, Line(bottomLeft, bottomRight)) ||
-        LineIntersectsLine(l, Line(topRight, bottomRight));
+    return LineIntersectsLine(l, vec4(topLeft, topRight)) ||
+        LineIntersectsLine(l, vec4(topLeft, bottomLeft)) ||
+        LineIntersectsLine(l, vec4(bottomLeft, bottomRight)) ||
+        LineIntersectsLine(l, vec4(topRight, bottomRight));
 }
 
 vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
-    Line toPlayer = Line(screen_coords, playerPos);
-    float transp = 0;
-    mat4 translation;
-    translation[0][0] = 1;
-    translation[1][1] = 1;
-    translation[2][2] = 1;
-    translation[3][3] = 1;
-    translation[0][3] = translate.x;
-    translation[1][3] = translate.y;
+    vec4 toPlayer = vec4(screen_coords, playerPos);
     for (int i = 0; i < RECT_COUNT; ++i) {
         vec4 tempRect = rects[i];
         tempRect.xy += translate;
-        if (LineIntersectsRect(toPlayer, tempRect)) {
-            transp = 1;
+        if (LineIntersectsRect(toPlayer, tempRect))
             return vec4(.1, .1, .1, .5);
-        }
     }
-
 
     return vec4(0,0,0,0);
 }
