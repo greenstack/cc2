@@ -5,11 +5,6 @@ uniform vec2 playerPos;
 uniform vec2 translate;
 uniform vec4[RECT_COUNT] rects;
 
-struct Line {
-    vec2 p1;
-    vec2 p2;
-};
-
 bool LineIntersectsLine(vec4 l1, vec4 l2) {
     number q = (l1.y - l2.y) * (l2.z - l2.x) - (l1.x - l2.x) * (l2.w - l2.y);
     number d = (l1.z - l1.x) * (l2.w - l2.y) - (l1.w - l1.y) * (l2.z - l2.x);
