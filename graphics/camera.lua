@@ -49,6 +49,13 @@ function Camera:Move(dx, dy)
 end
 
 
+function Camera:GetScreenPosition(x, y)
+  return {
+    (x - self.MapX - 1) * self.Map.Tileset.TileWidth,
+    (y - self.MapY - 1) * self.Map.Tileset.TileHeight
+  }
+end
+
 -- Moves the camera to the specified world pixel position.
 function Camera:SetPosition(x, y)
   local oldX = self.MapX
@@ -79,13 +86,18 @@ function Camera:Draw(playerPosition)
     end
   end
   
-  
   --temporary player indicator
   love.graphics.setColor(.7,0,.7)
-  love.graphics.circle("fill",(playerPosition.x - self.MapX - 1)*self.Map.Tileset.TileWidth,(playerPosition.y - self.MapY - 1)*self.Map.Tileset.TileHeight,4)
-
+  self.PlayerPosition = self:GetScreenPosition(playerPosition.x, playerPosition.y)
+  love.graphics.circle("fill",self.PlayerPosition[1], self.PlayerPosition[2],4)
+  
   --Store the screen coordinates for later use
-  self.PlayerPosition = {(playerPosition.x - self.MapX - 1)*self.Map.Tileset.TileWidth,(playerPosition.y - self.MapY - 1)*self.Map.Tileset.TileHeight}
+  
+  love.graphics.setColor(1, 1, 1)
+  for _, obj in ipairs(self.Map.Hitboxes) do
+    local objPos = self:GetScreenPosition(obj.xPos, obj.yPos)
+    love.graphics.rectangle("line", objPos[1], objPos[2], obj.pixelWidth, obj.pixelHeight)
+  end
 end
 
 -- Sets the map the camera is rendering.
