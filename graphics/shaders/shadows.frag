@@ -34,11 +34,18 @@ bool LineIntersectsRect(vec4 l, vec4 rect) {
 
 vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
     vec4 toPlayer = vec4(screen_coords, playerPos);
+    float dist = length(screen_coords - playerPos);
+    
     for (int i = 0; i < RECT_COUNT; ++i) {
         vec4 tempRect = rects[i];
         tempRect.xy += translate;
         if (LineIntersectsRect(toPlayer, tempRect))
             return vec4(.1, .1, .1, .5);
+    }
+    int fade_start = 200;
+    if(dist > fade_start) {
+      float fade = min(1,(dist - fade_start) / 200);
+      return vec4(.1, .1, .1, .5*fade);
     }
 
     return vec4(0,0,0,0);
