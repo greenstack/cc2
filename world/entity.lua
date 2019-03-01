@@ -11,10 +11,12 @@ function Entity:new(name,x,y,o)
   setmetatable(o, self)
   self.__index = self
   o.position = {x = x or 0, y = y or 0}
+  o.velocity = {x = x or 0, y = y or 0}
+  o.maxSpeed = 0
   return o
 end
 
-function Entity:update(dt)
+function Entity:update(dt,world)
 
 end
 

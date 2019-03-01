@@ -1,13 +1,13 @@
 require "graphics.camera"
 require "world.map.map"
+require "world.entity"
+require "world.playerEntity"
 
 world = {
   level = 0,
   weather = 1,
   --whatever values
-  player = {
-    position = {x = 5, y = 5}
-  },
+  player = {},
   entities = {},
   camera = {},
   map = {}
@@ -18,6 +18,8 @@ function world:init()
   print("taestaset")
   self.camera = Camera:new()
   self.camera:SetMap(self.map)
+  
+  self.player = PlayerEntity:new("player",30.5,25.5)
 end
 
 function world:update(dt,playerController)
@@ -30,7 +32,7 @@ function world:update(dt,playerController)
   self.camera:SetPositionCentered(self.player.position.x,self.player.position.y)
   
   for _,entity in pairs(self.entities) do
-    entity:update(dt)
+    entity:update(dt,world)
   end
 end
 
