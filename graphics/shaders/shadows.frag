@@ -1,5 +1,5 @@
 #define PI 3.141592
-#define RECT_COUNT 256
+#define RECT_COUNT _HITBOX_TOTAL_
 
 uniform vec2 playerPos;
 uniform vec2 translate;

@@ -129,14 +129,19 @@ function Camera:SetMap(map)
   end
   self:UpdateTilesetBatch()
 
+  
   -- Update the shadows shader to contain the right objects.
   local hitboxes = {}
   for _, box in ipairs(self.Map.Hitboxes) do
     table.insert(hitboxes, box:getVec4Definition())
   end
-  if dbg.ShadowsEnabled then
-    self.Shadows:send("rects", unpack(hitboxes))
-  end
+  
+  local shader = love.filesystem.read("graphics/shaders/shadows.frag")
+  -- This ensures that we have exactly as much space
+  -- as we need in our fragment shader. Nothing more.
+  shader = shader:gsub('_HITBOX_TOTAL_', #hitboxes)
+  self.Shadows = love.graphics.newShader(shader)
+  self.Shadows:send("rects", unpack(hitboxes))
 end
 
 -- Creates a new camera instance. This should rarely, if ever, be done.
@@ -144,7 +149,5 @@ function Camera:new(o)
   o = o or {}
   setmetatable(o, self)
   self.__index = self
-  local shader = love.filesystem.read("graphics/shaders/shadows.frag")
-  o.Shadows = love.graphics.newShader(shader)
   return o
 end
