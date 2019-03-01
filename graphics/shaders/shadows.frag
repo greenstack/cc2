@@ -39,7 +39,7 @@ bool LineIntersectsRect(Line l, vec4 rect) {
 
 vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
     Line toPlayer = Line(screen_coords, playerPos);
-    float transp = 1;
+    float transp = 0;
     mat4 translation;
     translation[0][0] = 1;
     translation[1][1] = 1;
@@ -47,11 +47,15 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
     translation[3][3] = 1;
     translation[0][3] = translate.x;
     translation[1][3] = translate.y;
-    for (int i = 0; i < RECT_COUNT; ++i)
-        if (LineIntersectsRect(toPlayer, rects[i] * translation)) {
-            transp = 0;
-            break;
+    for (int i = 0; i < RECT_COUNT; ++i) {
+        vec4 tempRect = rects[i];
+        tempRect.xy += translate;
+        if (LineIntersectsRect(toPlayer, tempRect)) {
+            transp = 1;
+            return vec4(.1, .1, .1, .5);
         }
+    }
 
-    return transp * color * Texel(texture, texture_coords);
+
+    return vec4(0,0,0,0);
 }

@@ -14,7 +14,8 @@ Camera = {
   -- (number) How many tiles to display vertically.
   TileDisplayHeight = 21,
   type = "Camera",
-
+  -- (shader) The shader that draws the shadows.
+  Shadows,
   -- Screen coordiantes for use in shaders
   PlayerPosition = { 1,1 }
 }
@@ -69,6 +70,9 @@ function Camera:SetPosition(x, y)
   if math.floor(self.MapX) ~= math.floor(oldX) or math.floor(self.MapY) ~= math.floor(oldY) then
     self:UpdateTilesetBatch()
   end
+  if dbg.ShadowsEnabled then
+    self.Shadows:send("translate", {-self.MapX * self.Map.Tileset.TileWidth, -self.MapY * self.Map.Tileset.TileHeight})
+  end
 end
 
 function Camera:SetPositionCentered(x,y)
@@ -76,6 +80,12 @@ function Camera:SetPositionCentered(x,y)
     x - (self.TileDisplayWidth / 2),
     y - (self.TileDisplayHeight / 2)
   )
+end
+
+function Camera:updatePlayerPos()
+  if dbg.ShadowsEnabled then
+    self.Shadows:send("playerPos", self.PlayerPosition)
+  end
 end
 
 -- Causes the camera to render to the screen everything it sees.
@@ -94,9 +104,16 @@ function Camera:Draw(playerPosition)
   --Store the screen coordinates for later use
   
   love.graphics.setColor(1, 1, 1)
-  for _, obj in ipairs(self.Map.Hitboxes) do
-    local objPos = self:GetScreenPosition(obj.xPos, obj.yPos)
-    love.graphics.rectangle("line", objPos[1], objPos[2], obj.pixelWidth, obj.pixelHeight)
+  if dbg.ShowHitboxes then
+    for _, obj in ipairs(self.Map.Hitboxes) do
+      local objPos = self:GetScreenPosition(obj.xPos, obj.yPos)
+      love.graphics.rectangle("line", objPos[1], objPos[2], obj.pixelWidth, obj.pixelHeight)
+    end
+  end
+  if dbg.ShadowsEnabled then
+    love.graphics.setShader(self.Shadows)
+    love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+    love.graphics.setShader()
   end
 end
 
@@ -111,6 +128,15 @@ function Camera:SetMap(map)
     self.TilesetBatch[layer.Name] = love.graphics.newSpriteBatch(map.Tileset.Image, map.Tileset.ImageWidth * map.Tileset.ImageHeight)
   end
   self:UpdateTilesetBatch()
+
+  -- Update the shadows shader to contain the right objects.
+  local hitboxes = {}
+  for _, box in ipairs(self.Map.Hitboxes) do
+    table.insert(hitboxes, box:getVec4Definition())
+  end
+  if dbg.ShadowsEnabled then
+    self.Shadows:send("rects", unpack(hitboxes))
+  end
 end
 
 -- Creates a new camera instance. This should rarely, if ever, be done.
@@ -118,5 +144,7 @@ function Camera:new(o)
   o = o or {}
   setmetatable(o, self)
   self.__index = self
+  local shader = love.filesystem.read("graphics/shaders/shadows.frag")
+  o.Shadows = love.graphics.newShader(shader)
   return o
 end

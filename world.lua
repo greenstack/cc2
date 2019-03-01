@@ -26,7 +26,7 @@ function world:update(dt,playerController)
   local dy = playerController.movement.y * dt * 5
   self.player.position.x = self.player.position.x + dx
   self.player.position.y = self.player.position.y + dy
-  
+  self.camera:updatePlayerPos()
   self.camera:SetPositionCentered(self.player.position.x,self.player.position.y)
   
   for _,entity in pairs(self.entities) do
