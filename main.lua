@@ -32,6 +32,8 @@ function love.draw()
   love.graphics.setFont(font)
   world:draw()
   player.screen:draw()
+  love.graphics.setColor(1,1,1)
+  love.graphics.print(love.timer.getFPS() .. "fps",750,25)
   love.graphics.reset()
 end
 
