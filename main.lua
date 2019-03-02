@@ -1,5 +1,6 @@
 Vector = require "vector"
 
+require "utilities"
 require "loading"
 require "player"
 require "world"
