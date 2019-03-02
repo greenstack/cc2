@@ -34,10 +34,10 @@ function NPC:new(name, age, gender, mood, receptiveness, relationshipStatus, fli
   self.name = name
   self.age = age
   self.gender = gender
-  self.mood = math.clamp(mood, 0, 100) -- scale from 0 to 100 (bad to good)
-  self.receptiveness = math.clamp(receptiveness, 0, 100) -- scale 0 to 100 (not receptive to very receptive)
+  self.mood = clamp(mood, 0, 100) -- scale from 0 to 100 (bad to good)
+  self.receptiveness = clamp(receptiveness, 0, 100) -- scale 0 to 100 (not receptive to very receptive)
   self.relationshipStatus = relationshipStatus
-  self.flirtatiousness = math.clamp(flirtatiousness, 0, 100) -- scale 0 to 100 (not flirtatious to very flirtatious)
+  self.flirtatiousness = clamp(flirtatiousness, 0, 100) -- scale 0 to 100 (not flirtatious to very flirtatious)
  
   return self
 end
@@ -75,11 +75,11 @@ function NPC:setAge (age)
 end
 
 function NPC:setMood (mood)
-    self.mood = math.clamp(mood, 0, 100)
+    self.mood = clamp(mood, 0, 100)
 end
 
 function NPC:setReceptiveness (receptiveness)
-    self.receptiveness = math.clamp(receptiveness, 0, 100)
+    self.receptiveness = clamp(receptiveness, 0, 100)
 end
 
 function NPC:setRelationshipStatus (relationshipStatus)
