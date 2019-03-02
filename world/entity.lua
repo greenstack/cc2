@@ -11,8 +11,11 @@ function Entity:new(name,x,y,o)
   setmetatable(o, self)
   self.__index = self
   o.position = {x = x or 0, y = y or 0}
-  o.velocity = {x = x or 0, y = y or 0}
+  o.velocity = {x = 0, y = 0}
+  o.movement = {x = 0, y = 0}
   o.maxSpeed = 0
+  o.acceleration = 1
+  o.hitBox = nil
   return o
 end
 
@@ -20,10 +23,15 @@ function Entity:update(dt,world)
 
 end
 
-function Entity:draw()
-
-end
 
 function Entity:getPosVec()
   return { self.position.x, self.position.y }
+end
+
+function Entity:getVelVec()
+  return { self.velocity.x, self.velocity.y }
+end
+
+function Entity:getMovVec()
+  return { self.movement.x, self.movement.y }
 end

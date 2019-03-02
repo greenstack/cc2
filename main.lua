@@ -1,8 +1,11 @@
+Vector = require "vector"
+
 require "loading"
 require "player"
 require "world"
 require "input"
 require "interactions"
+
 
 -- resources
 beep = love.audio.newSource("assets/sound/selection_beep.wav", "static")
@@ -15,7 +18,7 @@ arrow = love.graphics.newImage("assets/img/arrow.png")
 -- debug variables
 ShadowsEnabled = true
 FogEnabled = true
-ShowHitboxes = false
+ShowHitboxes = true
 ShowScreenCenter = false
 
 function ToggleShadow()
@@ -55,6 +58,7 @@ function love.draw()
   player.screen:draw()
   love.graphics.setColor(1,1,1)
   love.graphics.print(love.timer.getFPS() .. "fps",750,25)
+  love.graphics.print(math.floor(world.player.position.x) .. " , " .. math.floor(world.player.position.y),700,45)
   love.graphics.reset()
 end
 

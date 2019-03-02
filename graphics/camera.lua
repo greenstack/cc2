@@ -89,16 +89,23 @@ function Camera:updatePlayerPos()
 end
 
 -- Causes the camera to render to the screen everything it sees.
-function Camera:Draw(playerPosition)
+function Camera:Draw(playerPosition,player,entities)
   for _, batch in pairs(self.TilesetBatch) do
     if batch ~= nil then 
       love.graphics.draw(batch, math.floor(-(self.MapX%1)*self.Map.Tileset.TileWidth), math.floor(-(self.MapY%1)*self.Map.Tileset.TileHeight))
     end
   end
   
+  -- draw entities
+  
+  self:drawEntity(player)
+  for _, entity in ipairs(entities) do
+    self:drawEntity(entity)
+  end
+  
   --temporary player indicator
   love.graphics.setColor(.7,0,.7)
-  self.PlayerPosition = self:GetScreenPosition(playerPosition.x, playerPosition.y)
+  self.PlayerPosition = self:GetScreenPosition(player.position.x, player.position.y)
   love.graphics.circle("fill",self.PlayerPosition[1], self.PlayerPosition[2],4)
   
   --Store the screen coordinates for later use
@@ -150,4 +157,18 @@ function Camera:new(o)
   setmetatable(o, self)
   self.__index = self
   return o
+end
+
+-- Draws an entity. currently only displays their hitbox.
+function Camera:drawEntity(entity)
+  if ShowHitboxes and entity.hitBox then
+    local entityPos = self:GetScreenPosition(entity.position.x, entity.position.y)
+    local hitBoxP1 = self:GetScreenPosition(entity.position.x + entity.hitBox.x1,entity.position.y + entity.hitBox.y1)
+    local hitBoxP2 = self:GetScreenPosition(entity.position.x + entity.hitBox.x2,entity.position.y + entity.hitBox.y2)
+    love.graphics.setColor(1,1,1)
+    love.graphics.rectangle("line", hitBoxP1[1],
+                                    hitBoxP1[2],
+                                    hitBoxP2[1] - hitBoxP1[1],
+                                    hitBoxP2[2] - hitBoxP1[2])
+  end
 end
