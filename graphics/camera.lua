@@ -149,6 +149,7 @@ function Camera:SetMap(map)
   shader = shader:gsub('_HITBOX_TOTAL_', #hitboxes)
   self.Shadows = love.graphics.newShader(shader)
   self.Shadows:send("rects", unpack(hitboxes))
+  self.Shadows:send("fade", 300)
 end
 
 -- Creates a new camera instance. This should rarely, if ever, be done.
