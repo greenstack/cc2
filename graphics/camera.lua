@@ -64,8 +64,8 @@ function Camera:SetPosition(x, y)
   
   self.MapX = x
   self.MapY = y
-  self.MapX = math.max(math.min(x, self.Map.MapWidth - self.TileDisplayWidth), 0)
-  self.MapY = math.max(math.min(y, self.Map.MapHeight - self.TileDisplayHeight), 0)
+  self.MapX = math.max(math.min(x, self.Map.MapWidth - self.TileDisplayWidth + 1), 0)
+  self.MapY = math.max(math.min(y, self.Map.MapHeight - self.TileDisplayHeight + 1), 0)
   
   if math.floor(self.MapX) ~= math.floor(oldX) or math.floor(self.MapY) ~= math.floor(oldY) then
     self:UpdateTilesetBatch()
