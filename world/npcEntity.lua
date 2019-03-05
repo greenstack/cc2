@@ -26,8 +26,8 @@ NPC_RELATIONSHIP = {
  
 ----- NPC Construtor ------
 
-function NPC:new(name, age, gender, mood, receptiveness, relationshipStatus, flirtatiousness, o)
-  o = o or {}
+function NPC:new(name, x, y, age, gender, mood, receptiveness, relationshipStatus, flirtatiousness, o)
+  o = Entity.new(self, name, x, y, o)
   setmetatable(o, self)
   self.__index = self
   
