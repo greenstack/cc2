@@ -1,3 +1,6 @@
 [submodule "baton"]
 	path = baton
 	url = https://github.com/tesselode/baton.git
+[submodule "peachy"]
+	path = peachy
+	url = https://github.com/josh-perry/peachy.git
