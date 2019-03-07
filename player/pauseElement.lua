@@ -74,7 +74,7 @@ function PauseElement.option1(player)
   print("option 1")
 end
 function PauseElement.option2(player)
-  print("option 2",player:getScreen("gameScreen"))
+  print("option 2")
   player:getScreen("gameScreen"):getElement("console"):log("option 2")
 end
 function PauseElement.mainMenu(player)
