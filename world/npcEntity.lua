@@ -1,5 +1,7 @@
 ----- NPC Class ------
-NPC = {
+NPC = Entity:new()
+
+--[[{
   name = "Name", 
   age = 0, 
   gender = "", 
@@ -8,7 +10,7 @@ NPC = {
   relationshipStatus = "", 
   flirtatiousness = 0,
   type = "NPC"
-}
+}]]
 
 NPC_GENDER = {
     MALE = "male",
@@ -27,19 +29,23 @@ NPC_RELATIONSHIP = {
 ----- NPC Construtor ------
 
 function NPC:new(name, x, y, age, gender, mood, receptiveness, relationshipStatus, flirtatiousness, o)
-  o = Entity.new(self, name, x, y, o)
-  setmetatable(o, self)
-  self.__index = self
+  local o = Entity.new(self, name, x, y, o)
   
-  self.name = name
-  self.age = age
-  self.gender = gender
-  self.mood = clamp(mood, 0, 100) -- scale from 0 to 100 (bad to good)
-  self.receptiveness = clamp(receptiveness, 0, 100) -- scale 0 to 100 (not receptive to very receptive)
-  self.relationshipStatus = relationshipStatus
-  self.flirtatiousness = clamp(flirtatiousness, 0, 100) -- scale 0 to 100 (not flirtatious to very flirtatious)
- 
-  return self
+  o.maxSpeed = 2
+  o.acceleration = 1
+  
+  o.name = name
+  o.type = "NPC"
+  o.age = age
+  o.gender = gender
+  o.mood = clamp(mood, 0, 100) -- scale from 0 to 100 (bad to good)
+  o.receptiveness = clamp(receptiveness, 0, 100) -- scale 0 to 100 (not receptive to very receptive)
+  o.relationshipStatus = relationshipStatus
+  o.flirtatiousness = clamp(flirtatiousness, 0, 100) -- scale 0 to 100 (not flirtatious to very flirtatious)
+  o.hitBox = {x1=-.15,y1=-.15,x2=.15,y2=.15}
+  o.arrow = true --arrow pointing at their head to indicate the player can interact with them
+  
+  return o
 end
 
 ----- NPC Getters -----

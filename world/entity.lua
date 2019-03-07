@@ -15,7 +15,10 @@ function Entity:new(name,x,y,o)
   o.movement = {x = 0, y = 0}
   o.maxSpeed = 0
   o.acceleration = 1
+  o.facing = "d" -- d,u,l,r
   o.hitBox = nil
+  o.name = name
+  o.interaction = false -- indicates entity is in an interaction
   return o
 end
 

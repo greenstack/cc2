@@ -4,6 +4,8 @@ require "player.obediometerElement"
 require "player.pauseElement"
 require "player.consoleElement"
 require "player.mainMenuElement"
+require "player.actionElement"
+require "player.conversationElement"
 
 player = {
   obedience = 100,
@@ -21,6 +23,7 @@ function player:init()
   gameScreen:addElement(ObediometerElement:new("obediometer",10,10,true,true))
   gameScreen:addElement(ConsoleElement:new("console",0,0,false,false))
   gameScreen:addElement(PauseElement:new("pauseMenu",300,150,false,false))
+  gameScreen:addElement(ActionElement:new("action",0,50,false,false))
   local mainMenuScreen = Screen:new("mainMenuScreen")
   mainMenuScreen:addElement(MainMenuElement:new("mainMenu",0,0,true,true))
   self.screens = {
@@ -83,4 +86,11 @@ function player:getScreen(screen)
       return v
     end
   end
+end
+
+function player:isScreenActive(screen)
+  if self.screen == screen then
+    return true
+  end
+  return false
 end

@@ -2,50 +2,52 @@ require "graphics.camera"
 require "world.map.map"
 require "world.entity"
 require "world.playerEntity"
+require "world.npcEntity"
 
 world = {
   level = 0,
   weather = 1,
-  --whatever values
   player = {},
   entities = {},
   camera = {},
-  map = {}
+  map = {},
 }
 
 function world:init()
+  math.randomseed(os.time())
   self.map = Map:new("assets/maps/level3_cc1", "assets/img/tiles.png")
   self.camera = Camera:new()
   self.camera:SetMap(self.map)
   
   self.player = PlayerEntity:new("player",30.5,25.5)
+  
+  self:spawnNPC() --for testing
+  self:spawnNPC()
+  self:spawnNPC()
+  self:spawnNPC()
 end
 
 function world:update(dt,playerController)
   if playerController.paused or not playerController.inPlay then return end
   
-  self.player.movement = playerController.movement
-  
-  --[[
-  local dx = playerController.movement.x * dt * 5
-  local dy = playerController.movement.y * dt * 5
-  self.player.position.x = self.player.position.x + dx
-  self.player.position.y = self.player.position.y + dy
-  --]]
-  
-  for _,entity in pairs(self.entities) do
-    entity:update(dt,world)
+  if not self.player.interaction then
+    self.player.movement = playerController.movement
+  else
+    self.player.movement = {x=0,y=0}
   end
   
+  self:updateEntities(dt)
   self:moveEntities(dt)
   
-  self.camera:updatePlayerPos()
+  interactions:update(dt,self,playerController,input)
+  
+  self.camera:updatePlayerPos(self.player)
   self.camera:SetPositionCentered(self.player.position.x,self.player.position.y)
    
 end
 
 function world:draw()
-  self.camera:Draw(self.player.position,self.player,self.entities)
+  self.camera:Draw(self.player,self.entities)
   local w,h = love.graphics.getDimensions()
 
   -- Fog Shader for testing
@@ -70,6 +72,11 @@ function world:draw()
   
 end
 
+function world:spawnNPC()
+  local npc = NPC:new("testnpc",math.random(30,35),math.random(25,30),20,"female",50,50,"single",50)
+  table.insert(self.entities,npc)
+end
+
 function world:moveEntities(dt)
   self:moveEntity(dt,self.player)
   
@@ -78,10 +85,21 @@ function world:moveEntities(dt)
   end
 end
 
+function world:updateEntities(dt)
+  self.player:update(dt,self)
+  for _,entity in pairs(self.entities) do
+    entity:update(dt,self)
+  end
+end
+
 function world:moveEntity(dt,entity)
-  local brake = 1
-  if entity.movement.x == 0 and entity.movement.y == 0 then 
-    brake = 0.2
+  local brakeX = 1
+  local brakeY = 1
+  if entity.movement.x == 0 then
+    brakeX = 0.2
+  end
+  if entity.movement.y == 0 then 
+    brakeY = 0.2
   end
   local velocity = Vector.new(entity.velocity.x + entity.movement.x * entity.acceleration,entity.velocity.y + entity.movement.y * entity.acceleration)
   if velocity:length() > entity.maxSpeed then
@@ -89,7 +107,8 @@ function world:moveEntity(dt,entity)
     velocity = velocity * entity.maxSpeed
   end
   
-  velocity = velocity * brake
+  velocity.x = velocity.x * brakeX
+  velocity.y = velocity.y * brakeY
   
   entity.velocity = {x=velocity.x,y=velocity.y}
   local proposedPosition = {x=entity.position.x + entity.velocity.x * dt,y=entity.position.y + entity.velocity.y * dt}
@@ -131,8 +150,6 @@ function world:moveEntity(dt,entity)
     if fromTop then count = count + 1 end
     if fromBottom then count = count + 1 end
     
-    if count > 1 then print("count",count,fromLeft,fromRight,fromTop,fromBottom) end
-
     if fromTop then
       correction.y = mapHitBox.yPos - (proposedPosition.y + entity.hitBox.y2)
     elseif fromRight  then
@@ -148,5 +165,28 @@ function world:moveEntity(dt,entity)
     
   end
   
+  if entity.velocity.x > math.abs(entity.velocity.y) then
+    entity.facing = "r"
+  elseif entity.velocity.x < -math.abs(entity.velocity.y) then
+    entity.facing = "l"
+  elseif entity.velocity.y > math.abs(entity.velocity.x) then
+    entity.facing = "d"
+  elseif entity.velocity.y < -math.abs(entity.velocity.x) then
+    entity.facing = "u"
+  end
+  
   entity.position = proposedPosition
+end
+
+-- static helper function
+-- hitbox is of the form {x1,x2,y1,y2} 
+--   where x1 world x coordinate of the left bound of the hitbox
+--   and x2 is the world x coordinate to the right. similarly, y1 is the distnace to the top, and
+--   y2 is the distance to the bottom
+-- returns true when position lies within hitBox
+function world.hitBoxContains(hitBox,position)
+  return hitBox.x1 < position.x and
+          hitBox.x2 > position.x and
+          hitBox.y1 < position.y and
+          hitBox.y2 > position.y
 end
