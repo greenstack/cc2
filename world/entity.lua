@@ -26,7 +26,6 @@ function Entity:update(dt,world)
 
 end
 
-
 function Entity:getPosVec()
   return { self.position.x, self.position.y }
 end

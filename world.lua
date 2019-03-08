@@ -3,6 +3,7 @@ require "world.map.map"
 require "world.entity"
 require "world.playerEntity"
 require "world.npcEntity"
+require "world.weather"
 
 world = {
   level = 0,
@@ -21,10 +22,7 @@ function world:init()
   
   self.player = PlayerEntity:new("player",30.5,25.5)
   
-  self:spawnNPC() --for testing
-  self:spawnNPC()
-  self:spawnNPC()
-  self:spawnNPC()
+  self:spawnNPCs() --for testing
 end
 
 function world:update(dt,playerController)
@@ -72,9 +70,13 @@ function world:draw()
   
 end
 
-function world:spawnNPC()
-  local npc = NPC:new("testnpc",math.random(30,35),math.random(25,30),20,"female",50,50,"single",50)
-  table.insert(self.entities,npc)
+function world:spawnNPCs()
+  local npcs = NPC:generate(5, Weather.Clear)
+
+  for i = 1, #npcs do
+    npcs[i].position = { x = math.random(30,35), y = math.random(25,30) }
+    table.insert(self.entities, npcs[i])
+  end
 end
 
 function world:moveEntities(dt)
