@@ -4,6 +4,7 @@ require "world.entity"
 require "world.playerEntity"
 require "world.npcEntity"
 require "world.weather"
+local peachy = require 'peachy.peachy'
 
 world = {
   level = 0,
@@ -16,10 +17,11 @@ world = {
 
 function world:init()
   math.randomseed(os.time())
+  sewr = peachy.new("assets/img/animated_sewr.json", love.graphics.newImage("assets/img/animated_sewr.png"), "slime")
   self.map = Map:new("assets/maps/level3_cc1", "assets/img/tiles.png")
   self.camera = Camera:new()
   self.camera:SetMap(self.map)
-  
+
   self.player = PlayerEntity:new("player",30.5,25.5)
   
   self:spawnNPCs() --for testing
@@ -40,14 +42,31 @@ function world:update(dt,playerController)
   interactions:update(dt,self,playerController,input)
   
   self.camera:updatePlayerPos(self.player)
+
+  self.player.movement = playerController.movement
+
+  --[[
+  local dx = playerController.movement.x * dt * 5
+  local dy = playerController.movement.y * dt * 5
+  self.player.position.x = self.player.position.x + dx
+  self.player.position.y = self.player.position.y + dy
+  --]]
+
+  for _,entity in pairs(self.entities) do
+    entity:update(dt,world)
+  end
+
+  self:moveEntities(dt)
+  self.camera:updatePlayerPos()
   self.camera:SetPositionCentered(self.player.position.x,self.player.position.y)
-   
+  sewr:update(dt)
 end
 
 function world:draw()
   self.camera:Draw(self.player,self.entities)
   local w,h = love.graphics.getDimensions()
 
+  -- WEATHER ELEMENTS --
   -- Fog Shader for testing
   if FogEnabled then
     weatherShader = love.graphics.newShader("graphics/shaders/fog.frag")
@@ -59,7 +78,8 @@ function world:draw()
     love.graphics.rectangle("fill", 1, 1, w, h)
     love.graphics.setShader()
   end
- 
+
+  -- DEGUG ELEMENTS --
   -- lines showing the center of the screen for testing
   if ShowScreenCenter then
     love.graphics.setColor(.7,0,.7,0.6)
@@ -67,7 +87,8 @@ function world:draw()
     love.graphics.line(0,h/2,w,h/2)
     love.graphics.setColor(1,1,1)
   end
-  
+
+  sewr:draw(100, 100)
 end
 
 function world:spawnNPCs()
@@ -81,7 +102,7 @@ end
 
 function world:moveEntities(dt)
   self:moveEntity(dt,self.player)
-  
+
   for _,entity in pairs(self.entities) do
     self:moveEntity(dt,entity)
   end
@@ -114,20 +135,20 @@ function world:moveEntity(dt,entity)
   
   entity.velocity = {x=velocity.x,y=velocity.y}
   local proposedPosition = {x=entity.position.x + entity.velocity.x * dt,y=entity.position.y + entity.velocity.y * dt}
-  
+
   local collisions = {}
   for _,mapHitBox in pairs(self.map.Hitboxes) do
     local leftCol = mapHitBox.xPos < proposedPosition.x + entity.hitBox.x2
     local rightCol = mapHitBox.xPos + mapHitBox.width > proposedPosition.x + entity.hitBox.x1
     local topCol = mapHitBox.yPos < proposedPosition.y + entity.hitBox.y2
     local bottomCol = mapHitBox.yPos + mapHitBox.height > proposedPosition.y + entity.hitBox.y1
-  
+
     if leftCol and rightCol and topCol and bottomCol then
       table.insert(collisions,mapHitBox)
     end
-    
+
   end
-  table.sort(collisions,function(a,b) 
+  table.sort(collisions,function(a,b)
       local aDeltaX = (a.xPos + (a.width/2) - entity.position.x)
       local aDeltaY = (a.yPos + (a.height/2) - entity.position.y)
       local bDeltaX = (b.xPos + (b.width/2) - entity.position.x)
@@ -137,15 +158,15 @@ function world:moveEntity(dt,entity)
       return aDist < bDist
     end
   )
-  
+
   for _,mapHitBox in pairs(collisions) do
     local fromLeft = not (mapHitBox.xPos < entity.position.x + entity.hitBox.x2)
     local fromRight = not (mapHitBox.xPos + mapHitBox.width > entity.position.x + entity.hitBox.x1)
     local fromTop = not (mapHitBox.yPos < entity.position.y + entity.hitBox.y2)
     local fromBottom = not (mapHitBox.yPos + mapHitBox.height > entity.position.y + entity.hitBox.y1)
-    
+
     local correction = {x=0,y=0}
-    
+
     local count = 0
     if fromLeft then count = count + 1 end
     if fromRight then count = count + 1 end
@@ -161,10 +182,10 @@ function world:moveEntity(dt,entity)
     elseif fromBottom then
       correction.y = mapHitBox.yPos + mapHitBox.height - (proposedPosition.y + entity.hitBox.y1)
     end
-    
+
     proposedPosition.x = proposedPosition.x + correction.x
     proposedPosition.y = proposedPosition.y + correction.y
-    
+
   end
   
   if entity.velocity.x > math.abs(entity.velocity.y) then
