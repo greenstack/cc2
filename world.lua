@@ -41,8 +41,6 @@ function world:update(dt,playerController)
   
   interactions:update(dt,self,playerController,input)
   
-  self.camera:updatePlayerPos(self.player)
-
   self.player.movement = playerController.movement
 
   --[[
@@ -57,7 +55,7 @@ function world:update(dt,playerController)
   end
 
   self:moveEntities(dt)
-  self.camera:updatePlayerPos()
+  self.camera:updatePlayerPos(self.player)
   self.camera:SetPositionCentered(self.player.position.x,self.player.position.y)
   sewr:update(dt)
 end
