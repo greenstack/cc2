@@ -1,6 +1,7 @@
 require "world.map.layer"
 require "world.map.tileset"
 require "world.map.hitbox"
+require "world.map.pathingGraph"
 
 Map = {
   Name = "",
@@ -10,6 +11,7 @@ Map = {
   MapHeight,
   Tileset,
   Hitboxes,
+  PathingGraph,
 }
 
 function Map:new(levelName, tilesetPath, o)
@@ -40,6 +42,11 @@ function Map:new(levelName, tilesetPath, o)
     elseif layer.type == "tilelayer" and layer.visible then
       local l = Layer:new(layer, layerId)
       o.Layers[l.Name] = l
+    elseif layer.name == "complete nodes" then
+      local l = Layer:new(layer, layerId)
+      print("Setting up pathing graph.")
+      o.PathingGraph = PathingGraph:new(l)
+      o.PathingGraph:prepareDisplay(o)
     elseif not layer.visible then
       print("Skipping invisible layer " .. layer.name)
     else

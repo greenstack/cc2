@@ -26,6 +26,7 @@ ShadowsEnabled = true
 FogEnabled = true
 ShowHitboxes = true
 ShowScreenCenter = false
+ShowPathingGraph = false
 
 function ToggleShadow()
   ShadowsEnabled = not ShadowsEnabled
@@ -43,6 +44,11 @@ function ToggleScreenCenter()
   ShowScreenCenter = not ShowScreenCenter
 end
 
+function TogglePathingGraphDisplay()
+  ShowPathingGraph = not ShowPathingGraph
+end
+
+TogglePGD = TogglePathingGraphDisplay
 
 function love.load()
   player:init()

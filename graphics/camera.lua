@@ -104,10 +104,7 @@ function Camera:Draw(player,entities)
     self:drawEntity(entity)
   end
   
-  
-  
   --Store the screen coordinates for later use
-  
   love.graphics.setColor(1, 1, 1)
   if ShowHitboxes then
     for _, obj in ipairs(self.Map.Hitboxes) do
@@ -119,6 +116,9 @@ function Camera:Draw(player,entities)
     love.graphics.setShader(self.Shadows)
     love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
     love.graphics.setShader()
+  end
+  if ShowPathingGraph then
+    self.Map.PathingGraph:show(-(self.MapX)*self.Map.Tileset.TileWidth,-(self.MapY)*self.Map.Tileset.TileHeight)
   end
 end
 
@@ -133,7 +133,6 @@ function Camera:SetMap(map)
     self.TilesetBatch[layer.Name] = love.graphics.newSpriteBatch(map.Tileset.Image, map.Tileset.ImageWidth * map.Tileset.ImageHeight)
   end
   self:UpdateTilesetBatch()
-
   
   -- Update the shadows shader to contain the right objects.
   local hitboxes = {}
