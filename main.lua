@@ -55,18 +55,15 @@ function love.load()
   world:init()
   love.graphics.setBackgroundColor(0.5,0.5,0.5)
   love.keyboard.setKeyRepeat(true)
+
+  weatherShader = love.graphics.newShader("graphics/shaders/fog.frag")
+  weatherShader:send("fog_distance", 428)
+  weatherShader:send("fog_distance_min", 256)
 end
 
 function love.update(dt)
   input:update()
-  
-  
-  
-  
-  
-  
-  
-  
+    
   player:update(dt,input)
   world:update(dt,player)
   --interactions:update(dt,world,player)

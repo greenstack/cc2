@@ -67,12 +67,9 @@ function world:draw()
   -- WEATHER ELEMENTS --
   -- Fog Shader for testing
   if FogEnabled then
-    weatherShader = love.graphics.newShader("graphics/shaders/fog.frag")
     love.graphics.setShader(weatherShader)
     weatherShader:send("player_position", self.camera.PlayerPosition)
     weatherShader:send("screen_position", {self.camera.Map.Tileset.TileWidth * self.camera.MapX,self.camera.Map.Tileset.TileHeight * self.camera.MapY})
-    weatherShader:send("fog_distance", 428)
-    weatherShader:send("fog_distance_min", 256)
     love.graphics.rectangle("fill", 1, 1, w, h)
     love.graphics.setShader()
   end
