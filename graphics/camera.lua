@@ -140,6 +140,8 @@ function Camera:SetMap(map)
     table.insert(hitboxes, box:getVec4Definition())
   end
   
+  -- We need to read it from a file and then into a shader
+  -- because we need to replace some text.
   local shader = love.filesystem.read("graphics/shaders/shadows.frag")
   -- This ensures that we have exactly as much space
   -- as we need in our fragment shader. Nothing more.
@@ -147,6 +149,7 @@ function Camera:SetMap(map)
   self.Shadows = love.graphics.newShader(shader)
   self.Shadows:send("rects", unpack(hitboxes))
   self.Shadows:send("fade", 300)
+  self.Shadows:send("shadowAlpha", .3)
 end
 
 -- Creates a new camera instance. This should rarely, if ever, be done.

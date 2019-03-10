@@ -1,10 +1,16 @@
 #define PI 3.141592
+// This _HITBOX_TOTAL_ should be replaced by the actual amonth of hitboxes in
+// the current level when the shader is loaded in. This will ensure that the
+// correct amount of VRAM is allocated for the hitboxes.
 #define RECT_COUNT _HITBOX_TOTAL_
 
 uniform vec2 playerPos;
 uniform vec2 translate;
 uniform vec4[RECT_COUNT] rects;
 uniform float fade;
+uniform float shadowAlpha; 
+
+float shadowGray = 0.1;
 
 bool LineIntersectsLine(vec4 l1, vec4 l2) {
     number q = (l1.y - l2.y) * (l2.z - l2.x) - (l1.x - l2.x) * (l2.w - l2.y);
@@ -31,6 +37,12 @@ float LineIntersectsRect(vec4 l, vec4 rect) {
     vec2 topRight = vec2(rect.x + rect.z, rect.y);
     vec2 topLeft = rect.xy;
     vec2 bottomLeft = vec2(rect.x, rect.y + rect.w);
+
+    if (rect.x <= l.x && l.x <= rect.x + rect.z &&
+        rect.y <= l.y && l.y <= rect.y + rect.w ||
+        rect.x <= l.z && l.z <= rect.x + rect.z &&
+        rect.y <= l.w && l.w <= rect.y + rect.w)
+        return 1;
 
     float intersections = 0;
     vec4 intersected, check;
@@ -70,15 +82,15 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
         tempRect.xy += translate;
         intersections += LineIntersectsRect(toPlayer, tempRect);
         if (intersections > 1)
-            return vec4(.1, .1, .1, .5);
+            return vec4(vec3(shadowGray), shadowAlpha);
         if (0 < intersections && intersections <= 1) {
-            return vec4(.1, .1, .1, .25);
+            return vec4(vec3(shadowGray), shadowAlpha/2);
         }
     }
 
     if(dist > fade) {
       float fade_mag = min(1,(dist - fade) / 200);
-      return vec4(.1, .1, .1, .5*fade_mag);
+      return vec4(vec3(shadowGray), shadowAlpha*fade_mag);
     }
 
     return vec4(0,0,0,0);
