@@ -1,18 +1,16 @@
-language: c
+dist: xenial
 
-env:
-  global:
-    - LUA=lua5.2
+language: c
 
 branches:
   only:
     - master
 
 install:
-  - sudo apt-get install $LUA
+  - sudo apt-get install lua5.3
 
 script:
-  - lua tests.lua
+  - lua5.3 tests.lua
 
 notifications:
   recipients:

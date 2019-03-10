@@ -14,43 +14,59 @@ function ConsoleElement:new(name,x,y,enabled,visible,o)
   return o;
 end
 
+function ConsoleElement:close(player)
+  player.paused = self.oldPaused
+  player.debugMode = false
+  self:setEnabled(false)
+  self:setVisible(false)
+end
+
+function ConsoleElement:doCommand()
+  table.insert(self.history,self.lineText)
+  self.historyIndex = #self.history + 1
+  if(self.lineText == "clear") then
+    self.text = ""
+    self.lineText = ""
+    return
+  end
+  local f,err = load('return ' .. self.lineText)
+  if not f then
+    f,err = load(self.lineText)
+  end
+  self.text = self.text .. "> " .. self.lineText .. "\n"
+  local success,result = pcall(f)
+  self.text = self.text .. ": " .. tostring(result) .. "\n"
+  self.lineText = ""
+end
+
+function ConsoleElement:historyUp()
+  self.historyIndex = self.historyIndex - 1
+  if self.historyIndex < 1 then
+    self.historyIndex = 1
+  end
+  if self.historyIndex == #self.history then
+    self.tempStore = self.lineText
+  end
+  self.lineText = self.history[self.historyIndex] or ""
+end
+
+function ConsoleElement:historyDown()
+  self.historyIndex = self.historyIndex + 1
+  if self.historyIndex > #self.history + 1 then
+    self.historyIndex = #self.history + 1
+  end
+  self.lineText = self.history[self.historyIndex] or self.tempStore
+end
+
 function ConsoleElement:update(dt,input,player)
   if input:pressed('debug') and not self.wait then
-    player.paused = self.oldPaused
-    player.debugMode = false
-    self:setEnabled(false)
-    self:setVisible(false)
+    self:close(player)
   elseif input:pressed('enter') then
-    table.insert(self.history,self.lineText)
-    self.historyIndex = #self.history + 1
-    if(self.lineText == "clear") then
-      self.text = ""
-      self.lineText = ""
-      return
-    end
-    local f,err = loadstring('return ' .. self.lineText)
-    if not f then
-      f,err = loadstring(self.lineText)
-    end
-    self.text = self.text .. "> " .. self.lineText .. "\n"
-    local success,result = pcall(f)
-    self.text = self.text .. ": " .. tostring(result) .. "\n"
-    self.lineText = ""
+    self:doCommand()
   elseif input:pressed('kup') then
-    self.historyIndex = self.historyIndex - 1
-    if self.historyIndex < 1 then
-      self.historyIndex = 1
-    end
-    if self.historyIndex == #self.history then
-      self.tempStore = self.lineText
-    end
-    self.lineText = self.history[self.historyIndex] or ""
+    self:historyUp()
   elseif input:pressed('kdown') then
-    self.historyIndex = self.historyIndex + 1
-    if self.historyIndex > #self.history + 1 then
-      self.historyIndex = #self.history + 1
-    end
-    self.lineText = self.history[self.historyIndex] or self.tempStore
+    self:historyDown()
   end
   
   self.wait = false

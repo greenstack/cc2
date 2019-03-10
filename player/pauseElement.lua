@@ -16,25 +16,13 @@ end
 
 function PauseElement:update(dt,input,player)
   if not self.wait and input:pressed('menu') then
-    player.paused = false
-    self:setEnabled(false)
-    self:setVisible(false)
+    self:unpause(player)
   end
   
   if input:pressed('down') then
-    beep:stop()
-    beep:play()
-    self.selected = self.selected + 1
-    if(self.selected > #self.options) then
-      self.selected = 1
-    end
+    self:moveDown()
   elseif input:pressed('up') then
-    beep:stop()
-    beep:play()
-    self.selected = self.selected - 1
-    if(self.selected < 1) then
-      self.selected = #self.options
-    end
+    self:moveUp()
   end
   
   if input:pressed('talk') then
@@ -65,6 +53,30 @@ function PauseElement:draw()
       love.graphics.setColor(.9,.9,.9)
     end
     love.graphics.print(v.text,self.position.x + 40,self.position.y + 50*k)
+  end
+end
+
+function PauseElement:unpause(player)
+  player.paused = false
+  self:setEnabled(false)
+  self:setVisible(false)
+end
+
+function PauseElement:moveDown()
+  beep:stop()
+  beep:play()
+  self.selected = self.selected + 1
+  if(self.selected > #self.options) then
+    self.selected = 1
+  end
+end
+
+function PauseElement:moveUp()
+  beep:stop()
+  beep:play()
+  self.selected = self.selected - 1
+  if(self.selected < 1) then
+    self.selected = #self.options
   end
 end
 

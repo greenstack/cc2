@@ -10,23 +10,31 @@ function MainMenuElement:new(name,x,y,enabled,visible,o)
   return o
 end
 
+function MainMenuElement:moveDown()
+  beep:stop()
+  beep:play()
+  self.selected = self.selected + 1
+  if (self.selected > #self.options) then
+    self.selected = 1
+  end
+end
+
+function MainMenuElement:moveUp()
+  beep:stop()
+  beep:play()
+  self.selected = self.selected - 1
+  if (self.selected < 1) then
+    self.selected = #self.options
+  end
+end
+
 function MainMenuElement:update(dt,input,player)
   if input:pressed('enter') or input:pressed('talk') then
     self.options[self.selected].f(player)
   elseif input:pressed('down') then
-    beep:stop()
-    beep:play()
-    self.selected = self.selected + 1
-    if (self.selected > #self.options) then
-      self.selected = 1
-    end
+    self:moveDown()
   elseif input:pressed('up') then
-    beep:stop()
-    beep:play()
-    self.selected = self.selected - 1
-    if (self.selected < 1) then
-      self.selected = #self.options
-    end
+    self:moveUp()
   end
 end
 
@@ -54,12 +62,10 @@ function MainMenuElement:draw()
 end
 
 function MainMenuElement.startGame(player)
-  print("Starting game")
   player.inPlay = true
   player.screen = player:getScreen("gameScreen")
 end
 
 function MainMenuElement.quit()
-  print("Quitting game")
   love.event.quit()
 end

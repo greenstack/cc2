@@ -43,7 +43,7 @@ function TestExample:testEvals()
     lu.assertTrue(self.d) -- Only passes if the value is the boolean 'true'
     lu.assertEvalToTrue(self.a) -- Passes for any 'truthy' value (non-zero, non-empty, etc.)
     lu.assertFalse(self.e) -- Same deal, but now for the boolean 'false'
-    lu.assertEvalToFalse(self.c)
+    lu.assertEvalToFalse(self.c) -- Passes for false or nil
 end
 
 function TestExample:testIsStatements()
