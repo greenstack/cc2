@@ -2,7 +2,7 @@ language: c
 
 env:
   global:
-    - LUA=lua5.2
+    - LUA=lua5.3
 
 branches:
   only:
@@ -12,7 +12,7 @@ install:
   - sudo apt-get install $LUA
 
 script:
-  - lua tests.lua
+  - $LUA tests.lua
 
 notifications:
   recipients:
