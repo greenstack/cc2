@@ -82,14 +82,15 @@ function Camera:SetPositionCentered(x,y)
   )
 end
 
-function Camera:updatePlayerPos()
+function Camera:updatePlayerPos(player)
+  self.PlayerPosition = self:GetScreenPosition(player.position.x, player.position.y)
   if ShadowsEnabled then
     self.Shadows:send("playerPos", self.PlayerPosition)
   end
 end
 
 -- Causes the camera to render to the screen everything it sees.
-function Camera:Draw(playerPosition,player,entities)
+function Camera:Draw(player,entities)
   for _, batch in pairs(self.TilesetBatch) do
     if batch ~= nil then 
       love.graphics.draw(batch, math.floor(-(self.MapX%1)*self.Map.Tileset.TileWidth), math.floor(-(self.MapY%1)*self.Map.Tileset.TileHeight))
@@ -103,13 +104,7 @@ function Camera:Draw(playerPosition,player,entities)
     self:drawEntity(entity)
   end
   
-  --temporary player indicator
-  love.graphics.setColor(.7,0,.7)
-  self.PlayerPosition = self:GetScreenPosition(player.position.x, player.position.y)
-  love.graphics.circle("fill",self.PlayerPosition[1], self.PlayerPosition[2],4)
-  
   --Store the screen coordinates for later use
-  
   love.graphics.setColor(1, 1, 1)
   if ShowHitboxes then
     for _, obj in ipairs(self.Map.Hitboxes) do
@@ -121,6 +116,9 @@ function Camera:Draw(playerPosition,player,entities)
     love.graphics.setShader(self.Shadows)
     love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
     love.graphics.setShader()
+  end
+  if ShowPathingGraph then
+    self.Map.PathingGraph:show(-(self.MapX)*self.Map.Tileset.TileWidth,-(self.MapY)*self.Map.Tileset.TileHeight)
   end
 end
 
@@ -135,7 +133,6 @@ function Camera:SetMap(map)
     self.TilesetBatch[layer.Name] = love.graphics.newSpriteBatch(map.Tileset.Image, map.Tileset.ImageWidth * map.Tileset.ImageHeight)
   end
   self:UpdateTilesetBatch()
-
   
   -- Update the shadows shader to contain the right objects.
   local hitboxes = {}
@@ -162,6 +159,24 @@ end
 
 -- Draws an entity. currently only displays their hitbox.
 function Camera:drawEntity(entity)
+  
+  if entity.type == "playerEntity" then
+    love.graphics.setColor(.7,0,.7)
+  elseif entity.type == "NPC" then
+    love.graphics.setColor(0,0,.7)
+  end
+  local pos = self:GetScreenPosition(entity.position.x, entity.position.y)
+  love.graphics.circle("fill",pos[1], pos[2],4)
+  if entity.facing == "d" then
+    love.graphics.line(pos[1],pos[2],pos[1],pos[2]+10)
+  elseif entity.facing == "r" then
+    love.graphics.line(pos[1],pos[2],pos[1]+10,pos[2])
+  elseif entity.facing == "u" then
+    love.graphics.line(pos[1],pos[2],pos[1],pos[2]-10)
+  elseif entity.facing == "l" then
+    love.graphics.line(pos[1],pos[2],pos[1]-10,pos[2])
+  end
+
   if ShowHitboxes and entity.hitBox then
     local entityPos = self:GetScreenPosition(entity.position.x, entity.position.y)
     local hitBoxP1 = self:GetScreenPosition(entity.position.x + entity.hitBox.x1,entity.position.y + entity.hitBox.y1)
@@ -171,5 +186,10 @@ function Camera:drawEntity(entity)
                                     hitBoxP1[2],
                                     hitBoxP2[1] - hitBoxP1[1],
                                     hitBoxP2[2] - hitBoxP1[2])
+    if entity.arrow then
+      love.graphics.polygon("fill",entityPos[1],entityPos[2] - 10,
+                                    entityPos[1] + 5,entityPos[2] - 18,
+                                    entityPos[1] - 5,entityPos[2] - 18)
+    end
   end
 end

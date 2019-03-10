@@ -8,6 +8,7 @@ input = baton.new {
     down = {'key:down', 'key:s', 'axis:lefty+', 'button:dpdown'},
     action = {'key:x', 'button:a'},
     talk = {'key:space'},
+    cycle = {'key:tab'},
     menu = {'key:escape','button:start'},
     debug = {'key:`'},
     enter = {'key:return','key:kpenter'},
@@ -19,3 +20,9 @@ input = baton.new {
   },
   joystick = love.joystick.getJoysticks()[1]
 }
+
+function input:consumePressed(control)
+  local val = self:pressed(control)
+			self._controls[control].pressed = false
+	return val
+end

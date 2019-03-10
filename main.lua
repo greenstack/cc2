@@ -6,6 +6,7 @@ require "player"
 require "world"
 require "input"
 require "interactions"
+-- require "peachy.peachy"
 
 
 -- resources
@@ -16,11 +17,16 @@ font = love.graphics.newImageFont("assets/font/luafont.png",
   "123456789.,!?-+/():;%&`'*#=[]\"><{}")
 arrow = love.graphics.newImage("assets/img/arrow.png")
 
+tempPlayerImg = love.graphics.newImage("assets/img/temp_player.png")
+tempNPCImg = love.graphics.newImage("assets/img/temp_npc.png")
+
+
 -- debug variables
 ShadowsEnabled = true
 FogEnabled = true
 ShowHitboxes = true
 ShowScreenCenter = false
+ShowPathingGraph = false
 
 function ToggleShadow()
   ShadowsEnabled = not ShadowsEnabled
@@ -38,6 +44,11 @@ function ToggleScreenCenter()
   ShowScreenCenter = not ShowScreenCenter
 end
 
+function TogglePathingGraphDisplay()
+  ShowPathingGraph = not ShowPathingGraph
+end
+
+TogglePGD = TogglePathingGraphDisplay
 
 function love.load()
   player:init()
@@ -48,9 +59,17 @@ end
 
 function love.update(dt)
   input:update()
+  
+  
+  
+  
+  
+  
+  
+  
   player:update(dt,input)
   world:update(dt,player)
-  interactions:update(dt,world,player)
+  --interactions:update(dt,world,player)
 end
 
 function love.draw()
