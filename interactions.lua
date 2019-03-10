@@ -48,7 +48,7 @@ function interactions:update(dt,world,playerController,input)
 end
 
 function interactions:startConversation(world,playerController,npc)
-  local conversation = self.list[math.random(1,2)]
+  local conversation = self.list[math.random(1,3)]
   
   local conversationElement = ConversationElement:new("conversation",0,0,true,true,conversation,world.player,npc)
 

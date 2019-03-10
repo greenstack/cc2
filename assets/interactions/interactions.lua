@@ -72,5 +72,45 @@ return {
       }
     }
   },
-  
+  {
+    reqGender = {"male"},
+    reqRelationship = {"single","divorced","married","dating","widowed","engaged"},
+    reqMood = {min=0,max=100},
+    reqReceptiveness = {min=0,max=100},
+    reqFlirtatiousness = {min=0,max=100},
+    reqAge = {min=30,max=100},
+    dialogue = {
+      playerText = "Hi, I'm a missiona...",
+      npcText = "I know who you are. I used to be a missionary like you.\nThen I took a gunshot to the knee.",
+      options = {
+        {
+          optionText="I'm sorry...",
+          playerText="Wow. That sounds rough. Sorry to hear that, I guess...",
+          npxText="That's alright. Dang kids nowadays!",
+          effect = {
+            contacts=1,
+            obediometer=0
+          }
+        },
+        {
+          optionText="Suck it up!",
+          playerText="Look man. Nobody cares about your knee!\nDo you wanna hear the word of God or not?",
+          npcText="Get out of my face! Dang kids nowadays!",
+          effect = {
+            contacts=0,
+            obediometer=-50
+          }
+        },
+        {
+          optionText="(Start giving a blessing right here)",
+          playerText="*Begins praying*",
+          npcText="Hey! What are you doing? Dang kids nowadays!",
+          effect = {
+            contacts=0,
+            obediometer=0
+          }
+        }
+      }
+    }
+  }
 }
