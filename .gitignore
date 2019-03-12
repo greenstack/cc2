@@ -1,0 +1,6 @@
+#Ignore files made via build
+build
+*.love
+
+#Ignore workspace settings of individual IDEs/Text teditors
+.vscode
