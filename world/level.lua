@@ -1,44 +1,47 @@
-local weather = require 'weather.weather'
+local weather = require 'world.weather'
 
-local LevelVars = {
-    contactGoal = 0,
-    --the goal number of contacts for a given level--
+level = {
+    npcCount = 0,
+    --the numbers of npcs to spawn for a given level--
     weatherPattern = 0,
     --the weatherPattern for a given level
-
 }
 
 function level:generate(levelNumber)
     o = {}
     setmetatable(o, self)
     self.__index = self
-    o.contactGoal = getContactRequirement();
-    o.weatherPattern = getWeatherPattern();
+    o.weatherPattern = level:getWeatherPattern()
+    o.npcCount = level:getNpcCount(levelNumber, o.weatherPattern)
+    return o
 end
 
 
 function level:getWeatherPattern()
     rand = math.random(4)
+    local pattern
     if rand == 1 then
         pattern = Weather.Clear
-    else if rand == 2 and rand  then
+    elseif rand == 2 and rand  then
         pattern = Weather.Sunny
-    else if rand == 3 then
+    elseif rand == 3 then
         pattern = Weather.Rainy
-    else if rand == 4 then
+    elseif rand == 4 then
         pattern = Weather.Foggy
     end
     return pattern
 end
 
 
-function level:getContactRequirement(level, weather)
+function level:getNpcCount(level, weather)
+    local npcCount = 0
     if level == 1 then
-        contacts = random(25, 30)
+        npcCount = math.random(10, 15)
     elseif level == 2 then
-        contacts = random(30, 35)
+        npcCount = math.random(13, 17)
     elseif level == 3 then
-        contacts = random(35, 40)
+        npcCount = math.random(20, 25)
     end
-    return contacts
+    npcCount = math.floor(npcCount * weather.SpawnRateModifier)
+    return npcCount
 end

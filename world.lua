@@ -4,10 +4,11 @@ require "world.entity"
 require "world.playerEntity"
 require "world.npcEntity"
 require "world.weather"
+require "world.level"
 local peachy = require 'peachy.peachy'
 
 world = {
-  level = 0,
+  level = 1,
   weather = 1,
   player = {},
   entities = {},
@@ -17,6 +18,9 @@ world = {
 
 function world:init()
   math.randomseed(os.time())
+
+  levelVars = level:generate(self.level);
+
   sewr = peachy.new("assets/img/animated_sewr.json", love.graphics.newImage("assets/img/animated_sewr.png"), "slime")
   self.map = Map:new("assets/maps/level3_cc1", "assets/img/tiles.png")
   self.camera = Camera:new()
