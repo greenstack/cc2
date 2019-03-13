@@ -1,6 +1,7 @@
 #Ignore files made via build
 build
 *.love
+.DS_Store
 
 #Ignore workspace settings of individual IDEs/Text teditors
 .vscode
