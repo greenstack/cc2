@@ -95,7 +95,7 @@ function NPC:new(name, x, y, age, gender, receptiveness, relationship, flirtines
 
     o.flirtiness = math.clamp(flirtiness, 0, 100) -- scale 0 to 100 (not flirtatious to very flirtatious)
     o.hitBox = {x1=-.15, y1=-.15, x2=.15, y2=.15}
-    o.arrow = true --arrow pointing at their head to indicate the player can interact with them
+    o.arrow = false --arrow pointing at their head to indicate the player can interact with them
     return o
 end
 

@@ -10,6 +10,8 @@ require "player.conversationElement"
 player = {
   obedience = 100,
   maxObedience = 100,
+  contacts = 0,
+  contactsGoal = 0,
   paused = false,
   movement = {x=0,y=0},
   debugMode = false,
@@ -35,7 +37,6 @@ function player:init()
 end
 
 function player:update(dt,input)
-
   if self.inPlay and input:pressed('debug') and not self.debugMode and not self.paused then
     
     local consoleElement = self.screen:getElement("console")

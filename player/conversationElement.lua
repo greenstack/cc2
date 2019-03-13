@@ -9,14 +9,15 @@ function ConversationElement:new(name,x,y,enabled,visible,conversation,playerEnt
   o.npc = npc
   o.state = 1
   o.text = ""
+  o.choices = {}
   o.textProgress = 0 -- for text scrolling. indicates number of characters in
-  o.choice = nil
+  o.choice = 1
   o.firstTimeInState = true
   o.waiting = false
   return o
 end
 
-function ConversationElement:update(dt,input,player)
+function ConversationElement:update(dt,input,playerController)
   if self.state == 1 then -- initial greeting
     if self.firstTimeInState then
       self.text = self:replaceText(self.conversation.dialogue.playerText)
@@ -24,6 +25,7 @@ function ConversationElement:update(dt,input,player)
     end
     if self.waiting and input:consumePressed('talk') then
       self:nextState()
+      return
     end
   elseif self.state == 2 then -- npc response
     if self.firstTimeInState then
@@ -32,13 +34,52 @@ function ConversationElement:update(dt,input,player)
     end
     if self.waiting and input:consumePressed('talk') then
       self:nextState()
+      return
     end
   elseif self.state == 3 then -- chose an option
-    self:close()
+    if self.firstTimeInState then
+      self.text = ""
+      for _,v in ipairs(self.conversation.dialogue.options) do
+        table.insert(self.choices,self:replaceText(v.optionText))
+      end
+      self.firstTimeInState = false
+      self.waiting = true
+    end
+    
+    if input:pressed('up') then
+      self.choice = math.max(1,self.choice - 1)
+    end
+    if input:pressed('down') then
+      self.choice = math.min(self.choice + 1,#self.choices)
+    end
+    
+    if self.waiting and input:consumePressed('talk') then
+      self:nextState()
+      return
+    end
   elseif self.state == 4 then -- say your response
-  
+    if self.firstTimeInState then
+      self.text = self:replaceText(self.conversation.dialogue.options[self.choice].playerText)
+      self.firstTimeInState = false
+    end
+    
+    if self.waiting and input:consumePressed('talk') then
+      self:nextState()
+      return
+    end
   elseif self.state == 5 then -- final npc response
-  
+    if self.firstTimeInState then
+      self.text = self:replaceText(self.conversation.dialogue.options[self.choice].npcText)
+      self.firstTimeInState = false
+      
+      self:applyEffects(playerController,self.conversation.dialogue.options[self.choice].effect)
+      
+    end
+    
+    if self.waiting and input:consumePressed('talk') then
+      self:close()
+      return
+    end
   end
 
   
@@ -73,6 +114,17 @@ function ConversationElement:close()
   self.playerEntity.interaction = false
 end
 
+function ConversationElement:applyEffects(playerController,effects) 
+  if not effects then return end
+  
+  if effects.contacts then
+    playerController.contacts = playerController.contacts + effects.contacts
+  end
+  if effects.obediometer then
+    playerController.maxObedience = playerController.maxObedience + effects.obediometer
+  end
+end
+
 function ConversationElement:draw()
   local windowWidth,windowHeight = love.graphics.getDimensions()
   local elementWidth = windowWidth * 0.8
@@ -95,12 +147,24 @@ function ConversationElement:draw()
   end
   
   love.graphics.setColor(.9,.9,.9)
-  love.graphics.print(self:scrollText(self.text),xPos + 70,yPos + 5)
   
-  if self.waiting then
-    love.graphics.setColor(1,1,1)
-    love.graphics.draw(arrow,xPos + 550 , yPos + 120)
+  if self.state == 3 then
+    for k,v in ipairs(self.choices) do
+      love.graphics.print(v,xPos + 70,yPos + 5 + 30 * (k - 1))
+    end
+    if self.waiting then
+      love.graphics.setColor(1,1,1)
+      love.graphics.draw(arrow,xPos + 60,yPos + 5 + 30 * (self.choice - 1))
+    end  
+  else
+    love.graphics.print(self:scrollText(self.text),xPos + 70,yPos + 5)  
+    if self.waiting then
+      love.graphics.setColor(1,1,1)
+      love.graphics.draw(arrow,xPos + 550 , yPos + 120)
+    end
   end
+  
+  
   
 end
 

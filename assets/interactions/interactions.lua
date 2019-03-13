@@ -86,7 +86,7 @@ return {
         {
           optionText="I'm sorry...",
           playerText="Wow. That sounds rough. Sorry to hear that, I guess...",
-          npxText="That's alright. Dang kids nowadays!",
+          npcText="That's alright. Dang kids nowadays!",
           effect = {
             contacts=1,
             obediometer=0

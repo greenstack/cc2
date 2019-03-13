@@ -114,6 +114,10 @@ function world:updateEntities(dt)
 end
 
 function world:moveEntity(dt,entity)
+  if entity.interaction then
+    return
+  end
+  
   local brakeX = 1
   local brakeY = 1
   if entity.movement.x == 0 then

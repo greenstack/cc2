@@ -1,9 +1,10 @@
 interactions = {
   list = require "assets.interactions.interactions",
+  selectedEntity = nil,
 }
 
 function interactions:update(dt,world,playerController,input)
-  --find elligible interactables
+  --find eligible interactables
   
   local playerTalkHitBox = {x1 = (world.player.hitBox.x1 * 2) + world.player.position.x,
                             x2 = (world.player.hitBox.x2 * 2) + world.player.position.x,
@@ -19,21 +20,28 @@ function interactions:update(dt,world,playerController,input)
     playerTalkHitBox.x1 = playerTalkHitBox.x1 - 1
   end
   
-  local elligible = {}
+  local eligible = {}
   
   for _,entity in ipairs(world.entities) do
     if world.hitBoxContains(playerTalkHitBox,entity.position) then
-      table.insert(elligible,entity)
-    else 
-      entity.arrow = false
+      table.insert(eligible,entity)
     end
+  end
+  
+  if self.selectedEntity and not table.contains(eligible,self.selectedEntity) then
+    self.selectedEntity.arrow = false
+    self.selectedEntity = nil
+  end
+  
+  if #eligible > 0 and not self.selectedEntity then
+    self.selectedEntity = eligible[1]
+    self.selectedEntity.arrow = true
   end
 
   
   local actionElement = playerController.screen:getElement("action")
-  if #elligible > 0 then
-    elligible[1].arrow = true
-    actionElement.text = "Talk to " .. elligible[1].name
+  if self.selectedEntity then
+    actionElement.text = "Talk to " .. self.selectedEntity.name
     actionElement:setVisible(true)
   else
     actionElement.text = ""
@@ -41,8 +49,8 @@ function interactions:update(dt,world,playerController,input)
   end
   
   
-  if #elligible > 0 and not world.player.interaction and input:consumePressed('talk') then
-    self:startConversation(world,playerController,elligible[1])
+  if self.selectedEntity and not world.player.interaction and input:consumePressed('talk') then
+    self:startConversation(world,playerController,self.selectedEntity)
   end
   
 end
