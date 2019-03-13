@@ -41,10 +41,10 @@ function interactions:update(dt,world,playerController,input)
   
   local actionElement = playerController.screen:getElement("action")
   if self.selectedEntity then
-    actionElement.text = "Talk to " .. self.selectedEntity.name
+    actionElement:setText("Talk to " .. self.selectedEntity.name)
     actionElement:setVisible(true)
   else
-    actionElement.text = ""
+    actionElement:setText("")
     actionElement:setVisible(false)
   end
   
