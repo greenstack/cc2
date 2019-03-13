@@ -27,8 +27,7 @@ function world:init()
   self.camera:SetMap(self.map)
 
   self.player = PlayerEntity:new("player",30.5,25.5)
-  
-  self:spawnNPCs() --for testing
+  self:spawnNPCs(levelVars.npcCount, levelVars.weatherPattern)
 end
 
 function world:update(dt,playerController)
@@ -90,8 +89,8 @@ function world:draw()
   sewr:draw(100, 100)
 end
 
-function world:spawnNPCs()
-  local npcs = NPC:generate(5, Weather.Clear)
+function world:spawnNPCs(count, weather)
+  local npcs = NPC:generate(count, weather, self.map.PathingGraph.SpawnNodes)
 
   for i = 1, #npcs do
     npcs[i].position = { x = math.random(30,35), y = math.random(25,30) }
