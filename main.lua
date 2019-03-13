@@ -1,5 +1,6 @@
 Vector = require "vector"
 
+require "cc2debug"
 require "utilities"
 require "loading"
 require "player"
@@ -19,36 +20,6 @@ arrow = love.graphics.newImage("assets/img/arrow.png")
 
 tempPlayerImg = love.graphics.newImage("assets/img/temp_player.png")
 tempNPCImg = love.graphics.newImage("assets/img/temp_npc.png")
-
-
--- debug variables
-ShadowsEnabled = true
-FogEnabled = true
-ShowHitboxes = true
-ShowScreenCenter = false
-ShowPathingGraph = false
-
-function ToggleShadow()
-  ShadowsEnabled = not ShadowsEnabled
-end
-
-function ToggleFog()
-  FogEnabled = not FogEnabled
-end
-
-function ToggleHitboxes()
-  ShowHitboxes = not ShowHitboxes
-end
-
-function ToggleScreenCenter()
-  ShowScreenCenter = not ShowScreenCenter
-end
-
-function TogglePathingGraphDisplay()
-  ShowPathingGraph = not ShowPathingGraph
-end
-
-TogglePGD = TogglePathingGraphDisplay
 
 function love.load()
   player:init()
