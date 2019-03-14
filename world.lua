@@ -34,6 +34,8 @@ end
 function world:update(dt,playerController)
   if playerController.paused or not playerController.inPlay then return end
   
+  self.levelVars.weatherPattern:update(dt)
+
   if not self.player.interaction then
     self.player.movement = playerController.movement
   else
@@ -59,6 +61,12 @@ function world:draw()
   local w,h = love.graphics.getDimensions()
 
   -- WEATHER ELEMENTS --
+  if self.levelVars.weatherPattern.ParticleSystem ~= nil then
+    love.graphics.push()
+    love.graphics.scale(3, 3)
+    love.graphics.draw(self.levelVars.weatherPattern.ParticleSystem, love.graphics.getWidth() / 2, 0)
+    love.graphics.pop()
+  end
   -- Fog Shader for testing
   if FogEnabled and self.levelVars.weatherPattern.Name == "Foggy" then
     love.graphics.setShader(weatherShader)

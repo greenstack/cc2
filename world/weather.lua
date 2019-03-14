@@ -8,7 +8,10 @@ local WeatherPattern = {
   SpawnRateModifier = 0,
   -- Decreases how far the player can see
   VisionModifier = 0,
+  -- (love.graphics.Shader) The shader associated with this weather pattern.
   Shader,
+  -- (function) A function that updates the current weather. Typically empty.
+  update = function(dt) end,
   type = "WeatherPattern"
 }
 
@@ -42,4 +45,22 @@ function SetWeatherShaders()
   Weather.Foggy.Shader:send("fog_distance_min", 256)
 
   Weather.Sunny.Shader = love.graphics.newShader("graphics/shaders/sun.frag")
+  Weather.Sunny.Time = 0
+  Weather.Sunny.update = function(self, dt)
+    self.Time = self.Time + dt 
+    self.Shader:send("time", self.Time)
+  end
+  Weather.Rainy.Shader = love.graphics.newShader("graphics/shaders/rain.frag")
+  local raindrop = love.graphics.newImage("assets/img/raindrop.png")
+  local psystem = love.graphics.newParticleSystem(raindrop, 256)
+  psystem:setEmissionArea("uniform", love.graphics.getWidth() / 2, 0, 0, false)
+  psystem:setParticleLifetime(3, 4)
+  psystem:setEmissionRate(10)
+  psystem:setSizeVariation(1)
+  psystem:setDirection(-math.pi/2)
+  psystem:setSpeed(-100, -200)
+  psystem:setLinearAcceleration(0, 50, 0, 75)
+  psystem:setColors(1,1,1,1, 1,1,1,0)
+  Weather.Rainy.ParticleSystem = psystem
+  Weather.Rainy.update = function(self, dt) self.ParticleSystem:update(dt) end
 end

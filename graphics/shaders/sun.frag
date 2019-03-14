@@ -1,6 +1,7 @@
-//uniform love_ScreenSize;
-#define dThresh 10.0
+#define baseThresh 10.0
 #define highlight .15
+
+uniform float time;
 
 float distance(vec2 p1, vec2 p2, vec2 p0) {
     return
@@ -9,7 +10,7 @@ float distance(vec2 p1, vec2 p2, vec2 p0) {
 }
 
 // This shader works by checking if the pixel is close to the edge of the screen.
-// If it is within the threshold (defined by dThresh), it fades a bit, until the
+// If it is within the threshold (defined by baseThresh), it fades a bit, until the
 // pixel is about 15% whiter than it was before. It does this to all pixels - each
 // will be at least 15% whiter as a result of this shader.
 vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
@@ -20,6 +21,7 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
     vec4 modifier;
     float d;
     float modVar = 0;
+    float dThresh = abs(baseThresh * sin(time * 0.5));
     if ((d = distance(topLeft, topRight, screen_coords)) < dThresh)
         modVar = max(modVar, (dThresh-d)/dThresh);
     if ((d = distance(topLeft, botLeft, screen_coords)) < dThresh)
