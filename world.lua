@@ -4,27 +4,31 @@ require "world.entity"
 require "world.playerEntity"
 require "world.npcEntity"
 require "world.weather"
+require "world.level"
 local peachy = require 'peachy.peachy'
 
 world = {
-  level = 0,
+  level = 1,
   weather = 1,
   player = {},
   entities = {},
   camera = {},
   map = {},
+  levelVars = {},
 }
 
 function world:init()
   math.randomseed(os.time())
+
+  self.levelVars = level:generate(self.level)
+  self.weather = self.levelVars.weatherPattern
   sewr = peachy.new("assets/img/animated_sewr.json", love.graphics.newImage("assets/img/animated_sewr.png"), "slime")
   self.map = Map:new("assets/maps/level3_cc1", "assets/img/tiles.png")
   self.camera = Camera:new()
   self.camera:SetMap(self.map)
 
   self.player = PlayerEntity:new("player",30.5,25.5)
-  
-  self:spawnNPCs() --for testing
+  self:spawnNPCs(self.levelVars.npcCount, self.levelVars.weatherPattern)
 end
 
 function world:update(dt,playerController)
@@ -41,20 +45,6 @@ function world:update(dt,playerController)
   
   interactions:update(dt,self,playerController,input)
   
-  self.player.movement = playerController.movement
-
-  --[[
-  local dx = playerController.movement.x * dt * 5
-  local dy = playerController.movement.y * dt * 5
-  self.player.position.x = self.player.position.x + dx
-  self.player.position.y = self.player.position.y + dy
-  --]]
-
-  for _,entity in pairs(self.entities) do
-    entity:update(dt,world)
-  end
-
-  self:moveEntities(dt)
   self.camera:updatePlayerPos(self.player)
   self.camera:SetPositionCentered(self.player.position.x,self.player.position.y)
   sewr:update(dt)
@@ -86,8 +76,8 @@ function world:draw()
   sewr:draw(100, 100)
 end
 
-function world:spawnNPCs()
-  local npcs = NPC:generate(5, Weather.Clear)
+function world:spawnNPCs(count, weather)
+  local npcs = NPC:generate(count, weather, self.map.PathingGraph.SpawnNodes)
 
   for i = 1, #npcs do
     npcs[i].position = { x = math.random(30,35), y = math.random(25,30) }
@@ -111,6 +101,10 @@ function world:updateEntities(dt)
 end
 
 function world:moveEntity(dt,entity)
+  if entity.interaction then
+    return
+  end
+  
   local brakeX = 1
   local brakeY = 1
   if entity.movement.x == 0 then
