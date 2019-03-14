@@ -64,7 +64,7 @@ function world:draw()
   if self.levelVars.weatherPattern.ParticleSystem ~= nil then
     love.graphics.push()
     love.graphics.scale(3, 3)
-    love.graphics.draw(self.levelVars.weatherPattern.ParticleSystem, love.graphics.getWidth() / 2, 0)
+    love.graphics.draw(self.levelVars.weatherPattern.ParticleSystem, love.graphics.getWidth() / 6, 0)
     love.graphics.pop()
   end
   -- Fog Shader for testing

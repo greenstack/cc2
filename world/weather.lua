@@ -40,21 +40,25 @@ Weather = {
 }
 
 function SetWeatherShaders()
+  print("Configuring fog...")
   Weather.Foggy.Shader = love.graphics.newShader("graphics/shaders/fog.frag")
   Weather.Foggy.Shader:send("fog_distance", 428)
   Weather.Foggy.Shader:send("fog_distance_min", 256)
 
+  print("Configuring sun...")
   Weather.Sunny.Shader = love.graphics.newShader("graphics/shaders/sun.frag")
   Weather.Sunny.Time = 0
   Weather.Sunny.update = function(self, dt)
     self.Time = self.Time + dt 
     self.Shader:send("time", self.Time)
   end
+
+  print("Configuring rain...")
   Weather.Rainy.Shader = love.graphics.newShader("graphics/shaders/rain.frag")
   local raindrop = love.graphics.newImage("assets/img/raindrop.png")
-  local psystem = love.graphics.newParticleSystem(raindrop, 256)
-  psystem:setEmissionArea("uniform", love.graphics.getWidth() / 2, 0, 0, false)
-  psystem:setParticleLifetime(3, 4)
+  local psystem = love.graphics.newParticleSystem(raindrop, 64)
+  psystem:setEmissionArea("uniform", love.graphics.getWidth() / 6, 0, 0, false)
+  psystem:setParticleLifetime(1.5, 2)
   psystem:setEmissionRate(10)
   psystem:setSizeVariation(1)
   psystem:setDirection(-math.pi/2)
