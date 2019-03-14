@@ -14,20 +14,21 @@ world = {
   entities = {},
   camera = {},
   map = {},
+  levelVars = {},
 }
 
 function world:init()
   math.randomseed(os.time())
 
-  levelVars = level:generate(self.level);
-
+  self.levelVars = level:generate(self.level)
+  self.weather = self.levelVars.weatherPattern
   sewr = peachy.new("assets/img/animated_sewr.json", love.graphics.newImage("assets/img/animated_sewr.png"), "slime")
   self.map = Map:new("assets/maps/level3_cc1", "assets/img/tiles.png")
   self.camera = Camera:new()
   self.camera:SetMap(self.map)
 
   self.player = PlayerEntity:new("player",30.5,25.5)
-  self:spawnNPCs(levelVars.npcCount, levelVars.weatherPattern)
+  self:spawnNPCs(self.levelVars.npcCount, self.levelVars.weatherPattern)
 end
 
 function world:update(dt,playerController)
