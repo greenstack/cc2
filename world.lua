@@ -51,12 +51,16 @@ function world:update(dt,playerController)
 end
 
 function world:draw()
+  if (self.levelVars.weatherPattern.Name ~= "Foggy") then
+    love.graphics.setShader(self.levelVars.weatherPattern.Shader)
+  end
   self.camera:Draw(self.player,self.entities)
+  love.graphics.setShader()
   local w,h = love.graphics.getDimensions()
 
   -- WEATHER ELEMENTS --
   -- Fog Shader for testing
-  if FogEnabled then
+  if FogEnabled and self.levelVars.weatherPattern.Name == "Foggy" then
     love.graphics.setShader(weatherShader)
     weatherShader:send("player_position", self.camera.PlayerPosition)
     weatherShader:send("screen_position", {self.camera.Map.Tileset.TileWidth * self.camera.MapX,self.camera.Map.Tileset.TileHeight * self.camera.MapY})

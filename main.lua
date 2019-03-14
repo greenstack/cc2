@@ -26,10 +26,9 @@ function love.load()
   world:init()
   love.graphics.setBackgroundColor(0.5,0.5,0.5)
   love.keyboard.setKeyRepeat(true)
+  SetWeatherShaders()
 
-  weatherShader = love.graphics.newShader("graphics/shaders/fog.frag")
-  weatherShader:send("fog_distance", 428)
-  weatherShader:send("fog_distance_min", 256)
+  weatherShader = Weather.Foggy.Shader
 end
 
 function love.update(dt)
