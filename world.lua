@@ -44,20 +44,6 @@ function world:update(dt,playerController)
   
   interactions:update(dt,self,playerController,input)
   
-  self.player.movement = playerController.movement
-
-  --[[
-  local dx = playerController.movement.x * dt * 5
-  local dy = playerController.movement.y * dt * 5
-  self.player.position.x = self.player.position.x + dx
-  self.player.position.y = self.player.position.y + dy
-  --]]
-
-  for _,entity in pairs(self.entities) do
-    entity:update(dt,world)
-  end
-
-  self:moveEntities(dt)
   self.camera:updatePlayerPos(self.player)
   self.camera:SetPositionCentered(self.player.position.x,self.player.position.y)
   sewr:update(dt)
