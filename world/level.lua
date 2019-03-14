@@ -1,11 +1,31 @@
 local weather = require 'world.weather'
 
 level = {
-    npcCount = 0,
     --the numbers of npcs to spawn for a given level--
-    weatherPattern = 0,
+    npcCount = 0,
     --the weatherPattern for a given level
+    weatherPattern = 0,
+    --in game hour count
+    hour = 0,
+    --in game minute count
+    minute = 0,
+    --in game am/pm count,
+    ampm = 0,
+    --in game dt counter
+    dtCount = 0,
+    --in game time rate
+    rate = 0,
+    --in game late boolean
+    late = 0
 }
+
+function level:timeInit(o) 
+    o.hour = 9
+    o.minute = 30
+    o.ampm = "am"
+    o.rate = 15
+    o.late = false
+end
 
 function level:generate(levelNumber)
     o = {}
@@ -13,6 +33,7 @@ function level:generate(levelNumber)
     self.__index = self
     o.weatherPattern = level:getWeatherPattern()
     o.npcCount = level:getNpcCount(levelNumber, o.weatherPattern)
+    level:timeInit(o);
     return o
 end
 
@@ -45,3 +66,20 @@ function level:getNpcCount(level, weather)
     npcCount = math.floor(npcCount * weather.SpawnRateModifier)
     return npcCount
 end
+
+-- function level:updateTime(dt, levelVar)
+--     levelVar.dtCount = levelVar.dtCount + 1
+--     if (levelVar.dtCount == levelVar.rate) then
+--         levelVar.dtCount = 0
+--         levelVar.minute = levelVar.minute + 1
+--     end
+--     if (levelVar.minute == 60) then
+--         levelVar.minute = 0
+--         levelVar.hour = levelVar.hour + 1
+--     end
+--     if levelVar.hour == 13 then
+--         levelVar.hour = 1
+--         levelVar.ampm = "pm"
+--     end
+--     print("time: " .. levelVar.hour .. ":" .. levelVar.minute .. " " .. levelVar.ampm)
+-- end

@@ -44,7 +44,7 @@ function world:update(dt,playerController)
   
   self:updateEntities(dt)
   self:moveEntities(dt)
-  
+  self:updateTime(dt)
   interactions:update(dt,self,playerController,input)
   
   self.camera:updatePlayerPos(self.player)
@@ -86,6 +86,32 @@ function world:draw()
   end
 
   sewr:draw(100, 100)
+end
+
+function world:updateTime(dt)
+  self.levelVars.dtCount = self.levelVars.dtCount + 1
+  if (self.levelVars.dtCount == self.levelVars.rate) then
+      self.levelVars.dtCount = 0
+      self.levelVars.minute = self.levelVars.minute + 1
+  end
+  if (self.levelVars.minute == 60) then
+      self.levelVars.minute = 0
+      self.levelVars.hour = self.levelVars.hour + 1
+  end
+  if self.levelVars.hour == 12 then
+    self.levelVars.ampm = "pm"
+  end
+  if self.levelVars.hour == 13 then
+    self.levelVars.hour = 1
+    
+  end
+  if self.levelVars.ampm == "pm" and self.levelVars.hour == 9 and self.levelVars.minute == 30 then
+    self.levelVars.late = true
+  end
+  if self.levelVars.late == true then
+    --decrease obediometor
+  end
+  print("time: " .. self.levelVars.hour .. ":" .. self.levelVars.minute .. " " .. self.levelVars.ampm)
 end
 
 function world:spawnNPCs(count, weather)
