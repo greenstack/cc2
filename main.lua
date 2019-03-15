@@ -33,7 +33,7 @@ end
 
 function love.update(dt)
   input:update()
-    
+
   player:update(dt,input)
   world:update(dt,player)
   --interactions:update(dt,world,player)
