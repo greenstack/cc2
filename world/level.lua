@@ -24,7 +24,7 @@ level = {
 function level:timeInit(o) 
     o.hour = 9
     o.minute = 00
-    o.ampm = "PM"
+    o.ampm = "AM"
     o.rate = 15 --the lower the rate, the faster time will move in game
     o.late = false
     o.lateDrop = 0.37

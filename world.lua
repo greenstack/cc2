@@ -50,6 +50,9 @@ function world:update(dt,playerController)
 
   self.camera:updatePlayerPos(self.player)
   self.camera:SetPositionCentered(self.player.position.x,self.player.position.y)
+  if (playerController.obedience == 0) then
+    --end game, obedience is 0
+  end
 end
 
 function world:draw()
