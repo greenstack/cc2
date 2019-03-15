@@ -56,6 +56,7 @@ function world:draw()
   if (self.levelVars.weatherPattern.Name ~= "Foggy") then
     love.graphics.setShader(self.levelVars.weatherPattern.Shader)
   end
+  
   self.camera:Draw(self.player,self.entities)
   love.graphics.setShader()
   local w,h = love.graphics.getDimensions()
@@ -77,6 +78,12 @@ function world:draw()
     love.graphics.setShader()
   end
 
+  if self.levelVars.minute < 10 then
+    love.graphics.print("Time: " .. self.levelVars.hour .. ":0" .. self.levelVars.minute .. " " .. self.levelVars.ampm, 40, 83)
+  else
+    love.graphics.print("Time: " .. self.levelVars.hour .. ":" .. self.levelVars.minute .. " " .. self.levelVars.ampm, 40, 83)
+  end
+
   -- DEGUG ELEMENTS --
   -- lines showing the center of the screen for testing
   if ShowScreenCenter then
@@ -85,6 +92,8 @@ function world:draw()
     love.graphics.line(0,h/2,w,h/2)
     love.graphics.setColor(1,1,1)
   end
+
+  
 
 end
 
