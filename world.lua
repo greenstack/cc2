@@ -12,6 +12,7 @@ world = {
   weather = 1,
   player = {},
   entities = {},
+  npcs = {},
   camera = {},
   map = {},
   levelVars = {},
@@ -28,7 +29,7 @@ function world:init()
   self.camera:SetMap(self.map)
 
   self.player = PlayerEntity:new("player",30.5,25.5)
-  self:spawnNPCs(self.levelVars.npcCount, self.levelVars.weatherPattern)
+  self.npcs = NPC:generate(self.levelVars.npcCount, self.weather, self.map.PathingGraph.SpawnNodes)
 end
 
 function world:update(dt,playerController)
@@ -41,7 +42,8 @@ function world:update(dt,playerController)
   else
     self.player.movement = {x=0,y=0}
   end
-
+  
+  self:spawnDespawnNPCs()
   self:updateEntities(dt)
   self:moveEntities(dt)
   self:updateTime(dt)
@@ -112,15 +114,28 @@ function world:updateTime(dt)
   if self.levelVars.late == true then
     --decrease obediometor
   end
-  print("time: " .. self.levelVars.hour .. ":" .. self.levelVars.minute .. " " .. self.levelVars.ampm)
+--   print("time: " .. self.levelVars.hour .. ":" .. self.levelVars.minute .. " " .. self.levelVars.ampm)
 end
 
-function world:spawnNPCs(count, weather)
-  local npcs = NPC:generate(count, weather, self.map.PathingGraph.SpawnNodes)
+function world:spawnDespawnNPCs()
+-- print("NUM NPCS: " .. #self.npcs)
 
-  for i = 1, #npcs do
-    table.insert(self.entities, npcs[i])
+  for i, npc in pairs(self.npcs) do
+    if npc:shouldSpawn() then
+      table.insert(self.entities, npc)
+    elseif npc:shouldDespawn() then
+      for j, entity in pairs(self.entities) do
+        if entity.type == npc.type then
+          if entity.id == npc.id then
+            table.remove(self.entities, j)
+            -- print("REMOVED: " .. j)
+            break
+          end
+        end
+      end
+    end
   end
+  
 end
 
 function world:moveEntities(dt)
