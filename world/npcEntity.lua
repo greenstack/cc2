@@ -70,6 +70,10 @@ LAST_NAMES = {
     "Turley",
     "Watts"
 }
+
+lostMsg = "Which of you men, if you had one hundred sheep, and lost one of them, "
+        .. "wouldn't leave the ninety-nine in the wilderness, " 
+        .. "and go after the one that was lost, until he found it? "
  
 ----- NPC Construtor ------
 
@@ -196,16 +200,76 @@ function NPC:generate(count, weather, nodes)
         x = nodes[index].LocationX
         y = nodes[index].LocationY
 
-        print("X: " .. x .. ", Y: " .. y)
-
         table.insert(npcs, NPC:new(name, x, y, age, gender, receptiveness, relationship, flirtiness))
     end 
 
     return npcs
 end
 
-function NPC:update(dt,world)
-    print("HELL")
+function NPC:getNode(nodes, x, y)
+    for i, node in pairs(nodes) do
+        if node.LocationX == x and node.LocationY == y then
+            return node
+        end
+    end
+
+    return nil
+end
+
+function NPC:update(dt, world)
+    if self.interaction then
+        return
+    end
+
+    local x = self.position.x
+    local y = self.position.y
+
+    local node = NPC:getNode(world.map.PathingGraph.Nodes, x, y)
+
+    if node ~= nil then
+        -- choose new direction
+        local target = node.Edges[math.random(1, #node.Edges)]
+        local targetX = target.LocationX
+        local targetY = target.LocationY
+
+        if targetX > x then
+            self.facing = "r"
+        elseif targetX < x then
+            self.facing = "l"
+        elseif targetY > y then
+            self.facing = "d"
+        elseif targetY < y then
+            self.facing = "u"
+        else
+            error(self.name .. " couldn't decide where to go. Send help.")
+        end
+    end
+
+    print("Name: " .. self.name .. " [X: " .. x .. ", Y: " .. y .. "]" .. " Moving: " .. self.facing)
+
+    local mvmt = 0.025
+    local rnd = 3
+
+    -- NPC moves
+    if self.facing == "r" then
+        self.position.x = math.round(self.position.x + mvmt, rnd)
+    elseif self.facing == "l" then
+        self.position.x = math.round(self.position.x - mvmt, rnd)
+    elseif self.facing == "u" then
+        self.position.y = math.round(self.position.y - mvmt, rnd)
+    elseif self.facing == "d" then
+        self.position.y = math.round(self.position.y + mvmt, rnd)
+    else
+        error(self.name .. " forgot which way to walk. Awkward.")
+    end
+
+    if self.position.x < 0 or 
+        self.position.x > world.map.MapWidth or 
+        self.position.y < 0 or 
+        self.position.x > world.map.MapHeight then
+        error(lostMsg .. self.name .. " is lost.")
+    end
+
 end
 
 function NPC:getStats ()
@@ -222,6 +286,11 @@ end
 
 function math.clamp(low, n, high) 
     return math.min(math.max(n, low), high) 
+end
+
+function math.round(num, numDecimalPlaces)
+    local mult = 10^(numDecimalPlaces or 0)
+    return math.floor(num * mult + 0.5) / mult
 end
 
 function table.indexOf(t, object)
