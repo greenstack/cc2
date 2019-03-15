@@ -169,21 +169,31 @@ function Camera:drawEntity(entity)
     return
     love.graphics.setColor(.7,0,.7)
   elseif entity.type == "NPC" then
-    love.graphics.setColor(0,0,.7)
+      love.graphics.setColor(0,0,.7)
   end
-  love.graphics.circle("fill",pos[1], pos[2],4)
-  if entity.facing == "d" then
-    love.graphics.line(pos[1],pos[2],pos[1],pos[2]+10)
-  elseif entity.facing == "r" then
-    love.graphics.line(pos[1],pos[2],pos[1]+10,pos[2])
-  elseif entity.facing == "u" then
-    love.graphics.line(pos[1],pos[2],pos[1],pos[2]-10)
-  elseif entity.facing == "l" then
-    love.graphics.line(pos[1],pos[2],pos[1]-10,pos[2])
+  
+  if entity.visible then
+    love.graphics.circle("fill",pos[1], pos[2],4)
+    
+    if entity.facing == "d" then
+      love.graphics.line(pos[1],pos[2],pos[1],pos[2]+10)
+    elseif entity.facing == "r" then
+      love.graphics.line(pos[1],pos[2],pos[1]+10,pos[2])
+    elseif entity.facing == "u" then
+      love.graphics.line(pos[1],pos[2],pos[1],pos[2]-10)
+    elseif entity.facing == "l" then
+      love.graphics.line(pos[1],pos[2],pos[1]-10,pos[2])
+    end
+    
+    love.graphics.setColor(1,1,1)
+    if entity.arrow then
+      love.graphics.polygon("fill",pos[1],pos[2] - 10,
+                                    pos[1] + 5,pos[2] - 18,
+                                    pos[1] - 5,pos[2] - 18)
+    end
   end
 
   if ShowHitboxes and entity.hitBox then
-    local entityPos = self:GetScreenPosition(entity.position.x, entity.position.y)
     local hitBoxP1 = self:GetScreenPosition(entity.position.x + entity.hitBox.x1,entity.position.y + entity.hitBox.y1)
     local hitBoxP2 = self:GetScreenPosition(entity.position.x + entity.hitBox.x2,entity.position.y + entity.hitBox.y2)
     love.graphics.setColor(1,1,1)
@@ -191,10 +201,6 @@ function Camera:drawEntity(entity)
                                     hitBoxP1[2],
                                     hitBoxP2[1] - hitBoxP1[1],
                                     hitBoxP2[2] - hitBoxP1[2])
-    if entity.arrow then
-      love.graphics.polygon("fill",entityPos[1],entityPos[2] - 10,
-                                    entityPos[1] + 5,entityPos[2] - 18,
-                                    entityPos[1] - 5,entityPos[2] - 18)
-    end
+    
   end
 end

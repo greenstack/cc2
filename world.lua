@@ -34,6 +34,7 @@ end
 function world:update(dt,playerController)
   if playerController.paused or not playerController.inPlay then return end
 
+  
   self.levelVars.weatherPattern:update(dt)
 
   if not self.player.interaction then
@@ -48,6 +49,8 @@ function world:update(dt,playerController)
   self:updateTime(dt)
   interactions:update(dt,self,playerController,input)
 
+  self:setVisibleEntities()
+  
   self.camera:updatePlayerPos(self.player)
   self.camera:SetPositionCentered(self.player.position.x,self.player.position.y)
 end
@@ -86,6 +89,53 @@ function world:draw()
     love.graphics.setColor(1,1,1)
   end
 
+end
+
+function world:setVisibleEntities()
+  local playerPos = self.player.position
+  for _,v in ipairs(self.entities) do
+    --check a ray from the player to each entity in the world
+    local sightLine = {x=playerPos.x,y=playerPos.y,z=v.position.x,w=v.position.y}--{x = v.position.x - playerPos.x, y = v.position.y - playerPos.y}
+    v.visible = true
+    for _,h in ipairs(self.map.Hitboxes) do
+      if self:lineIntersectsRect(sightLine,h) then
+        v.visible = false
+        break
+      end
+    end
+  end
+end
+
+function world:lineIntersectsRect(line,rect)
+  local top = rect.yPos
+  local left = rect.xPos
+  local bottom = top + rect.height
+  local right = left + rect.width
+  
+  return self:lineIntersectsLine(line,{x=left,y=top,z=right,w=top}) or
+         self:lineIntersectsLine(line,{x=left,y=top,z=left,w=bottom}) or
+         self:lineIntersectsLine(line,{x=left,y=bottom,z=right,w=bottom}) or
+         self:lineIntersectsLine(line,{x=right,y=top,z=right,w=bottom})
+  
+end
+
+function world:lineIntersectsLine(l1,l2)
+  local q = (l1.y - l2.y) * (l2.z - l2.x) - (l1.x - l2.x) * (l2.w - l2.y)
+  local d = (l1.z - l1.x) * (l2.w - l2.y) - (l1.w - l1.y) * (l2.z - l2.x)
+
+  if d == 0 then 
+    return false 
+  end
+
+  local r = q / d
+  q = (l1.y - l2.y) * (l1.z - l1.x) - (l1.x - l2.x) * (l1.w - l1.y)
+  local s = q / d;
+
+  if r < 0 or r > 1 or s < 0 or s > 1 then
+    return false
+  end
+
+  return true
 end
 
 function world:updateTime(dt)
