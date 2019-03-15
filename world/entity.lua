@@ -19,11 +19,14 @@ function Entity:new(name,x,y,o)
   o.hitBox = nil
   o.name = name
   o.interaction = false -- indicates entity is in an interaction
+  o.animation = nil
   return o
 end
 
 function Entity:update(dt,world)
-
+  if o.animation ~= nil then
+    animation.update(dt)
+  end
 end
 
 function Entity:getPosVec()

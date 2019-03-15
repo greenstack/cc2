@@ -23,7 +23,6 @@ function world:init()
 
   self.levelVars = level:generate(self.level)
   self.weather = self.levelVars.weatherPattern
-  sewr = peachy.new("assets/img/animated_sewr.json", love.graphics.newImage("assets/img/animated_sewr.png"), "slime")
   self.map = Map:new("assets/maps/level3_cc1", "assets/img/tiles.png")
   self.camera = Camera:new()
   self.camera:SetMap(self.map)
@@ -51,7 +50,6 @@ function world:update(dt,playerController)
 
   self.camera:updatePlayerPos(self.player)
   self.camera:SetPositionCentered(self.player.position.x,self.player.position.y)
-  sewr:update(dt)
 end
 
 function world:draw()
@@ -74,7 +72,7 @@ function world:draw()
     love.graphics.setShader(weatherShader)
     weatherShader:send("player_position", self.camera.PlayerPosition)
     weatherShader:send("screen_position", {self.camera.Map.Tileset.TileWidth * self.camera.MapX,self.camera.Map.Tileset.TileHeight * self.camera.MapY})
-    weatherShader:send("time", time)
+    weatherShader:send("time", os.time())
     love.graphics.rectangle("fill", 1, 1, w, h)
     love.graphics.setShader()
   end
@@ -88,7 +86,6 @@ function world:draw()
     love.graphics.setColor(1,1,1)
   end
 
-  sewr:draw(100, 100)
 end
 
 function world:updateTime(dt)
