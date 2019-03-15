@@ -118,7 +118,6 @@ function world:spawnNPCs(count, weather)
   local npcs = NPC:generate(count, weather, self.map.PathingGraph.SpawnNodes)
 
   for i = 1, #npcs do
-    npcs[i].position = { x = math.random(30,35), y = math.random(25,30) }
     table.insert(self.entities, npcs[i])
   end
 end
