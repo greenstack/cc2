@@ -45,7 +45,7 @@ function world:update(dt,playerController)
   self:spawnDespawnNPCs()
   self:updateEntities(dt)
   self:moveEntities(dt)
-  self:updateTime(dt)
+  self:updateTime(dt, playerController)
   interactions:update(dt,self,playerController,input)
 
   self.camera:updatePlayerPos(self.player)
@@ -78,6 +78,7 @@ function world:draw()
     love.graphics.setShader()
   end
 
+  --Prints Time to GUI
   if self.levelVars.minute < 10 then
     love.graphics.print("Time: " .. self.levelVars.hour .. ":0" .. self.levelVars.minute .. " " .. self.levelVars.ampm, 40, 83)
   else
@@ -97,7 +98,7 @@ function world:draw()
 
 end
 
-function world:updateTime(dt)
+function world:updateTime(dt, playerController)
   self.levelVars.dtCount = self.levelVars.dtCount + 1
   if (self.levelVars.dtCount == self.levelVars.rate) then
       self.levelVars.dtCount = 0
@@ -108,17 +109,18 @@ function world:updateTime(dt)
       self.levelVars.hour = self.levelVars.hour + 1
   end
   if self.levelVars.hour == 12 then
-    self.levelVars.ampm = "pm"
+    self.levelVars.ampm = "PM"
   end
   if self.levelVars.hour == 13 then
     self.levelVars.hour = 1
 
   end
-  if self.levelVars.ampm == "pm" and self.levelVars.hour == 9 and self.levelVars.minute == 30 then
+  if self.levelVars.ampm == "PM" and self.levelVars.hour == 9 and self.levelVars.minute == 30 then
     self.levelVars.late = true
   end
   if self.levelVars.late == true then
-    --decrease obediometor
+    playerController.obedience = playerController.obedience - self.levelVars.lateDrop
+    --print("decreasing obedience to:" .. playerController.obedience);
   end
 --   print("time: " .. self.levelVars.hour .. ":" .. self.levelVars.minute .. " " .. self.levelVars.ampm)
 end
