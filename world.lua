@@ -46,19 +46,23 @@ function world:update(dt,playerController)
   self:spawnDespawnNPCs()
   self:updateEntities(dt)
   self:moveEntities(dt)
-  self:updateTime(dt)
+  self:updateTime(dt, playerController)
   interactions:update(dt,self,playerController,input)
 
   self:setVisibleEntities()
   
   self.camera:updatePlayerPos(self.player)
   self.camera:SetPositionCentered(self.player.position.x,self.player.position.y)
+  if (playerController.obedience == 0) then
+    --end game, obedience is 0
+  end
 end
 
 function world:draw()
   if (self.levelVars.weatherPattern.Name ~= "Foggy") then
     love.graphics.setShader(self.levelVars.weatherPattern.Shader)
   end
+  
   self.camera:Draw(self.player,self.entities)
   love.graphics.setShader()
   local w,h = love.graphics.getDimensions()
@@ -80,6 +84,13 @@ function world:draw()
     love.graphics.setShader()
   end
 
+  --Prints Time to GUI
+  if self.levelVars.minute < 10 then
+    love.graphics.print("Time: " .. self.levelVars.hour .. ":0" .. self.levelVars.minute .. " " .. self.levelVars.ampm, 40, 83)
+  else
+    love.graphics.print("Time: " .. self.levelVars.hour .. ":" .. self.levelVars.minute .. " " .. self.levelVars.ampm, 40, 83)
+  end
+
   -- DEGUG ELEMENTS --
   -- lines showing the center of the screen for testing
   if ShowScreenCenter then
@@ -88,6 +99,8 @@ function world:draw()
     love.graphics.line(0,h/2,w,h/2)
     love.graphics.setColor(1,1,1)
   end
+
+  
 
 end
 
@@ -138,7 +151,7 @@ function world:lineIntersectsLine(l1,l2)
   return true
 end
 
-function world:updateTime(dt)
+function world:updateTime(dt, playerController)
   self.levelVars.dtCount = self.levelVars.dtCount + 1
   if (self.levelVars.dtCount == self.levelVars.rate) then
       self.levelVars.dtCount = 0
@@ -149,17 +162,18 @@ function world:updateTime(dt)
       self.levelVars.hour = self.levelVars.hour + 1
   end
   if self.levelVars.hour == 12 then
-    self.levelVars.ampm = "pm"
+    self.levelVars.ampm = "PM"
   end
   if self.levelVars.hour == 13 then
     self.levelVars.hour = 1
 
   end
-  if self.levelVars.ampm == "pm" and self.levelVars.hour == 9 and self.levelVars.minute == 30 then
+  if self.levelVars.ampm == "PM" and self.levelVars.hour == 9 and self.levelVars.minute == 30 then
     self.levelVars.late = true
   end
   if self.levelVars.late == true then
-    --decrease obediometor
+    playerController.obedience = playerController.obedience - self.levelVars.lateDrop
+    --print("decreasing obedience to:" .. playerController.obedience);
   end
 --   print("time: " .. self.levelVars.hour .. ":" .. self.levelVars.minute .. " " .. self.levelVars.ampm)
 end

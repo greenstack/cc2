@@ -11,20 +11,23 @@ level = {
     minute = 0,
     --in game am/pm count,
     ampm = 0,
-    --in game dt counter
+    --dt counter, counts how many frames have passed for keeping time
     dtCount = 0,
     --in game time rate
     rate = 0,
-    --in game late boolean
-    late = 0
+    --late boolean, when true obedience drops at a constant rate
+    late = 0,
+    --late drop, the lower the variable the faster the obedience drops when late
+    lateDrop = 0,
 }
 
 function level:timeInit(o) 
     o.hour = 9
-    o.minute = 30
-    o.ampm = "am"
-    o.rate = 15
+    o.minute = 00
+    o.ampm = "AM"
+    o.rate = 15 --the lower the rate, the faster time will move in game
     o.late = false
+    o.lateDrop = 0.37
 end
 
 function level:generate(levelNumber)
