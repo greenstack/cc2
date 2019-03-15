@@ -38,7 +38,7 @@ float fbm(vec2 coord) //fractal brownian motion
 
 float distance(vec2 player, vec2 frag)
 {
-  return sqrt((pow(frag[1] - player[1], 2) + pow(frag[0] - player[0], 2)));
+  return sqrt(pow(frag[1] - player[1], 2) + pow(frag[0] - player[0], 2));
 }
 
 vec4 effect(vec4 color, Image texture, vec2 tc, vec2 sc)

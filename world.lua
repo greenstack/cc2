@@ -33,7 +33,7 @@ end
 
 function world:update(dt,playerController)
   if playerController.paused or not playerController.inPlay then return end
-  
+
   self.levelVars.weatherPattern:update(dt)
 
   if not self.player.interaction then
@@ -41,12 +41,12 @@ function world:update(dt,playerController)
   else
     self.player.movement = {x=0,y=0}
   end
-  
+
   self:updateEntities(dt)
   self:moveEntities(dt)
   self:updateTime(dt)
   interactions:update(dt,self,playerController,input)
-  
+
   self.camera:updatePlayerPos(self.player)
   self.camera:SetPositionCentered(self.player.position.x,self.player.position.y)
   sewr:update(dt)
@@ -72,6 +72,7 @@ function world:draw()
     love.graphics.setShader(weatherShader)
     weatherShader:send("player_position", self.camera.PlayerPosition)
     weatherShader:send("screen_position", {self.camera.Map.Tileset.TileWidth * self.camera.MapX,self.camera.Map.Tileset.TileHeight * self.camera.MapY})
+    weatherShader:send("time", time)
     love.graphics.rectangle("fill", 1, 1, w, h)
     love.graphics.setShader()
   end
@@ -103,7 +104,7 @@ function world:updateTime(dt)
   end
   if self.levelVars.hour == 13 then
     self.levelVars.hour = 1
-    
+
   end
   if self.levelVars.ampm == "pm" and self.levelVars.hour == 9 and self.levelVars.minute == 30 then
     self.levelVars.late = true
@@ -141,13 +142,13 @@ function world:moveEntity(dt,entity)
   if entity.interaction then
     return
   end
-  
+
   local brakeX = 1
   local brakeY = 1
   if entity.movement.x == 0 then
     brakeX = 0.2
   end
-  if entity.movement.y == 0 then 
+  if entity.movement.y == 0 then
     brakeY = 0.2
   end
   local velocity = Vector.new(entity.velocity.x + entity.movement.x * entity.acceleration,entity.velocity.y + entity.movement.y * entity.acceleration)
@@ -155,10 +156,10 @@ function world:moveEntity(dt,entity)
     velocity:normalize()
     velocity = velocity * entity.maxSpeed
   end
-  
+
   velocity.x = velocity.x * brakeX
   velocity.y = velocity.y * brakeY
-  
+
   entity.velocity = {x=velocity.x,y=velocity.y}
   local proposedPosition = {x=entity.position.x + entity.velocity.x * dt,y=entity.position.y + entity.velocity.y * dt}
 
@@ -198,7 +199,7 @@ function world:moveEntity(dt,entity)
     if fromRight then count = count + 1 end
     if fromTop then count = count + 1 end
     if fromBottom then count = count + 1 end
-    
+
     if fromTop then
       correction.y = mapHitBox.yPos - (proposedPosition.y + entity.hitBox.y2)
     elseif fromRight  then
@@ -213,7 +214,7 @@ function world:moveEntity(dt,entity)
     proposedPosition.y = proposedPosition.y + correction.y
 
   end
-  
+
   if entity.velocity.x > math.abs(entity.velocity.y) then
     entity.facing = "r"
   elseif entity.velocity.x < -math.abs(entity.velocity.y) then
@@ -223,12 +224,12 @@ function world:moveEntity(dt,entity)
   elseif entity.velocity.y < -math.abs(entity.velocity.x) then
     entity.facing = "u"
   end
-  
+
   entity.position = proposedPosition
 end
 
 -- static helper function
--- hitbox is of the form {x1,x2,y1,y2} 
+-- hitbox is of the form {x1,x2,y1,y2}
 --   where x1 world x coordinate of the left bound of the hitbox
 --   and x2 is the world x coordinate to the right. similarly, y1 is the distnace to the top, and
 --   y2 is the distance to the bottom
