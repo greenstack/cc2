@@ -245,7 +245,7 @@ function NPC:update(dt, world)
         end
     end
 
-    print("Name: " .. self.name .. " [X: " .. x .. ", Y: " .. y .. "]" .. " Moving: " .. self.facing)
+    -- print("Name: " .. self.name .. " [X: " .. x .. ", Y: " .. y .. "]" .. " Moving: " .. self.facing)
 
     local mvmt = 0.025
     local rnd = 3
