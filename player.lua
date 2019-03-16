@@ -24,10 +24,10 @@ player = {
 function player:init()
   local gameScreen = Screen:new("gameScreen")
   gameScreen:addElement(ObediometerElement:new("obediometer",10,10,true,true))
-  gameScreen:addElement(ConsoleElement:new("console",0,0,false,false))
   gameScreen:addElement(PauseElement:new("pauseMenu",300,150,false,false))
   gameScreen:addElement(ActionElement:new("action",0,30,false,false))
   gameScreen:addElement(ContactsElement:new("contacts",10,55,true,true))
+  gameScreen:addElement(ConsoleElement:new("console",0,0,false,false))
   local mainMenuScreen = Screen:new("mainMenuScreen")
   mainMenuScreen:addElement(MainMenuElement:new("mainMenu",0,0,true,true))
   self.screens = {
