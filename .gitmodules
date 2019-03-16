@@ -4,3 +4,6 @@
 [submodule "peachy"]
 	path = peachy
 	url = https://github.com/josh-perry/peachy.git
+[submodule "a-star-lua"]
+	path = a-star-lua
+	url = https://github.com/lattejed/a-star-lua

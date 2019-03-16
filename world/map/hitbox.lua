@@ -43,3 +43,10 @@ function Hitbox:new(xPos, yPos, width, height, tileset, o)
   o.pixelHeight = height
   return o
 end
+
+function Hitbox:toAbsolutePosHitBox()
+  return {x1=self.xPos,
+          x2=self.xPos + self.width,
+          y1=self.yPos,
+          y2=self.yPos + self.height}
+end

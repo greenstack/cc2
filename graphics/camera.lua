@@ -170,6 +170,8 @@ function Camera:drawEntity(entity)
     love.graphics.setColor(.7,0,.7)
   elseif entity.type == "NPC" then
       love.graphics.setColor(0,0,.7)
+  elseif entity.type == "CompanionEntity" then
+      love.graphics.setColor(0,.7,0)
   end
   
   if entity.visible then

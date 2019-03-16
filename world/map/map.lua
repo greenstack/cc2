@@ -12,6 +12,7 @@ Map = {
   Tileset,
   Hitboxes,
   PathingGraph,
+  PathingGrid,
 }
 
 function Map:new(levelName, tilesetPath, o)
@@ -53,5 +54,25 @@ function Map:new(levelName, tilesetPath, o)
       print("Unsupported layer type: " .. layer.type)
     end
   end
+  
+  --generate pathing grid
+  o.PathingGrid = {}
+  for x=1, o.MapWidth do
+    for y=1, o.MapHeight do
+      if world.locationIsPathable(nil,{x=x + 0.5,y=y + 0.5},o.Hitboxes) then
+        table.insert(o.PathingGrid,{x=x,y=y})
+      end
+    end
+  end
+  
   return o
+end
+
+-- returns the node in the pathing grid at (x,y), or nil if it does not exist
+function Map:getPathingNodeAt(x,y)
+  for _,v in pairs(self.PathingGrid) do
+    if v.x == x and v.y == y then
+      return v
+    end
+  end
 end

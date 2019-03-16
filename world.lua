@@ -3,6 +3,7 @@ require "world.map.map"
 require "world.entity"
 require "world.playerEntity"
 require "world.npcEntity"
+require "world.companionEntity"
 require "world.weather"
 require "world.level"
 local peachy = require 'peachy.peachy'
@@ -11,6 +12,7 @@ world = {
   level = 1,
   weather = 1,
   player = {},
+  companion = {},
   entities = {},
   npcs = {},
   camera = {},
@@ -28,6 +30,8 @@ function world:init()
   self.camera:SetMap(self.map)
 
   self.player = PlayerEntity:new("player",30.5,25.5)
+  self.companion = CompanionEntity:new("Elder Meanie",32.5,27.5)
+  table.insert(self.entities,self.companion)
   self.npcs = NPC:generate(self.levelVars.npcCount, self.weather, self.map.PathingGraph.SpawnNodes)
 end
 
@@ -50,6 +54,12 @@ function world:update(dt,playerController)
   interactions:update(dt,self,playerController,input)
 
   self:setVisibleEntities()
+  
+  if not self.companion.visible then
+    playerController:addObedience(-0.2)
+  else 
+    playerController:addObedience(0.05)
+  end
   
   self.camera:updatePlayerPos(self.player)
   self.camera:SetPositionCentered(self.player.position.x,self.player.position.y)
@@ -108,15 +118,21 @@ function world:setVisibleEntities()
   local playerPos = self.player.position
   for _,v in ipairs(self.entities) do
     --check a ray from the player to each entity in the world
-    local sightLine = {x=playerPos.x,y=playerPos.y,z=v.position.x,w=v.position.y}--{x = v.position.x - playerPos.x, y = v.position.y - playerPos.y}
-    v.visible = true
-    for _,h in ipairs(self.map.Hitboxes) do
-      if self:lineIntersectsRect(sightLine,h) then
-        v.visible = false
-        break
-      end
+    local sightLine = {x=playerPos.x,y=playerPos.y,z=v.position.x,w=v.position.y}
+    v.visible = self:pointCanSeePoint(playerPos,v.position)
+  end
+end
+
+function world:pointCanSeePoint(p1,p2) 
+  local sightLine = {x=p1.x,y=p1.y,z=p2.x,w=p2.y}
+  local visible = true
+  for _,h in ipairs(self.map.Hitboxes) do
+    if self:lineIntersectsRect(sightLine,h) then
+      visible = false
+      break
     end
   end
+  return visible
 end
 
 function world:lineIntersectsRect(line,rect)
@@ -219,22 +235,21 @@ function world:moveEntity(dt,entity)
     return
   end
 
-  local brakeX = 1
-  local brakeY = 1
-  if entity.movement.x == 0 then
-    brakeX = 0.2
-  end
-  if entity.movement.y == 0 then
-    brakeY = 0.2
-  end
-  local velocity = Vector.new(entity.velocity.x + entity.movement.x * entity.acceleration,entity.velocity.y + entity.movement.y * entity.acceleration)
+  local frictionCoef = 0.2
+  local frictionX = entity.velocity.x * frictionCoef
+  local frictionY = entity.velocity.y * frictionCoef
+  
+  local netForceX = entity.movement.x * entity.acceleration - frictionX
+  local netForceY = entity.movement.y * entity.acceleration - frictionY
+  
+  local velocity = Vector.new(entity.velocity.x + netForceX,entity.velocity.y + netForceY)
   if velocity:length() > entity.maxSpeed then
     velocity:normalize()
     velocity = velocity * entity.maxSpeed
   end
 
-  velocity.x = velocity.x * brakeX
-  velocity.y = velocity.y * brakeY
+  --velocity.x = velocity.x * brakeX
+  --velocity.y = velocity.y * brakeY
 
   entity.velocity = {x=velocity.x,y=velocity.y}
   local proposedPosition = {x=entity.position.x + entity.velocity.x * dt,y=entity.position.y + entity.velocity.y * dt}
@@ -302,6 +317,15 @@ function world:moveEntity(dt,entity)
   end
 
   entity.position = proposedPosition
+end
+
+function world:locationIsPathable(position,hitboxes)
+  for _,mapHitBox in pairs(hitboxes or self.map.Hitboxes) do
+    if world.hitBoxContains(mapHitBox:toAbsolutePosHitBox(),position) then
+      return false
+    end
+  end
+  return true
 end
 
 -- static helper function

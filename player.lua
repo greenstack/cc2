@@ -57,22 +57,32 @@ function player:update(dt,input)
   end
   
   if self.inPlay and not self.paused then
-  
     self.movement.x,self.movement.y = input:get('move')
-  
-    --temporary way to change obediometer for testing
-    if input:down("action") then
-      self.obedience = self.obedience - 0.4
-    else
-      self.obedience = self.obedience + 0.2
-    end
-    self.obedience = math.min(self.maxObedience,self.obedience)
-    self.obedience = math.max(0,self.obedience)
-  else
-    
   end
 
   self.screen:update(dt,input,self)
+end
+
+function player:addObedience(amount)
+  self.obedience = self.obedience + amount
+  self.obedience = math.min(self.maxObedience,self.obedience)
+  self.obedience = math.max(0,self.obedience)
+end
+
+function player:setObedience(amount)
+  self.obedience = amount
+  self.obedience = math.min(self.maxObedience,self.obedience)
+  self.obedience = math.max(0,self.obedience)
+end
+
+function player:addMaxObedience(amount)
+  self.maxObedience = self.maxObedience + amount
+  self.maxObedience = math.max(0,self.maxObedience)
+end
+
+function player:setMaxObedience(amount)
+  self.maxObedience = amount
+  self.maxObedience = math.max(0,self.maxObedience)
 end
 
 function player:textinput(text)
