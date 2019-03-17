@@ -41,3 +41,9 @@ end
 function Entity:getMovVec()
   return { self.movement.x, self.movement.y }
 end
+
+function Entity:getAbsoluteHitbox()
+  if self.hitBox then
+    return {x1=self.hitBox.x1+self.position.x,x2=self.hitBox.x2+self.position.x,y1=self.hitBox.y1+self.position.y,y2=self.hitBox.y2+self.position.y}
+  end
+end

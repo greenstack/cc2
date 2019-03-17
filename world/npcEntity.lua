@@ -87,8 +87,12 @@ function NPC:new(id, name, x, y, age, gender, receptiveness, relationship, flirt
     end
 
     o.flirtiness = math.clamp(flirtiness, 0, 100) -- scale 0 to 100 (not flirtatious to very flirtatious)
+
     o.spawnToggle = false
     o.spawned = false
+    o.spawnNode = {}
+    o.prevNode = nil
+    o.targetNode = nil
     o.hitBox = {x1 =- .15, y1 =- .15, x2 = .15, y2 = .15}
     o.arrow = false --arrow pointing at their head to indicate the player can interact with them
     return o
@@ -188,10 +192,13 @@ function NPC:generate(count, weather, nodes)
             index = math.random(1, #nodes)
         end
 
-        x = nodes[index].LocationX
-        y = nodes[index].LocationY
-
-        table.insert(npcs, NPC:new(i, name, x, y, age, gender, receptiveness, relationship, flirtiness))
+        x = nodes[index].LocationX + 0.5
+        y = nodes[index].LocationY + 0.5
+        local npc = NPC:new(i, name, x, y, age, gender, receptiveness, relationship, flirtiness)
+        npc.spawnNode = nodes[index]
+        npc.prevNode = npc.spawnNode
+        npc.targetNode = npc.spawnNode
+        table.insert(npcs, npc)
     end 
 
     return npcs
@@ -210,7 +217,7 @@ end
 
 function NPC:shouldSpawn()
     if not self.spawned and math.random(1, 100) == 100 then
-        -- print(self.name .. " SPAWNED")
+        self.spawnNode = NPC:getNode(world.map.PathingGraph.Nodes, self.position.x, self.position.y)
         self.spawned = true
         self.spawnToggle = false
         return true
@@ -221,7 +228,7 @@ end
 
 function NPC:getNode(nodes, x, y)
     for i, node in pairs(nodes) do
-        if node.LocationX == x and node.LocationY == y then
+        if node.LocationX == math.floor(x) and node.LocationY == math.floor(y) then
             return node
         end
     end
@@ -239,54 +246,31 @@ function NPC:update(dt, world)
 
     local node = NPC:getNode(world.map.PathingGraph.Nodes, x, y)
 
-    if node ~= nil then
-        if node.NodeType == NodeTypes.Spawning and math.random(0, 1) == 1 then
+    if node then
+        if node.NodeType == NodeTypes.Spawning and not (node == self.spawnNode) and math.random(0, 1) == 1 then
             self.spawnToggle = true
             return
         end
+        
+        if node == self.targetNode and world.hitBoxContains(self:getAbsoluteHitbox(),{x=node.LocationX + 0.5,y=node.LocationY + 0.5}) then
+          -- choose new direction
+          self.targetNode = node.Edges[math.random(1, #node.Edges)]
+          self.targetNode = self:getNode(world.map.PathingGraph.Nodes,self.targetNode.LocationX,self.targetNode.LocationY)
+          local targetX = self.targetNode.LocationX + 0.5
+          local targetY = self.targetNode.LocationY + 0.5
 
-        -- choose new direction
-        local target = node.Edges[math.random(1, #node.Edges)]
-        local targetX = target.LocationX
-        local targetY = target.LocationY
-
-        if targetX > x then
-            self.facing = "r"
-        elseif targetX < x then
-            self.facing = "l"
-        elseif targetY > y then
-            self.facing = "d"
-        elseif targetY < y then
-            self.facing = "u"
-        else
-            error(self.name .. " couldn't decide where to go. Send help.")
+          self.movement.x = targetX - x
+          self.movement.y = targetY - y
+          
         end
-    end
-
-    -- print("Name: " .. self.name .. " [X: " .. x .. ", Y: " .. y .. "]" .. " Moving: " .. self.facing)
-
-    local mvmt = 0.025
-    local rnd = 3
-
-    -- move
-    if self.facing == "r" then
-        self.position.x = math.round(self.position.x + mvmt, rnd)
-    elseif self.facing == "l" then
-        self.position.x = math.round(self.position.x - mvmt, rnd)
-    elseif self.facing == "u" then
-        self.position.y = math.round(self.position.y - mvmt, rnd)
-    elseif self.facing == "d" then
-        self.position.y = math.round(self.position.y + mvmt, rnd)
-    else
-        error(self.name .. " forgot which way to walk. Awkward.")
     end
 
     -- check if they are still on the map
     if self.position.x < 0 or 
-        self.position.x > world.map.MapWidth or 
+        self.position.x > world.map.MapWidth + 1 or 
         self.position.y < 0 or 
-        self.position.x > world.map.MapHeight then
-        error(luke154 .. self.name .. " is lost.")
+        self.position.x > world.map.MapHeight + 1 then
+        error(luke154 .. self.name .. " is lost. at " .. self.position.x .. "," .. self.position.y)
     end
 end
 
