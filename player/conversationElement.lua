@@ -33,7 +33,11 @@ function ConversationElement:update(dt,input,playerController)
       self.firstTimeInState = false
     end
     if self.waiting and input:consumePressed('talk') then
-      self:nextState()
+      if self.conversation.dialogue.options then
+        self:nextState()
+      else
+        self:close()
+      end
       return
     end
   elseif self.state == 3 then -- chose an option

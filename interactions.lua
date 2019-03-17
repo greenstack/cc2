@@ -50,19 +50,48 @@ function interactions:update(dt,world,playerController,input)
   
   
   if self.selectedEntity and not world.player.interaction and input:consumePressed('talk') then
-    self:startConversation(world,playerController,self.selectedEntity)
+    self:startConversation(world.player,playerController,self.selectedEntity)
   end
   
 end
 
-function interactions:startConversation(world,playerController,npc)
-  local conversation = self.list[math.random(1,3)]
+function interactions:startConversation(player,playerController,npc)
+  local conversation = self:getValidConversation(npc)
   
-  local conversationElement = ConversationElement:new("conversation",0,0,true,true,conversation,world.player,npc)
+  if conversation then
+    local conversationElement = ConversationElement:new("conversation",0,0,true,true,conversation,player,npc)
 
-  local gameScreen = playerController:getScreen("gameScreen")
-  gameScreen:addElement(conversationElement)
-  
-  world.player.interaction = true
-  npc.interaction = true
+    local gameScreen = playerController:getScreen("gameScreen")
+    gameScreen:addElement(conversationElement)
+    
+    player.interaction = true
+    npc.interaction = true
+  end
+end
+
+function interactions:getValidConversation(npc)
+  local validConversations = {}
+  for k,v in pairs(self.list) do
+    if (not v.reqGender or table.contains(v.reqGender,npc.gender)) and
+       (not v.reqRelationship or table.contains(v.reqRelationship,npc.relationship)) and
+       (not v.reqMood or self.inRange(v.reqMood,npc.mood)) and
+       (not v.reqReceptiveness or self.inRange(v.reqReceptiveness,npc.receptiveness)) and
+       (not v.reqFlirtatiousness or self.inRange(v.reqFlirtatiousness,npc.flirtiness)) and
+       (not v.reqAge or self.inRange(v.reqAge,npc.age)) and
+       (not v.reqContacted or v.reqContacted == npc.contacted) and 
+       (not v.reqType or table.contains(v.reqType,npc.type))
+       
+    then
+      table.insert(validConversations,v)
+    end
+  end
+  if #validConversations > 0 then
+    return validConversations[math.random(1,#validConversations)]
+  else 
+    print("no valid conversation found for " .. npc.name)
+  end
+end
+
+function interactions.inRange(range,val) 
+  return range.min <= val and val <= range.max
 end

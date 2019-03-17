@@ -29,7 +29,7 @@ function world:init()
   self.camera = Camera:new()
   self.camera:SetMap(self.map)
 
-  self.player = PlayerEntity:new("player",30.5,25.5)
+  self.player = PlayerEntity:new("You",30.5,25.5)
   self.companion = CompanionEntity:new("Elder Meanie",32.5,27.5)
   table.insert(self.entities,self.companion)
   self.npcs = NPC:generate(self.levelVars.npcCount, self.weather, self.map.PathingGraph.SpawnNodes)

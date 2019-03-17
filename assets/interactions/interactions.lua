@@ -1,11 +1,36 @@
+--[[
+This is the list of all possible interactions with NPCs. (this inclues the companion)
+Interactions have a specific structure, and messing with that might crash the game.
+
+Each interaction can optionally include any of the following requirements, which limit 
+what NPCs can use any particular interaction. For example, an interaction which specifies 
+reqAge = {min=20,max=30},
+will prevent this interaction by being used by any NPC who's age lies outside of that range
+
+Possible Requirements:
+
+> Range: these requirements check if that npc attribute lies within the given range, inclusive
+  - reqMood
+  - reqReceptiveness
+  - reqFlirtatiousness
+  - reqAge
+> List: these requirements check if that npc attribute is contained within the given table
+  - reqGender
+  - reqRelationship
+  - reqType
+> Single value: these requirements check if that npc attribute is equal to the given value
+  - reqContacted
+
+Text in the interactions can make use of the following string substitutions from the npc attributes
+{name} is replaced with the NPC's name
+{age} is replaced with the NPC's age
+--]]
 return {
   {
-    reqGender = {"male","female"},
     reqRelationship = {"single","divorced"},
-    reqMood = {min=0,max=100},
-    reqReceptiveness = {min=0,max=100},
-    reqFlirtatiousness = {min=0,max=100},
-    reqAge = {min=18,max=26},
+    reqAge = {min=10,max=30},
+    reqContacted = false,
+    reqType = {"NPC"},
     dialogue = {
       playerText = "Hello. Is your name {name}?",
       npcText = "Why yes it is? How did you know?",
@@ -43,10 +68,10 @@ return {
   {
     reqGender = {"female"},
     reqRelationship = {"single","divorced"},
-    reqMood = {min=0,max=100},
-    reqReceptiveness = {min=0,max=100},
     reqFlirtatiousness = {min=75,max=100},
     reqAge = {min=18,max=22},
+    reqContacted = false,
+    reqType = {"NPC"},
     dialogue = {
       playerText = "Hey, how's it going?",
       npcText = "I'm doing great, now that you're around!",
@@ -73,12 +98,10 @@ return {
     }
   },
   {
-    reqGender = {"male"},
     reqRelationship = {"single","divorced","married","dating","widowed","engaged"},
-    reqMood = {min=0,max=100},
-    reqReceptiveness = {min=0,max=100},
-    reqFlirtatiousness = {min=0,max=100},
     reqAge = {min=30,max=100},
+    reqContacted = false,
+    reqType = {"NPC"},
     dialogue = {
       playerText = "Hi, I'm a missiona...",
       npcText = "I know who you are. I used to be a missionary like you.\nThen I took a gunshot to the knee.",
@@ -112,5 +135,40 @@ return {
         }
       }
     }
-  }
+  },
+  {
+    reqRelationship = {"single","divorced","married","dating","widowed","engaged"},
+    reqAge = {min=0,max=10},
+    reqContacted = false,
+    reqType = {"NPC"},
+    dialogue = {
+      playerText = "Hey there buddy! I'm a missiona...",
+      npcText = "Mommy says I shouldn't talk to strangers.",
+    }
+  },
+  {
+    reqContacted = false,
+    reqType = {"CompanionEntity"},
+    dialogue = {
+      playerText = "Hello",
+      npcText = "({name} is ignoring you)",
+    }
+  },
+  {
+    reqContacted = false,
+    reqType = {"NPC"},
+    dialogue = {
+      playerText = "Hello",
+      npcText = "I'm not interested.",
+    }
+  },
+  {
+    reqContacted = true,
+    reqType = {"NPC"},
+    dialogue = {
+      playerText = "Hey...",
+      npcText = "I've got to get going. ",
+    }
+  },
+  
 }

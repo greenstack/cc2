@@ -67,7 +67,7 @@ luke154 = "What man of you, having an hundred sheep, if he lose one of them, "
  
 ----- NPC Construtor ------
 
-function NPC:new(id, name, x, y, age, gender, receptiveness, relationship, flirtiness)
+function NPC:new(id, name, x, y, age, gender, mood, receptiveness, relationship, flirtiness)
     local o = Entity.new(self, name, x, y)
   
     o.maxSpeed = 2
@@ -78,6 +78,7 @@ function NPC:new(id, name, x, y, age, gender, receptiveness, relationship, flirt
     o.type = "NPC"
     o.age = age
     o.gender = gender
+    o.mood = mood
     o.receptiveness = math.clamp(receptiveness, 0, 100) -- scale 0 to 100 (not receptive to very receptive)
 
     if age < 18 then
@@ -88,6 +89,8 @@ function NPC:new(id, name, x, y, age, gender, receptiveness, relationship, flirt
 
     o.flirtiness = math.clamp(flirtiness, 0, 100) -- scale 0 to 100 (not flirtatious to very flirtatious)
 
+    o.contacted = false
+    
     o.spawnToggle = false
     o.spawned = false
     o.spawnNode = {}
@@ -158,7 +161,7 @@ function NPC:generate(count, weather, nodes)
 
     local half = math.ceil(count / 2)
 
-    local name, x, y, age, gender, receptiveness, relationship, flirtiness -- variables used when inserting
+    local name, x, y, age, gender, mood, receptiveness, relationship, flirtiness -- variables used when inserting
 
     local used_nodes = {}
     local index
@@ -175,6 +178,7 @@ function NPC:generate(count, weather, nodes)
         
         name = name .. " " .. LAST_NAMES[math.random(1, #LAST_NAMES)]
         age = math.random(minAge, maxAge)
+        mood = math.random(minMood, maxMood)
         receptiveness = math.floor(math.random(minReceptiveness, maxReceptiveness) * weather.ReceptivenessModifier)
         relationship = RELATIONSHIPS[math.random(1, #RELATIONSHIPS)]
         flirtiness = math.floor(math.random(minFlirtiness, maxFlirtiness) * weather.FlirtinessModifier)
@@ -194,7 +198,7 @@ function NPC:generate(count, weather, nodes)
 
         x = nodes[index].LocationX + 0.5
         y = nodes[index].LocationY + 0.5
-        local npc = NPC:new(i, name, x, y, age, gender, receptiveness, relationship, flirtiness)
+        local npc = NPC:new(i, name, x, y, age, gender, mood, receptiveness, relationship, flirtiness)
         npc.spawnNode = nodes[index]
         npc.prevNode = npc.spawnNode
         npc.targetNode = npc.spawnNode
