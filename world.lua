@@ -37,7 +37,8 @@ end
 
 function world:update(dt,playerController)
   if playerController.paused or not playerController.inPlay then return end
-
+  
+  playerController.contactsGoal = self.levelVars.contactGoal
   
   self.levelVars.weatherPattern:update(dt)
 

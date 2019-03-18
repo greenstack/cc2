@@ -1,8 +1,10 @@
 local weather = require 'world.weather'
 
 level = {
-    --the numbers of npcs to spawn for a given level--
+    --the numbers of npcs to spawn for a given level
     npcCount = 0,
+    --the number of npcs needed to contact for this level
+    contactGoal = 0,
     --the weatherPattern for a given level
     weatherPattern = 0,
     --in game hour count
@@ -34,14 +36,15 @@ function level:generate(levelNumber)
     o = {}
     setmetatable(o, self)
     self.__index = self
-    o.weatherPattern = level:getWeatherPattern()
-    o.npcCount = level:getNpcCount(levelNumber, o.weatherPattern)
+    o.weatherPattern = level.getWeatherPattern()
+    o.npcCount = level.getNpcCount(levelNumber, o.weatherPattern)
+    o.contactGoal = level.getContactGoal(levelNumber, o.weatherPattern)
     level:timeInit(o);
     return o
 end
 
-
-function level:getWeatherPattern()
+--TODO: this data should be specified in a level asset
+function level.getWeatherPattern()
     rand = math.random(4)
     local pattern
     if rand == 1 then
@@ -56,8 +59,8 @@ function level:getWeatherPattern()
     return pattern
 end
 
-
-function level:getNpcCount(level, weather)
+--TODO: this data should be specified in a level asset
+function level.getNpcCount(level, weather)
     local npcCount = 0
     if level == 1 then
         npcCount = math.random(10, 15)
@@ -69,6 +72,19 @@ function level:getNpcCount(level, weather)
     npcCount = math.floor(npcCount * weather.SpawnRateModifier)
     return npcCount
 end
+
+--TODO: this data should be specified in a level asset
+function level.getContactGoal(levelNumber,weatherPattern)
+  if levelNumber == 1 then
+    return 8
+  elseif levelNumber == 2 then
+    return 10
+  else 
+    return 15
+  end
+end
+
+
 
 -- function level:updateTime(dt, levelVar)
 --     levelVar.dtCount = levelVar.dtCount + 1

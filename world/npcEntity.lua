@@ -267,13 +267,20 @@ function NPC:update(dt, world)
           -- choose new direction
           self.targetNode = node.Edges[math.random(1, #node.Edges)]
           self.targetNode = self:getNode(world.map.PathingGraph.Nodes,self.targetNode.LocationX,self.targetNode.LocationY)
-          local targetX = self.targetNode.LocationX + 0.5
-          local targetY = self.targetNode.LocationY + 0.5
 
-          self.movement.x = targetX - x
-          self.movement.y = targetY - y
 
         end
+    end
+    
+    if self.targetNode then
+      local targetX = self.targetNode.LocationX + 0.5
+      local targetY = self.targetNode.LocationY + 0.5
+
+      self.movement.x = targetX - x
+      self.movement.y = targetY - y
+    else
+      self.movement.x = 0
+      self.movement.y = 0
     end
 
     -- check if they are still on the map
@@ -281,7 +288,7 @@ function NPC:update(dt, world)
         self.position.x > world.map.MapWidth + 1 or
         self.position.y < 0 or
         self.position.x > world.map.MapHeight + 1 then
-        error(luke154 .. self.name .. " is lost. at " .. self.position.x .. "," .. self.position.y)
+        print(luke154 .. self.name .. " is lost. at " .. self.position.x .. "," .. self.position.y)
     end
 
     -- Update the animation state to match the movement state
