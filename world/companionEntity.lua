@@ -1,4 +1,5 @@
 require 'a-star-lua.a-star'
+local peachy = require 'peachy.peachy'
 
 CompanionEntity = Entity:new()
 
@@ -13,6 +14,7 @@ function CompanionEntity:new(name,x,y,o)
   o.restlessness = 5 -- timer that accumlates time, affects when he will run somewhere new
   o.restlesnessThreshold = 20
   o.curPath = {}
+  o.animation = peachy.new("assets/animation/companion.json", nil, "Idle")
   o.curPathIndex = 0
   o.atTarget = true
   return o
@@ -27,7 +29,7 @@ function CompanionEntity:update(dt,world)
     else
       restlessnessModifier = 1
     end
-    
+
     self.restlessness = self.restlessness + dt * restlessnessModifier
     local range = math.round(self.restlessness) + 10
     if self.restlessness > (self.restlesnessThreshold - self.mood) then
@@ -37,24 +39,24 @@ function CompanionEntity:update(dt,world)
         local spotX = math.random(math.floor(self.position.x - range),math.ceil(self.position.x + range))
         local spotY = math.random(math.floor(self.position.y - range),math.ceil(self.position.y + range))
         local spot = {x=spotX,y=spotY}
-        
+
         --find node in pathing grid
-        
+
         local pathNode = world.map:getPathingNodeAt(spotX,spotY)
-        
+
         if pathNode and not world:pointCanSeePoint(world.player.position,{x=spotX,y=spotY}) then
           table.insert(validNodes,pathNode)
         end
       end
       if #validNodes > 0 then
         local targetNode = validNodes[math.random(1,#validNodes)]
-        
+
         -- generate path to target
         local currentNode = world.map:getPathingNodeAt(math.floor(self.position.x),math.floor(self.position.y))
         if not currentNode then
           print("current node not found in pathing grid")
         else
-          self.curPath = astar.path (currentNode, targetNode, world.map.PathingGrid, false, 
+          self.curPath = astar.path (currentNode, targetNode, world.map.PathingGrid, false,
                                      function(node,neighbor) return math.abs(node.x-neighbor.x) <= 1 and math.abs(node.y-neighbor.y) <= 1 end)
           if self.curPath then
             self.curPathIndex = 1
@@ -68,7 +70,7 @@ function CompanionEntity:update(dt,world)
     -- get to current target
     local closeEnough = 0.1
     local nextNode = self.curPath[self.curPathIndex]
-    local diff = {x=nextNode.x + 0.5 - self.position.x,y=nextNode.y + 0.5 - self.position.y} 
+    local diff = {x=nextNode.x + 0.5 - self.position.x,y=nextNode.y + 0.5 - self.position.y}
     local movement = Vector.new(diff.x,diff.y)
     movement:normalize()
     self.movement.x = movement.x
@@ -81,8 +83,27 @@ function CompanionEntity:update(dt,world)
         self.movement.y = 0
       end
     end
-    
-  else 
+
+  else
     error("your companion is lost")
   end
+
+  -- Update the animation
+  if self.movement.x > 0 and self.facing == "r" then
+    self.animation:setTag("RunRight")
+  elseif self.movement.x < 0 and self.facing == "l" then
+    self.animation:setTag("RunLeft")
+  elseif self.movement.y > 0 and self.facing == "d" then
+    self.animation:setTag("RunDown")
+  elseif self.movement.y < 0 and self.facing == "u" then
+    self.animation:setTag("RunUp")
+  else
+    self.animation:setTag("Idle")
+  end
+
+  self.animation:update(dt)
+end
+
+function CompanionEntity:draw(x,y)
+  self.animation:draw(x,y)
 end

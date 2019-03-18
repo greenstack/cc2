@@ -8,7 +8,7 @@ function PlayerEntity:new(name,x,y,o)
   o.type="PlayerEntity"
   o.acceleration = 1
   o.hitBox = {x1=-.15,y1=-.15,x2=.15,y2=.15}
-  o.animation = peachy.new("assets/img/player.json", nil, "Idle")
+  o.animation = peachy.new("assets/animation/player.json", nil, "Idle")
   return o
 end
 
