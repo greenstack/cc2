@@ -288,13 +288,13 @@ function NPC:update(dt, world)
     -- TODO: This could be optimized by moving it to changing the state only based
     --       when we change the state
     if self.animation ~= nil then
-      if self.movement.x > 0 then
+      if self.movement.x > 0 and self.facing == "r" then
         self.animation:setTag("RunRight")
-      elseif self.movement.x < 0 then
+      elseif self.movement.x < 0 and self.facing == "l" then
         self.animation:setTag("RunLeft")
-      elseif self.movement.y > 0 then
+      elseif self.movement.y > 0 and self.facing == "d" then
         self.animation:setTag("RunDown")
-      elseif self.movement.y < 0 then
+      elseif self.movement.y < 0 and self.facing == "u" then
         self.animation:setTag("RunUp")
       else
         self.animation:setTag("Idle")
