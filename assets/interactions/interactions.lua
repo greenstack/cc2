@@ -170,5 +170,33 @@ return {
       npcText = "I've got to get going. ",
     }
   },
-  
+  {
+    reqContacted = false,
+    reqType = {"NPC"},
+    reqReceptiveness = {min=50, max=100},
+    dialogue = {
+      playerText = "Hello! Do you have a moment?",
+      npcText = "Yeah, I've got time.",
+      options = {
+        {
+          optionText = "Teach about the Book of Mormon",
+          playerText = "You begin teaching them about the Book of Mormon...",
+          npcText = "That's really interesting. Would you mind teaching me more later?",
+          effect = {
+            contacts = 1,
+            obediometer = 0
+          }
+        },
+        {
+          optionText = "Inquire about religion",
+          playerText = "Are you religious?",
+          npcText = "Not really, and I'm not sure I'm interested.",
+          effect = {
+            contacts = 0,
+            obediometer = 0,
+          }
+        },
+      }
+    }
+  }
 }
