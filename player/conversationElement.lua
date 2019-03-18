@@ -161,7 +161,7 @@ function ConversationElement:draw()
       love.graphics.draw(arrow,xPos + 60,yPos + 5 + 30 * (self.choice - 1))
     end  
   else
-    love.graphics.print(self:scrollText(self.text),xPos + 70,yPos + 5)  
+    love.graphics.printf(self:scrollText(self.text),xPos + 70,yPos + 5,500)  
     if self.waiting then
       love.graphics.setColor(1,1,1)
       love.graphics.draw(arrow,xPos + 550 , yPos + 120)
