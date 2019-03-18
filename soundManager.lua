@@ -1,0 +1,67 @@
+SoundManager = {
+  Songs = {},
+  Items = {},
+  Length = {},
+  PlayTime = 0,
+  Count = 0,
+  Delay = 0,
+  Current = "",
+  Mode = "random"
+}
+
+function SoundManager:new(o)
+  o = o or {}
+  setmetatable(o, self)
+  self.__index = self
+  o.Items = {}
+  o.Length = {}
+  o.Songs = {}
+  return o
+end
+
+function SoundManager:setMode(mode)
+  self.Mode = mode
+end
+
+function SoundManager:addSong(name, path, length)
+  table.insert(self.Songs, name)
+  self.Items[name] = love.audio.newSource(path, "stream")
+  self.Length[name] = length
+  self.Count = self.Count + 1
+end
+
+function SoundManager:play(name)
+  self.Items[name]:play()
+  self.PlayTime = 0
+  self.Current = name
+end
+
+function SoundManager:stop(name)
+  self.Items[name]:stop()
+end
+
+function SoundManager:pause(name)
+  self.Items[name]:pause()
+end
+
+function SoundManager:setDelay(delay)
+  self.Delay = delay
+end
+
+function SoundManager:update(dt)
+  self.PlayTime = self.PlayTime + dt
+  if (self.PlayTime > self.Length[self.Current] + self.Delay) then
+    print("Stopping song " .. self.Current)
+    self:stop(self.Current)
+    if self.Mode == "loop" then
+      print("Looping " .. self.Current)
+      self:play(self.Current)
+    elseif self.Mode == "random" then
+      local song = self.Songs[love.math.random(#self.Songs)]
+      print("Now playing " .. song) 
+      self:play(song)
+    else
+      error("Invalid mode " .. self.Mode)
+    end
+  end
+end

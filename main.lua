@@ -7,8 +7,7 @@ require "player"
 require "world"
 require "input"
 require "interactions"
--- require "peachy.peachy"
-
+require "soundManager"
 
 -- resources
 beep = love.audio.newSource("assets/sound/selection_beep.wav", "static")
@@ -21,13 +20,20 @@ arrow = love.graphics.newImage("assets/img/arrow.png")
 tempPlayerImg = love.graphics.newImage("assets/img/temp_player.png")
 tempNPCImg = love.graphics.newImage("assets/img/temp_npc.png")
 
+
 function love.load()
   player:init()
   world:init()
   love.graphics.setBackgroundColor(0.5,0.5,0.5)
   love.keyboard.setKeyRepeat(true)
   SetWeatherShaders()
-
+  sm = SoundManager:new()
+  sm:addSong("themeA", "assets/sound/theme_a.ogg", 226) --226
+  sm:addSong("themeB", "assets/sound/theme_b.ogg", 150) -- 250
+  sm:addSong("themeC", "assets/sound/theme_c.ogg", 187) --287
+  sm:setDelay(5)
+  sm:setMode("random")
+  sm:play("themeA")
   weatherShader = Weather.Foggy.Shader
 end
 
@@ -36,6 +42,7 @@ function love.update(dt)
 
   player:update(dt,input)
   world:update(dt,player)
+  sm:update(dt)
   --interactions:update(dt,world,player)
 end
 
