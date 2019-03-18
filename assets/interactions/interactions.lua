@@ -173,6 +173,47 @@ return {
   {
     reqContacted = false,
     reqType = {"NPC"},
+    reqFlirtatiousness = {min=50, max=100},
+    reqGender = {"female"},
+    reqRelationship = {"single"},
+    reqAge = {min=18, max=26},
+    dialogue = {
+      playerText = "Hey there!",
+      npcText = "Oh hey there, handsome! What's a good-looking guy like you doing?",
+      options = {
+        {
+          optionText = "Flirt with her",
+          playerText = "(You flirt with her)",
+          npcText = "(Giggles) I like you... come visit me later, okay?",
+          effect = {
+            contacts = 0,
+            obediometer = -15,
+          }
+        },
+        {
+          optionText = "Leave her behind",
+          playerText = "Not much. Sorry, I gotta go.",
+          npcText = "Oh... okay...",
+          effect = {
+            contacts = 0,
+            obediometer = 10,
+          }
+        },
+        {
+          optionText = "Preach some",
+          playerText = "I'm here as a missionary.",
+          npcText = "Oh really? That's interesting! I'd like to hear more!",
+          effect = {
+            contacts = 1,
+            obediometer = 0,
+          }
+        }
+      }
+    }
+  },
+  {
+    reqContacted = false,
+    reqType = {"NPC"},
     reqReceptiveness = {min=50, max=100},
     dialogue = {
       playerText = "Hello! Do you have a moment?",
