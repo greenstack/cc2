@@ -2,7 +2,7 @@
 -- debug variables
 ShadowsEnabled = true
 FogEnabled = true
-ShowHitboxes = true
+ShowHitboxes = false
 ShowScreenCenter = false
 ShowPathingGraph = false
 
