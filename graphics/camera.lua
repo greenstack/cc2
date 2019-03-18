@@ -165,14 +165,17 @@ end
 function Camera:drawEntity(entity)
   local pos = self:GetScreenPosition(entity.position.x, entity.position.y)
   if entity.type == "PlayerEntity" then
+    love.graphics.setColor(1,1,1)
     entity:draw(pos[1]-16, pos[2]-16)
     return -- Renove this line for debug drawing on the playera
     love.graphics.setColor(.7,0,.7)
   elseif entity.type == "NPC" then
+    love.graphics.setColor(1,1,1)
     entity:draw(pos[1]-16, pos[2]-16)
     return -- Renove this line for debug drawing on the NPCs
     love.graphics.setColor(0,0,.7)
   elseif entity.type == "CompanionEntity" then
+    love.graphics.setColor(1,1,1)
     entity:draw(pos[1]-16, pos[2]-16)
     return -- Renove this line for debug drawing on the companion
     love.graphics.setColor(0,.7,0)
