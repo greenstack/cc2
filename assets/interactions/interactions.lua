@@ -173,9 +173,9 @@ return {
   {
     reqContacted = false,
     reqType = {"NPC"},
-    reqFlirtatiousness = {min=50, max=100},
+    reqFlirtatiousness = {min=25, max=100},
     reqGender = {"female"},
-    reqRelationship = {"single"},
+    reqRelationship = {"single", "widowed", "divorced"},
     reqAge = {min=18, max=26},
     dialogue = {
       playerText = "Hey there!",
@@ -183,7 +183,7 @@ return {
       options = {
         {
           optionText = "Flirt with her",
-          playerText = "(You flirt with her)",
+          playerText = "(You flirt with {name})",
           npcText = "(Giggles) I like you... come visit me later, okay?",
           effect = {
             contacts = 0,
