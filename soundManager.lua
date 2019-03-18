@@ -53,15 +53,20 @@ function SoundManager:update(dt)
   if (self.PlayTime > self.Length[self.Current] + self.Delay) then
     print("Stopping song " .. self.Current)
     self:stop(self.Current)
+    local song
     if self.Mode == "loop" then
       print("Looping " .. self.Current)
-      self:play(self.Current)
+      song = self.Current
     elseif self.Mode == "random" then
-      local song = self.Songs[love.math.random(#self.Songs)]
-      print("Now playing " .. song) 
-      self:play(song)
+      song = self.Songs[love.math.random(#self.Songs)]
+    elseif self.Mode == "linear" then
+      return
+    elseif self.Mode == "noloop" then
+      return
     else
       error("Invalid mode " .. self.Mode)
     end
+    print("Now playing " .. song) 
+    self:play(song)
   end
 end
