@@ -72,14 +72,14 @@ end
 function interactions:getValidConversation(npc)
   local validConversations = {}
   for k,v in pairs(self.list) do
-    if (not v.reqGender or table.contains(v.reqGender,npc.gender)) and
+    if (not v.reqType or table.contains(v.reqType,npc.type))  and
+       (not v.reqGender or table.contains(v.reqGender,npc.gender)) and
        (not v.reqRelationship or table.contains(v.reqRelationship,npc.relationship)) and
        (not v.reqMood or self.inRange(v.reqMood,npc.mood)) and
        (not v.reqReceptiveness or self.inRange(v.reqReceptiveness,npc.receptiveness)) and
        (not v.reqFlirtatiousness or self.inRange(v.reqFlirtatiousness,npc.flirtiness)) and
        (not v.reqAge or self.inRange(v.reqAge,npc.age)) and
-       (not v.reqContacted or v.reqContacted == npc.contacted) and 
-       (not v.reqType or table.contains(v.reqType,npc.type))
+       (not v.reqContacted or v.reqContacted == npc.contacted) 
        
     then
       table.insert(validConversations,v)
