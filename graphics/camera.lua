@@ -164,39 +164,22 @@ end
 -- Draws an entity. currently only displays their hitbox.
 function Camera:drawEntity(entity)
   local pos = self:GetScreenPosition(entity.position.x, entity.position.y)
+  love.graphics.setColor(1,1,1)
   if entity.type == "PlayerEntity" then
     entity:draw(pos[1]-16, pos[2]-16)
-    return -- Renove this line for debug drawing on the playera
-    love.graphics.setColor(.7,0,.7)
-  elseif entity.type == "NPC" then
+    --return -- Renove this line for debug drawing on the playera
+  elseif entity.type == "NPC" and entity.visible then
     entity:draw(pos[1]-16, pos[2]-16)
-    return -- Renove this line for debug drawing on the NPCs
-    love.graphics.setColor(0,0,.7)
-  elseif entity.type == "CompanionEntity" then
+    --return -- Renove this line for debug drawing on the NPCs
+  elseif entity.type == "CompanionEntity" and entity.visible then
     entity:draw(pos[1]-16, pos[2]-16)
-    return -- Renove this line for debug drawing on the companion
-    love.graphics.setColor(0,.7,0)
+    --return -- Renove this line for debug drawing on the companion
   end
 
-  if entity.visible then
-    love.graphics.circle("fill",pos[1], pos[2],4)
-
-    if entity.facing == "d" then
-      love.graphics.line(pos[1],pos[2],pos[1],pos[2]+10)
-    elseif entity.facing == "r" then
-      love.graphics.line(pos[1],pos[2],pos[1]+10,pos[2])
-    elseif entity.facing == "u" then
-      love.graphics.line(pos[1],pos[2],pos[1],pos[2]-10)
-    elseif entity.facing == "l" then
-      love.graphics.line(pos[1],pos[2],pos[1]-10,pos[2])
-    end
-
-    love.graphics.setColor(1,1,1)
-    if entity.arrow then
-      love.graphics.polygon("fill",pos[1],pos[2] - 10,
-                                    pos[1] + 5,pos[2] - 18,
-                                    pos[1] - 5,pos[2] - 18)
-    end
+  if entity.visible and entity.arrow then
+    love.graphics.polygon("fill",pos[1],pos[2] - 15,
+                                  pos[1] + 5,pos[2] - 23,
+                                  pos[1] - 5,pos[2] - 23)
   end
 
   if ShowHitboxes and entity.hitBox then
