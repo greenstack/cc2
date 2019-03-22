@@ -27,13 +27,18 @@ function love.load()
   love.graphics.setBackgroundColor(0.5,0.5,0.5)
   love.keyboard.setKeyRepeat(true)
   SetWeatherShaders()
-  sm = SoundManager:new()
-  sm:addSong("themeA", "assets/sound/theme_a.ogg", 226) --226
-  sm:addSong("themeB", "assets/sound/theme_b.ogg", 150) -- 250
-  sm:addSong("themeC", "assets/sound/theme_c.ogg", 187) --287
-  sm:setDelay(5)
-  sm:setMode("random")
-  sm:play("themeA")
+  gamePlaylist = SoundManager:new()
+  gamePlaylist:addSong("themeA", "assets/sound/theme_a.ogg", 226) --226
+  gamePlaylist:addSong("themeB", "assets/sound/theme_b.ogg", 150) -- 250
+  gamePlaylist:addSong("themeC", "assets/sound/theme_c.ogg", 187) --287
+  gamePlaylist:setDelay(5)
+  gamePlaylist:setMode("random")
+
+  titlePlaylist = SoundManager:new()
+  titlePlaylist:addSong("titleTheme", "assets/sound/theme_title.ogg", 37)
+  titlePlaylist:play("titleTheme")
+  currentPlaylist = titlePlaylist
+
   weatherShader = Weather.Foggy.Shader
 end
 
@@ -42,8 +47,7 @@ function love.update(dt)
 
   player:update(dt,input)
   world:update(dt,player)
-  sm:update(dt)
-  --interactions:update(dt,world,player)
+  currentPlaylist:update(dt)
 end
 
 function love.draw()

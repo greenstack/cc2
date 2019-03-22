@@ -31,16 +31,24 @@ function SoundManager:addSong(name, path, length)
 end
 
 function SoundManager:play(name)
+  if not name then
+    error("A name of a song must be provided.")
+  elseif not self.Items[name] then
+    error("The song " .. name .. " could not be found.")
+  end
+  
   self.Items[name]:play()
   self.PlayTime = 0
   self.Current = name
 end
 
 function SoundManager:stop(name)
+  name = name or self.Current
   self.Items[name]:stop()
 end
 
 function SoundManager:pause(name)
+  name = name or self.Current
   self.Items[name]:pause()
 end
 

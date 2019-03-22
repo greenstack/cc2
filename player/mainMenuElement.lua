@@ -64,6 +64,9 @@ end
 function MainMenuElement.startGame(player)
   player.inPlay = true
   player.screen = player:getScreen("gameScreen")
+  currentPlaylist:stop()
+  currentPlaylist = gamePlaylist
+  gamePlaylist:play("themeA")
 end
 
 function MainMenuElement.quit()
