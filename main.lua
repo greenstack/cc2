@@ -37,6 +37,7 @@ function love.load()
   titlePlaylist = SoundManager:new()
   titlePlaylist:addSong("titleTheme", "assets/sound/theme_title.ogg", 37)
   titlePlaylist:play("titleTheme")
+  titlePlaylist:setMode("loop")
   currentPlaylist = titlePlaylist
 
   weatherShader = Weather.Foggy.Shader

@@ -68,6 +68,7 @@ function SoundManager:update(dt)
     elseif self.Mode == "random" then
       song = self.Songs[love.math.random(#self.Songs)]
     elseif self.Mode == "linear" then
+      print("linear play mode hasn't been implemented.")
       return
     elseif self.Mode == "noloop" then
       return
