@@ -69,7 +69,7 @@ luke154 = "What man of you, having an hundred sheep, if he lose one of them, "
 
 ----- NPC Construtor ------
 
-function NPC:new(id, name, x, y, age, gender, mood, receptiveness, relationship, flirtiness, animation)
+function NPC:new(id, name, x, y, age, gender, mood, receptiveness, relationship, flirtiness, animation, imagename)
     local o = Entity.new(self, name, x, y)
 
     o.maxSpeed = 2
@@ -94,6 +94,7 @@ function NPC:new(id, name, x, y, age, gender, mood, receptiveness, relationship,
     o.contacted = false
 
     o.animation = animation
+    o.imageName = imagename
     o.spawnToggle = false
     o.spawned = false
     o.spawnNode = {}
