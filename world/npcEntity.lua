@@ -126,6 +126,10 @@ function NPC:getFlirtiness ()
     return self.flirtiness
 end
 
+function NPC:getImageName ()
+  return self.imageName
+end
+
 ----- NPC Setters -----
 
 function NPC:setAge (age)
@@ -175,12 +179,14 @@ function NPC:generate(count, weather, nodes)
             name = FEMALE_NAMES[math.random(1, #FEMALE_NAMES)]
             gender = "female"
             -- Choose a random female npc animation set here
-            animation = peachy.new("assets/animation/female_blonde.json", nil, "Idle")
+            imagename = "female_" .. (i % 2)
+            animation = peachy.new("assets/animation/" .. imagename .. ".json", nil, "Idle")
         else
             name = MALE_NAMES[math.random(1, #MALE_NAMES)]
             gender = "male"
             -- Choose a random male npc animation set here
-            animation = peachy.new("assets/animation/female_blonde.json", nil, "Idle")
+            imagename = "male_" .. (i % 2)
+            animation = peachy.new("assets/animation/" .. imagename .. ".json", nil, "Idle")
         end
 
         name = name .. " " .. LAST_NAMES[math.random(1, #LAST_NAMES)]
@@ -205,7 +211,7 @@ function NPC:generate(count, weather, nodes)
 
         x = nodes[index].LocationX + 0.5
         y = nodes[index].LocationY + 0.5
-        local npc = NPC:new(i, name, x, y, age, gender, mood, receptiveness, relationship, flirtiness, animation)
+        local npc = NPC:new(i, name, x, y, age, gender, mood, receptiveness, relationship, flirtiness, animation, imagename)
         npc.spawnNode = nodes[index]
         npc.prevNode = npc.spawnNode
         npc.targetNode = npc.spawnNode
@@ -271,7 +277,7 @@ function NPC:update(dt, world)
 
         end
     end
-    
+
     if self.targetNode then
       local targetX = self.targetNode.LocationX + 0.5
       local targetY = self.targetNode.LocationY + 0.5

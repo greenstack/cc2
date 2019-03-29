@@ -18,7 +18,7 @@ font = love.graphics.newImageFont("assets/font/luafont.png",
 arrow = love.graphics.newImage("assets/img/arrow.png")
 
 tempPlayerImg = love.graphics.newImage("assets/img/temp_player.png")
-tempNPCImg = love.graphics.newImage("assets/img/temp_npc.png")
+tempNPCImg = love.graphics.newImage("assets/img/female_1.png")
 
 
 function love.load()

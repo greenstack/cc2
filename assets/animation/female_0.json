@@ -156,7 +156,7 @@
  "meta": {
   "app": "http://www.aseprite.org/",
   "version": "1.2.9-x64",
-  "image": "assets\\animation\\female_0.png",
+  "image": "assets/animation/female_0.png",
   "format": "RGBA8888",
   "size": { "w": 544, "h": 32 },
   "scale": "1",
