@@ -21,6 +21,8 @@ level = {
     late = 0,
     --late drop, the lower the variable the faster the obedience drops when late
     lateDrop = 0,
+    --current level number
+    levelNumber = 0
 }
 
 function level:timeInit(o) 
@@ -39,8 +41,16 @@ function level:generate(levelNumber)
     o.weatherPattern = level.getWeatherPattern()
     o.npcCount = level.getNpcCount(levelNumber, o.weatherPattern)
     o.contactGoal = level.getContactGoal(levelNumber, o.weatherPattern)
+    o.levelNumber = levelNumber
     level:timeInit(o);
     return o
+end
+
+function level:update(dt, world) 
+  if world.weather ~= self.weatherPattern then
+    self.weatherPattern = world.weather
+    self.getNpcCount(self.levelNumber, self.weatherPattern)
+  end
 end
 
 --TODO: this data should be specified in a level asset
@@ -67,7 +77,15 @@ function level.getNpcCount(level, weather)
     elseif level == 2 then
         npcCount = math.random(13, 17)
     elseif level == 3 then
-        npcCount = math.random(20, 25)
+      npcCount = math.random(20, 25)
+    elseif level == 4 then
+      npcCount = math.random(24, 29)
+    elseif level == 5 then
+      npcCount = math.random(26, 31)
+    elseif level == 6 then
+      npcCount = math.random(30, 31)
+    elseif level == 7 then
+      npcCount = math.random(33, 35)
     end
     npcCount = math.floor(npcCount * weather.SpawnRateModifier)
     return npcCount
@@ -79,6 +97,16 @@ function level.getContactGoal(levelNumber,weatherPattern)
     return 8
   elseif levelNumber == 2 then
     return 10
+  elseif levelNumber == 3 then
+    return 12
+  elseif levelNumber == 4 then
+    return 12
+  elseif levelNumber == 5 then
+    return 14
+  elseif levelNumber == 6 then
+    return 16
+  elseif levelNumber == 7 then
+    return 18
   else 
     return 15
   end
