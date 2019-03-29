@@ -48,8 +48,10 @@ end
 
 function level:update(dt, world) 
   if world.weather ~= self.weatherPattern then
-    self.weatherPattern = world.weather
-    self.getNpcCount(self.levelNumber, self.weatherPattern)
+    print("npc: " .. self.npcCount)
+    world.weather = self.weatherPattern
+    self.npcCount = self.getNpcCount(self.levelNumber, self.weatherPattern)
+    print("npc: " .. self.npcCount)
   end
 end
 
