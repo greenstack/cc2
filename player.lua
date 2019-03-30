@@ -8,20 +8,19 @@ require "player.actionElement"
 require "player.conversationElement"
 require "player.contactsElement"
 
-player = {
-  obedience = 100,
-  maxObedience = 100,
-  contacts = 0,
-  contactsGoal = 0,
-  paused = false,
-  movement = {x=0,y=0},
-  debugMode = false,
-  inPlay = false,
-  screen = {},
-  screens = {}
-}
+player = {}
 
 function player:init()
+  self.obedience = 100
+  self.maxObedience = 100
+  self.contacts = 0
+  self.contactsGoal = 0
+  self.paused = false
+  self.movement = {x=0,y=0}
+  self.debugMode = false
+  self.inPlay = false
+  self.screen = {}
+  self.screens = {}
   local gameScreen = Screen:new("gameScreen")
   gameScreen:addElement(ObediometerElement:new("obediometer",10,10,true,true))
   gameScreen:addElement(PauseElement:new("pauseMenu",300,150,false,false))

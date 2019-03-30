@@ -94,6 +94,7 @@ function PauseElement.mainMenu(player)
   gamePlaylist:stop()
   currentPlaylist = titlePlaylist
   currentPlaylist:play("titleTheme")
+  love.reset()
 end
 function PauseElement.quit()
   love.event.quit()
