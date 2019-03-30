@@ -2,7 +2,6 @@ Vector = require "vector"
 
 require "cc2debug"
 require "utilities"
-require "loading"
 require "player"
 require "world"
 require "input"
