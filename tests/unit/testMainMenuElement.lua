@@ -33,6 +33,12 @@ function love.event.quit()
   MockPlayer.quit = true
 end
 
+currentPlaylist = {}
+function currentPlaylist:stop() return end
+
+gamePlaylist = {}
+function gamePlaylist:play(theme) return end
+
 -------------------------------------------------
 -- Setup Method
 -------------------------------------------------
