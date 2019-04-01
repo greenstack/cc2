@@ -7,7 +7,7 @@ ShowScreenCenter = false
 ShowPathingGraph = false
 
 function SetWeather(weather)
-  world.levelVars.weatherPattern = weather
+  world.levelVars:setWeatherPattern(weather)
 end
 
 function ReloadShaders()

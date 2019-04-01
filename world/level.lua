@@ -6,7 +6,7 @@ level = {
     --the number of npcs needed to contact for this level
     contactGoal = 0,
     --the weatherPattern for a given level
-    weatherPattern = 0,
+    weatherPattern = {},
     --in game hour count
     hour = 0,
     --in game minute count
@@ -23,20 +23,33 @@ level = {
     lateDrop = 0,
 }
 
-function level:timeInit(o) 
-    o.hour = 9
-    o.minute = 00
-    o.ampm = "AM"
-    o.rate = 15 --the lower the rate, the faster time will move in game
-    o.late = false
-    o.lateDrop = 0.37
+function level:getTimeInSeconds()
+    local timeInSeconds = 0;
+    local twelveHours = 43200;
+    local hours = self.hour * 3600
+    local minutes = self.minute * 60
+    if self.ampm ~= "AM" and self.hour < 12 then
+        timeInSeconds = twelveHours
+    end
+    timeInSeconds = timeInSeconds + hours + minutes
+    return timeInSeconds
 end
 
-function level:generate(levelNumber)
-    o = {}
+function level:timeInit()
+    self.hour = 9
+    self.minute = 00
+    self.ampm = "AM"
+    self.rate = 15 --the lower the rate, the faster time will move in game
+    self.late = false
+    self.lateDrop = 0.37
+end
+
+function level:generate(levelNumber, o)
+    o = o or {}
     setmetatable(o, self)
     self.__index = self
-    o.weatherPattern = level.getWeatherPattern()
+    local wp = level.getWeatherPattern()
+    o:setWeatherPattern(wp)
     o.npcCount = level.getNpcCount(levelNumber, o.weatherPattern)
     o.contactGoal = level.getContactGoal(levelNumber, o.weatherPattern)
     level:timeInit(o);
@@ -57,6 +70,14 @@ function level.getWeatherPattern()
         pattern = Weather.Foggy
     end
     return pattern
+end
+
+function level:setWeatherPattern(pattern)
+    print(pattern)
+    if self.weatherPattern and self.weatherPattern.Sound then
+        self.weatherPattern.Sound:stop()
+    end
+    self.weatherPattern = pattern
 end
 
 --TODO: this data should be specified in a level asset
@@ -83,22 +104,3 @@ function level.getContactGoal(levelNumber,weatherPattern)
     return 15
   end
 end
-
-
-
--- function level:updateTime(dt, levelVar)
---     levelVar.dtCount = levelVar.dtCount + 1
---     if (levelVar.dtCount == levelVar.rate) then
---         levelVar.dtCount = 0
---         levelVar.minute = levelVar.minute + 1
---     end
---     if (levelVar.minute == 60) then
---         levelVar.minute = 0
---         levelVar.hour = levelVar.hour + 1
---     end
---     if levelVar.hour == 13 then
---         levelVar.hour = 1
---         levelVar.ampm = "pm"
---     end
---     print("time: " .. levelVar.hour .. ":" .. levelVar.minute .. " " .. levelVar.ampm)
--- end
