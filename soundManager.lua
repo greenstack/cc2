@@ -2,9 +2,11 @@ SoundManager = {
   Songs = {},
   Items = {},
   Length = {},
+  Volumes = {},
   PlayTime = 0,
   Count = 0,
   Delay = 0,
+  Volume = 1,
   Current = "",
   Mode = "random"
 }
@@ -21,6 +23,17 @@ function SoundManager:new(o)
   return o
 end
 
+-- Sets the volume for all sources in the manager.
+-- (float) volume: the intensity of the sound.
+function SoundManager:setVolume(volume)
+  print("Setting volume to " .. volume)
+  self.Volume = volume
+  for _, song in ipairs(self.Songs) do
+    print(song)
+    self.Items[song]:setVolume(volume)
+  end
+end
+
 -- Sets the mode for this sound manager.
 -- (String) mode: loop, random, linear, noloop
 function SoundManager:setMode(mode)
@@ -35,6 +48,7 @@ function SoundManager:addSong(name, path, length)
   table.insert(self.Songs, name)
   self.Items[name] = love.audio.newSource(path, "stream")
   self.Length[name] = length
+  self.Items[name]:setVolume(self.Volume)
   self.Count = self.Count + 1
 end
 
@@ -100,4 +114,5 @@ function SoundManager:update(dt)
     print("Now playing " .. song) 
     self:play(song)
   end
+  -- Reset the volume for non-managed sound resource
 end
