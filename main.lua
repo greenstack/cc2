@@ -2,7 +2,6 @@ Vector = require "vector"
 
 require "cc2debug"
 require "utilities"
-require "loading"
 require "player"
 require "world"
 require "input"
@@ -18,7 +17,7 @@ font = love.graphics.newImageFont("assets/font/luafont.png",
 arrow = love.graphics.newImage("assets/img/arrow.png")
 
 tempPlayerImg = love.graphics.newImage("assets/img/temp_player.png")
-tempNPCImg = love.graphics.newImage("assets/img/temp_npc.png")
+tempNPCImg = love.graphics.newImage("assets/img/female_1.png")
 
 
 function love.load()
@@ -59,9 +58,17 @@ function love.update(dt)
   currentPlaylist:update(dt)
 end
 
+function love.reset()
+  player:init()
+  world.entities = {}
+  world:init()
+end
+
 function love.draw()
   love.graphics.setFont(font)
-  world:draw()
+  if player.screen == player:getScreen("gameScreen") then
+    world:draw()
+  end
   player.screen:draw()
   love.graphics.setColor(1,1,1)
   love.graphics.print(love.timer.getFPS() .. "fps", 750, 25)

@@ -52,6 +52,7 @@ function world:update(dt,playerController)
   self:updateEntities(dt)
   self:moveEntities(dt)
   self:updateTime(dt, playerController)
+  self.levelVars:update(dt, self)
   interactions:update(dt,self,playerController,input)
 
   self:setVisibleEntities()

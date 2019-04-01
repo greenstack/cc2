@@ -7,6 +7,7 @@ function ConversationElement:new(name,x,y,enabled,visible,conversation,playerEnt
   o.conversation = conversation
   o.playerEntity = playerEntity
   o.npc = npc
+  o.npcImg = love.graphics.newImage("assets/img/".. npc.imageName .. ".png")
   o.state = 1
   o.text = ""
   o.choices = {}
@@ -49,14 +50,14 @@ function ConversationElement:update(dt,input,playerController)
       self.firstTimeInState = false
       self.waiting = true
     end
-    
+
     if input:pressed('up') then
       self.choice = math.max(1,self.choice - 1)
     end
     if input:pressed('down') then
       self.choice = math.min(self.choice + 1,#self.choices)
     end
-    
+
     if self.waiting and input:consumePressed('talk') then
       self:nextState()
       return
@@ -66,7 +67,7 @@ function ConversationElement:update(dt,input,playerController)
       self.text = self:replaceText(self.conversation.dialogue.options[self.choice].playerText)
       self.firstTimeInState = false
     end
-    
+
     if self.waiting and input:consumePressed('talk') then
       self:nextState()
       return
@@ -75,18 +76,18 @@ function ConversationElement:update(dt,input,playerController)
     if self.firstTimeInState then
       self.text = self:replaceText(self.conversation.dialogue.options[self.choice].npcText)
       self.firstTimeInState = false
-      
+
       self:applyEffects(playerController,self.conversation.dialogue.options[self.choice].effect)
-      
+
     end
-    
+
     if self.waiting and input:consumePressed('talk') then
       self:close()
       return
     end
   end
 
-  
+
   if not (self.state == 3) then
     if not self.waiting and input:consumePressed('talk') then
       self.textProgress = #self.text
@@ -94,15 +95,15 @@ function ConversationElement:update(dt,input,playerController)
       self.textProgress = self.textProgress + dt * scrollSpeed
     end
   end
-  
+
   if self.textProgress >= #self.text then
     self.waiting = true
   end
-  
+
   --[[if input:consumePressed('talk') then
-    
+
   end]]
-  
+
 end
 
 function ConversationElement:nextState()
@@ -118,9 +119,9 @@ function ConversationElement:close()
   self.playerEntity.interaction = false
 end
 
-function ConversationElement:applyEffects(playerController,effects) 
+function ConversationElement:applyEffects(playerController,effects)
   if not effects then return end
-  
+
   if effects.contacts then
     playerController.contacts = playerController.contacts + effects.contacts
   end
@@ -136,22 +137,23 @@ function ConversationElement:draw()
 
   local xPos = (windowWidth - elementWidth) / 2
   local yPos = windowHeight - elementHeight
-  
-  
+
+
   love.graphics.setColor(.2,.2,.2)
   love.graphics.rectangle("fill",xPos,yPos,elementWidth,elementHeight)
-  
+
   love.graphics.setColor(1,1,1)
+  padding = 8
   if self.state == 1 or self.state == 3 or self.state == 4 then
-    love.graphics.draw(tempPlayerImg,xPos,yPos)
-    love.graphics.print(self.playerEntity.name,xPos,yPos+64)
-  else 
-    love.graphics.draw(tempNPCImg,xPos + elementWidth - 64,yPos)
-    love.graphics.print(self.npc.name,xPos + elementWidth - 64,yPos+64)
+    love.graphics.draw(tempPlayerImg,xPos + padding,yPos)
+    love.graphics.print(self.playerEntity.name,xPos + padding,yPos+64)
+  else
+    love.graphics.draw(self.npcImg,xPos + elementWidth - 64 - padding,yPos)
+    love.graphics.print(self.npc.name,xPos + elementWidth - 64 - padding,yPos+64)
   end
-  
+
   love.graphics.setColor(.9,.9,.9)
-  
+
   if self.state == 3 then
     for k,v in ipairs(self.choices) do
       love.graphics.print(v,xPos + 70,yPos + 5 + 30 * (k - 1))
@@ -159,17 +161,17 @@ function ConversationElement:draw()
     if self.waiting then
       love.graphics.setColor(1,1,1)
       love.graphics.draw(arrow,xPos + 60,yPos + 5 + 30 * (self.choice - 1))
-    end  
+    end
   else
-    love.graphics.printf(self:scrollText(self.text),xPos + 70,yPos + 5,500)  
+    love.graphics.printf(self:scrollText(self.text),xPos + 70,yPos + 5,500)
     if self.waiting then
       love.graphics.setColor(1,1,1)
       love.graphics.draw(arrow,xPos + 550 , yPos + 120)
     end
   end
-  
-  
-  
+
+
+
 end
 
 function ConversationElement:replaceText(text)
@@ -182,4 +184,3 @@ function ConversationElement:scrollText(text)
   text = text:sub(0,self.textProgress)
   return text
 end
-
