@@ -33,12 +33,20 @@ function love.load()
   gamePlaylist:addSong("themeC", "assets/sound/theme_c.ogg", 187) --287
   gamePlaylist:setDelay(5)
   gamePlaylist:setMode("random")
+  gamePlaylist:setVolume(0)
 
   titlePlaylist = SoundManager:new()
   titlePlaylist:addSong("titleTheme", "assets/sound/theme_title.ogg", 37)
-  titlePlaylist:play("titleTheme")
+  --titlePlaylist:play("titleTheme")
   titlePlaylist:setMode("loop")
-  currentPlaylist = titlePlaylist
+  titlePlaylist:setVolume(0)
+  
+  testPlaylist = SoundManager:new()
+  testPlaylist:addSong("beta1", "assets/sound/Song-A-Unfinished_1.ogg", 500)
+  testPlaylist:play("beta1")
+  testPlaylist:setVolume(0)
+  titlePlaylist:setMode("loop")
+  currentPlaylist = testPlaylist
 
   weatherShader = Weather.Foggy.Shader
 end
@@ -56,7 +64,7 @@ function love.draw()
   world:draw()
   player.screen:draw()
   love.graphics.setColor(1,1,1)
-  love.graphics.print(love.timer.getFPS() .. "fps",750,25)
+  love.graphics.print(love.timer.getFPS() .. "fps", 750, 25)
   love.graphics.print(math.floor(world.player.position.x) .. " , " .. math.floor(world.player.position.y),700,45)
   love.graphics.reset()
 end

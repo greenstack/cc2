@@ -11,13 +11,13 @@ local WeatherPattern = {
   -- (love.graphics.Shader) The shader associated with this weather pattern.
   Shader,
   -- (function) A function that updates the current weather. Typically empty.
-  update = function(dt) end,
+  update = function(self, dt) if self.BackgroundNoise ~= nil then self.BackgroundNoise:update(dt) end end,
   type = "WeatherPattern"
 }
 
 -- Creates a new weather pattern.
-function WeatherPattern:new(name, rMod, fMod, srMod, vMod) 
-  o = {}
+function WeatherPattern:new(name, rMod, fMod, srMod, vMod, o) 
+  o = o or {}
   setmetatable(o, self)
   self.__index = self
   o.Name = name
@@ -55,6 +55,8 @@ function SetWeatherShaders()
 
   print("Configuring rain...")
   Weather.Rainy.Shader = love.graphics.newShader("graphics/shaders/rain.frag")
+  Weather.Rainy.Sound = SoundManager:new()
+  Weather.Rainy.Sound:addSong("r", "assets/sound/_rain.mp3", 81)
   local raindrop = love.graphics.newImage("assets/img/raindrop.png")
   local psystem = love.graphics.newParticleSystem(raindrop, 32)
   psystem:setEmissionArea("uniform", love.graphics.getWidth() / 6, 0, 0, false)
@@ -66,5 +68,5 @@ function SetWeatherShaders()
   psystem:setLinearAcceleration(0, 50, 0, 75)
   psystem:setColors(1,1,1,1, 1,1,1,0)
   Weather.Rainy.ParticleSystem = psystem
-  Weather.Rainy.update = function(self, dt) self.ParticleSystem:update(dt) end
+  Weather.Rainy.update = function(self, dt) self.ParticleSystem:update(dt); self.Sound:update(dt) end
 end
