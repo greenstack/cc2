@@ -4,10 +4,24 @@
 // correct amount of VRAM is allocated for the hitboxes.
 #define RECT_COUNT _HITBOX_TOTAL_
 
+// 7:30 pm is 70200. Reduce range of sight until 9:00 pm (75600)
+// reduce range (fade) to 50
+
+// 9:30 am is 34200. Raise range of sight until 11:00 am (39600)
+// start at 150, go up to 300
 uniform vec2 playerPos;
 uniform vec2 translate;
 uniform vec4[RECT_COUNT] rects;
-uniform float fade;
+
+uniform float morning_fade; // range in the morning
+uniform float fade;         // Standard daytime fade distance. Default is 300
+uniform float evening_fade; // minimum range in the morning
+uniform float worldTime;      // Current time in the world.
+uniform vec2 morningBounds; // the time after which to increase range and the time
+                            // to stop increasing
+uniform vec2 eveningBounds; // the time after which to decrease range and the time
+                            // to stop decreasing 
+
 uniform float shadowAlpha; 
 
 float shadowGray = 0.1;
@@ -73,6 +87,16 @@ float LineIntersectsRect(vec4 l, vec4 rect) {
     return intersections;
 }
 
+bool betweenInclusive(float lower, float n, float upper) {
+    return (lower <= n && n <= upper);
+}
+
+float getFadeDistance(float fade_to, float fade_from, vec2 bounds) {
+    float slope = (fade_to - fade_from) / (bounds.y - bounds.x);
+    float intercept = fade_to - bounds.y * slope;
+    return slope * worldTime + intercept;
+}
+
 vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
     vec4 toPlayer = vec4(screen_coords, playerPos);
     float dist = length(screen_coords - playerPos);
@@ -88,9 +112,33 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
         }
     }
 
-    if(dist > fade) {
-      float fade_mag = min(1,(dist - fade) / 200);
-      return vec4(vec3(shadowGray), shadowAlpha*fade_mag);
+    float fade_dist = fade;
+    if (worldTime <= morningBounds.x) {
+        fade_dist = morning_fade;
+    }
+    else if (betweenInclusive(morningBounds.x, worldTime, morningBounds.y)) {
+        fade_dist = getFadeDistance(fade, morning_fade, morningBounds);
+    }
+    else if (betweenInclusive(morningBounds.y, worldTime, eveningBounds.x)) {
+        fade_dist = fade;
+    }
+    else if (betweenInclusive(eveningBounds.x, worldTime, eveningBounds.y)) {
+        fade_dist = getFadeDistance(evening_fade, fade, eveningBounds);
+    }
+    else if (worldTime >= eveningBounds.y) {
+        fade_dist = evening_fade;
+    }
+    else fade_dist = 0;
+
+    float shadowMod = 0;
+    /*if (betweenInclusive(morningBounds.y, worldTime, eveningBounds.x)) {
+        // make the shadows lighter
+        shadowMod = -shadowAlpha*(1/(eveningBounds.x - morningBounds.y)*worldTime);
+    }*/
+    shadowMod += shadowAlpha;
+    if(dist > fade_dist) {
+      float fade_mag = min(1,(dist - fade_dist) / 200);
+      return vec4(vec3(shadowGray), shadowMod * fade_mag);
     }
 
     return vec4(0,0,0,0);

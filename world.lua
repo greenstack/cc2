@@ -53,6 +53,7 @@ function world:update(dt,playerController)
   self:moveEntities(dt)
   self:updateTime(dt, playerController)
   self.levelVars:update(dt, self)
+  self.camera.Shadows:send("worldTime", self.levelVars:getTimeInSeconds())
   interactions:update(dt,self,playerController,input)
 
   self:setVisibleEntities()
@@ -102,7 +103,7 @@ function world:draw()
   else
     love.graphics.print("Time: " .. self.levelVars.hour .. ":" .. self.levelVars.minute .. " " .. self.levelVars.ampm, 40, 83)
   end
-
+  love.graphics.print("Time (s): " .. self.levelVars:getTimeInSeconds(), 40, 100);
   -- DEGUG ELEMENTS --
   -- lines showing the center of the screen for testing
   if ShowScreenCenter then
@@ -191,9 +192,7 @@ function world:updateTime(dt, playerController)
   end
   if self.levelVars.late == true then
     playerController.obedience = playerController.obedience - self.levelVars.lateDrop
-    --print("decreasing obedience to:" .. playerController.obedience);
   end
---   print("time: " .. self.levelVars.hour .. ":" .. self.levelVars.minute .. " " .. self.levelVars.ampm)
 end
 
 function world:spawnDespawnNPCs()

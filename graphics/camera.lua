@@ -149,7 +149,14 @@ function Camera:SetMap(map)
   shader = shader:gsub('_HITBOX_TOTAL_', #hitboxes)
   self.Shadows = love.graphics.newShader(shader)
   self.Shadows:send("rects", unpack(hitboxes))
+  
+  -- configure the fade distance
+  self.Shadows:send("morning_fade", 150)
   self.Shadows:send("fade", 300)
+  self.Shadows:send("evening_fade", 50)
+  self.Shadows:send("morningBounds", {34200, 39600})
+  self.Shadows:send("eveningBounds", {70200, 75600})
+
   self.Shadows:send("shadowAlpha", .3)
 end
 
