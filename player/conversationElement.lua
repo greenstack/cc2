@@ -149,7 +149,8 @@ function ConversationElement:draw()
     love.graphics.print(self.playerEntity.name,xPos + padding,yPos+64)
   else
     love.graphics.draw(self.npcImg,xPos + elementWidth - 64 - padding,yPos)
-    love.graphics.print(self.npc.name,xPos + elementWidth - 64 - padding,yPos+64)
+    width = font:getWidth(self.npc.name)
+    love.graphics.print(self.npc.name,xPos + elementWidth - width - padding,yPos+64)
   end
 
   love.graphics.setColor(.9,.9,.9)
