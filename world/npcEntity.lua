@@ -94,7 +94,7 @@ function NPC:new(id, name, x, y, age, gender, mood, receptiveness, relationship,
     o.contacted = false
 
     o.animation = animation
-    o.imageName = imagename
+    o.interactionImg = imagename
     o.spawnToggle = false
     o.spawned = false
     o.spawnNode = {}

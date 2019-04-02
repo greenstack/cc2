@@ -16,9 +16,7 @@ font = love.graphics.newImageFont("assets/font/luafont.png",
   "123456789.,!?-+/():;%&`'*#=[]\"><{}")
 arrow = love.graphics.newImage("assets/img/arrow.png")
 
-tempPlayerImg = love.graphics.newImage("assets/img/temp_player.png")
-tempNPCImg = love.graphics.newImage("assets/img/female_1.png")
-
+playerImg = love.graphics.newImage("assets/img/player_portrait.png")
 
 function love.load()
   player:init()
@@ -39,7 +37,7 @@ function love.load()
   --titlePlaylist:play("titleTheme")
   titlePlaylist:setMode("loop")
   titlePlaylist:setVolume(0)
-  
+
   testPlaylist = SoundManager:new()
   testPlaylist:addSong("beta1", "assets/sound/Song-A-Unfinished_1.ogg", 500)
   testPlaylist:play("beta1")

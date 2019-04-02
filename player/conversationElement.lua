@@ -7,7 +7,7 @@ function ConversationElement:new(name,x,y,enabled,visible,conversation,playerEnt
   o.conversation = conversation
   o.playerEntity = playerEntity
   o.npc = npc
-  o.npcImg = love.graphics.newImage("assets/img/".. npc.imageName .. ".png")
+  o.npcImg = love.graphics.newImage("assets/img/".. npc.interactionImg .. ".png")
   o.state = 1
   o.text = ""
   o.choices = {}
@@ -145,7 +145,7 @@ function ConversationElement:draw()
   love.graphics.setColor(1,1,1)
   padding = 8
   if self.state == 1 or self.state == 3 or self.state == 4 then
-    love.graphics.draw(tempPlayerImg,xPos + padding,yPos)
+    love.graphics.draw(playerImg,xPos + padding,yPos)
     love.graphics.print(self.playerEntity.name,xPos + padding,yPos+64)
   else
     love.graphics.draw(self.npcImg,xPos + elementWidth - 64 - padding,yPos)
