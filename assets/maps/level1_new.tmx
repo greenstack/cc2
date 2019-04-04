@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="3">
+<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="6">
  <tileset firstgid="1" source="city.tsx"/>
  <tileset firstgid="101" source="pathingGraph.tsx"/>
- <layer id="3" name="ground_layer" width="16" height="16" opacity="0.09">
+ <layer id="3" name="ground_layer" width="16" height="16">
   <data encoding="csv">
 1,1,5,6,6,6,6,6,6,6,6,6,6,27,6,6,
 1,1,5,6,16,6,6,6,6,6,6,6,6,27,6,6,
@@ -30,8 +30,8 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,47,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,49,
+0,0,0,0,42,41,0,0,0,0,0,0,0,0,0,47,
+0,0,0,0,41,42,0,0,0,0,0,0,0,0,0,49,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,46,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -45,6 +45,8 @@
  <objectgroup id="6" name="collisions">
   <object id="1" x="321.5" y="193" width="63" height="94"/>
   <object id="2" x="480.5" y="202" width="30.5" height="85.5"/>
+  <object id="3" x="134.5" y="197" width="54" height="58.5"/>
+  <object id="4" x="556" y="192"/>
  </objectgroup>
  <layer id="5" name="high" width="16" height="16">
   <properties>
