@@ -20,6 +20,7 @@ function Entity:new(name,x,y,o)
   o.name = name
   o.interaction = false -- indicates entity is in an interaction
   o.animation = nil
+  o.interactionImg = ""
   o.visible = false
   return o
 end

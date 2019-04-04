@@ -17,6 +17,7 @@ function CompanionEntity:new(name,x,y,o)
   o.animation = peachy.new("assets/animation/companion.json", nil, "Idle")
   o.curPathIndex = 0
   o.atTarget = true
+  o.interactionImg = "companion_portrait"
   return o
 end
 
