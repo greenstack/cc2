@@ -25,12 +25,18 @@ function world:init()
 
   self.levelVars = level:generate(self.level)
   self.weather = self.levelVars.weatherPattern
-  self.map = Map:new("assets/maps/level3_cc1", "assets/img/tiles.png")
+  self.map = Map:new("assets/maps/level1_new", "assets/img/tiles.png")
   self.camera = Camera:new()
   self.camera:SetMap(self.map)
 
-  self.player = PlayerEntity:new("You",30.5,25.5)
-  self.companion = CompanionEntity:new("Elder Meanie",32.5,27.5)
+  -- We want to start both the player and the companion in the middle of their
+  -- spawn tile.
+  self.player = PlayerEntity:new("You", 
+    self.map.PathingGraph.PlayerStart.LocationX + 0.5, 
+    self.map.PathingGraph.PlayerStart.LocationY + 0.5)
+  self.companion = CompanionEntity:new("Elder Meanie", 
+    self.map.PathingGraph.CompanionStart.LocationX + 0.5, 
+    self.map.PathingGraph.CompanionStart.LocationY + 0.5)
   table.insert(self.entities,self.companion)
   self.npcs = NPC:generate(self.levelVars.npcCount, self.weather, self.map.PathingGraph.SpawnNodes)
 end
