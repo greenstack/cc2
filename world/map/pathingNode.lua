@@ -6,13 +6,22 @@ PathingNode = {
   type = "pathingNode",
 }
 
+local NODE_TYPES_OLD = {
+  Spawning = 51,
+  Intersection = 11,
+  Shop = 30,
+  PlayerStart = 28,
+  CompanionStart = 29,
+  Blocking = 40,
+}
+
 NodeTypes = {
-  Spawning = 51,--1,
-  Intersection = 11,--2,
-  Shop = 30,--3,
-  PlayerStart = 28,--4,
-  CompanionStart = 29,--5,
-  Blocking = 40,--6
+  Spawning = 101,
+  Intersection = 102,
+  Shop = 103,
+  PlayerStart = 104,
+  CompanionStart = 105,
+  Blocking = 106
 }
 
 function PathingNode:insertEdge(node)

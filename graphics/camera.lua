@@ -22,13 +22,13 @@ Camera = {
 
 -- Causes the camera to update the part of the world it is to be rendering.
 function Camera:UpdateTilesetBatch()
-  for layerName, tilesetBatch in pairs(self.TilesetBatch) do
+  for layerId, tilesetBatch in pairs(self.TilesetBatch) do
     tilesetBatch:clear()
     for y = 0, self.TileDisplayHeight - 1 do
       for x = 0, self.TileDisplayWidth - 1 do
-        if not self.Map.Layers[layerName]:IsTileEmpty(x + math.floor(self.MapX), y + math.floor(self.MapY)) then
+        if not self.Map.Layers[layerId]:IsTileEmpty(x + math.floor(self.MapX), y + math.floor(self.MapY)) then
           tilesetBatch:add(
-            self.Map.Tileset:GetTile(self.Map.Layers[layerName]:GetTile(x + math.floor(self.MapX), y + math.floor(self.MapY)).TileId),
+            self.Map.Tileset:GetTile(self.Map.Layers[layerId]:GetTile(x + math.floor(self.MapX), y + math.floor(self.MapY)).TileId),
             self.Map.Tileset.TileWidth * (x - 1),
             self.Map.Tileset.TileHeight * (y - 1)
           )
@@ -131,7 +131,7 @@ function Camera:SetMap(map)
   print(#map.Layers)
   for _, layer in pairs(map.Layers) do
     print("Setting layer " .. layer.Name .. " tileset batch.")
-    self.TilesetBatch[layer.Name] = love.graphics.newSpriteBatch(map.Tileset.Image, map.Tileset.ImageWidth * map.Tileset.ImageHeight)
+    self.TilesetBatch[layer.id] = love.graphics.newSpriteBatch(map.Tileset.Image, map.Tileset.ImageWidth * map.Tileset.ImageHeight)
   end
   self:UpdateTilesetBatch()
 

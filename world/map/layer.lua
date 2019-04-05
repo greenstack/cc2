@@ -35,6 +35,7 @@ function Layer:new(data, layerId, o)
   setmetatable(o, self)
   self.__index = self
   o.Name = data.name
+  o.id = data.id
   o.Grid = {}
   o.LayerWidth = data.width
   o.LayerHeight = data.height

@@ -42,7 +42,7 @@ function Map:new(levelName, tilesetPath, o)
       o.Hitboxes = objects
     elseif layer.type == "tilelayer" and layer.visible then
       local l = Layer:new(layer, layerId)
-      o.Layers[l.Name] = l
+      o.Layers[l.id] = l
     elseif layer.name == "complete nodes" then
       local l = Layer:new(layer, layerId)
       print("Setting up pathing graph.")
