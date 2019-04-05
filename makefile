@@ -1,6 +1,6 @@
 BUILD_DIR = ./build
 CC2 = cc2.love
-EXCLUDES = -x $(BUILD_DIR) readme.md .git*
+EXCLUDES = -x $(BUILD_DIR) readme.md .git* *.tsx *.tmx
 FLAGS = -r
 
 all: cc2
