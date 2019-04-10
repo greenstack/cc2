@@ -50,8 +50,7 @@ function level:generate(levelNumber, o)
     o = o or {}
     setmetatable(o, self)
     self.__index = self
-    -- local wp = level.getWeatherPattern()
-    local wp = Weather.Rainy
+    local wp = level.getWeatherPattern()
     o:setWeatherPattern(wp)
     o.npcCount = level.getNpcCount(levelNumber, o.weatherPattern)
     o.contactGoal = level.getContactGoal(levelNumber, o.weatherPattern)
