@@ -38,7 +38,7 @@ function world:init()
     self.map.PathingGraph.CompanionStart.LocationX + 0.5, 
     self.map.PathingGraph.CompanionStart.LocationY + 0.5)
   table.insert(self.entities,self.companion)
-  self.npcs = NPC:generate(self.levelVars.npcCount, self.weather, self.map.PathingGraph.SpawnNodes)
+  self.npcs = NPC:generate(self.levelVars.npcCount, self.map.PathingGraph.SpawnNodes)
 end
 
 function world:update(dt,playerController)
@@ -202,7 +202,9 @@ function world:updateTime(dt, playerController)
 end
 
 function world:spawnDespawnNPCs()
--- print("NUM NPCS: " .. #self.npcs)
+    -- if #self.npcs < self.levelVars.npcCount * 2 then
+    --     local npcs = NPC:generate(self.levelVars.npcCount * 2, self.weather, self.map.PathingGraph.SpawnNodes)
+    -- end
 
   for i, npc in pairs(self.npcs) do
     if npc:shouldSpawn() then

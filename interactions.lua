@@ -76,8 +76,8 @@ function interactions:getValidConversation(npc)
        (not v.reqGender or table.contains(v.reqGender,npc.gender)) and
        (not v.reqRelationship or table.contains(v.reqRelationship,npc.relationship)) and
        (not v.reqMood or self.inRange(v.reqMood,npc.mood)) and
-       (not v.reqReceptiveness or self.inRange(v.reqReceptiveness,npc.receptiveness)) and
-       (not v.reqFlirtatiousness or self.inRange(v.reqFlirtatiousness,npc.flirtiness)) and
+       (not v.reqReceptiveness or self.inRange(v.reqReceptiveness,npc.receptiveness())) and
+       (not v.reqFlirtatiousness or self.inRange(v.reqFlirtatiousness,npc.flirtiness())) and
        (not v.reqAge or self.inRange(v.reqAge,npc.age)) and
        (not v.reqContacted or v.reqContacted == npc.contacted) 
        
