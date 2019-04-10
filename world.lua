@@ -15,6 +15,7 @@ world = {
   companion = {},
   entities = {},
   npcs = {},
+  spawnedNpcs = 0,
   camera = {},
   map = {},
   levelVars = {},
@@ -38,7 +39,7 @@ function world:init()
     self.map.PathingGraph.CompanionStart.LocationX + 0.5, 
     self.map.PathingGraph.CompanionStart.LocationY + 0.5)
   table.insert(self.entities,self.companion)
-  self.npcs = NPC:generate(self.levelVars.npcCount, self.map.PathingGraph.SpawnNodes)
+  self.npcs = NPC:generate(self.levelVars.npcCount * 2, self.map.PathingGraph.SpawnNodes)
 end
 
 function world:update(dt,playerController)
@@ -202,26 +203,45 @@ function world:updateTime(dt, playerController)
 end
 
 function world:spawnDespawnNPCs()
-    -- if #self.npcs < self.levelVars.npcCount * 2 then
-    --     local npcs = NPC:generate(self.levelVars.npcCount * 2, self.weather, self.map.PathingGraph.SpawnNodes)
-    -- end
+  -- temporarily store npcCount in case the npcCount is updated during execution
+  local npcCount = self.levelVars.npcCount 
 
-  for i, npc in pairs(self.npcs) do
-    if npc:shouldSpawn() then
-      table.insert(self.entities, npc)
-    elseif npc:shouldDespawn() then
-      for j, entity in pairs(self.entities) do
-        if entity.type == npc.type then
-          if entity.id == npc.id then
-            table.remove(self.entities, j)
-            -- print("REMOVED: " .. j)
-            break
-          end
-        end
+  -- Dynamically generate more NPCs if the npcCount increases
+  if (self.spawnedNpcs + #self.npcs) < (npcCount * 2) then
+    local numToAdd = (npcCount * 2) - self.spawnedNpcs
+    local npcs = NPC:generate(numToAdd, self.map.PathingGraph.SpawnNodes)
+
+    for i = 1, #npcs do
+      table.insert(self.npcs, npcs[i])
+    end
+  end 
+
+  -- Remove NPCs waiting to despawn
+  for i = #self.entities, 1, -1 do
+    local entity = self.entities[i]
+
+    if entity.type == "NPC" then
+      if entity:shouldDespawn() then
+        entity.despawnToggle = false
+        entity.spawned = false
+        -- print("REMOVED: " .. entity:getStats())
+        table.remove(self.entities, i)
+        table.insert(self.npcs, entity)
+        self.spawnedNpcs = self.spawnedNpcs - 1
       end
     end
   end
-  
+
+  -- Add NPCs to bring the count back up
+  while self.spawnedNpcs < npcCount do
+    local i = math.random(1, #self.npcs)
+    local npc = self.npcs[i]
+    npc.spawned = true
+    -- print("ADDED: " .. npc:getStats())
+    table.remove(self.npcs, i)
+    table.insert(self.entities, npc)
+    self.spawnedNpcs = self.spawnedNpcs + 1
+  end
 end
 
 function world:moveEntities(dt)

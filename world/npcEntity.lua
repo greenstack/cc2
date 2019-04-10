@@ -103,7 +103,7 @@ function NPC:new(id, name, x, y, age, gender, mood, receptiveness, relationship,
 
     o.animation = animation
     o.interactionImg = imagename
-    o.spawnToggle = false
+    o.despawnToggle = false
     o.spawned = false
     o.spawnNode = {}
     o.prevNode = nil
@@ -163,7 +163,7 @@ end
 --[[
 NPC:generate
 count - the number of NPCs to generate
-nodes - the spawnToggle nodes on the map
+nodes - the spawning nodes on the map
 ]]
 function NPC:generate(count, nodes)
     math.randomseed(os.time())
@@ -204,7 +204,7 @@ function NPC:generate(count, nodes)
         relationship = RELATIONSHIPS[math.random(1, #RELATIONSHIPS)]
         flirtiness = math.random(minFlirtiness, maxFlirtiness)
 
-        -- spawnToggle until the nodes are filled up
+        -- spawn at random nodes until the nodes are filled up
         if i <= #nodes then
             while true do
                 index = math.random(1, #nodes)
@@ -232,21 +232,7 @@ function NPC:generate(count, nodes)
 end
 
 function NPC:shouldDespawn()
-    if self.spawned and self.spawnToggle then
-        -- print(self.name .. " DESPAWNED")
-        self.spawned = false
-        self.spawnToggle = false
-        return true
-    end
-
-    return false
-end
-
-function NPC:shouldSpawn()
-    if not self.spawned and math.random(1, 100) == 100 then
-        self.spawnNode = NPC:getNode(world.map.PathingGraph.Nodes, self.position.x, self.position.y)
-        self.spawned = true
-        self.spawnToggle = false
+    if self.spawned and self.despawnToggle then
         return true
     end
 
@@ -264,7 +250,7 @@ function NPC:getNode(nodes, x, y)
 end
 
 function NPC:update(dt, world)
-    if self.interaction or self.spawnToggle then
+    if self.interaction or self.despawnToggle then
         return
     end
 
@@ -274,8 +260,8 @@ function NPC:update(dt, world)
     local node = NPC:getNode(world.map.PathingGraph.Nodes, x, y)
 
     if node then
-        if node.NodeType == NodeTypes.Spawning and not (node == self.spawnNode) and math.random(0, 1) == 1 then
-            self.spawnToggle = true
+        if node.NodeType == NodeTypes.Spawning and not (node == self.spawnNode) and math.random(0, 100) == 100 then
+            self.despawnToggle = true
             return
         end
 
