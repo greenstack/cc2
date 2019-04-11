@@ -26,7 +26,7 @@ function world:init()
 
   self.levelVars = level:generate(self.level)
   self.weather = self.levelVars.weatherPattern
-  self.map = Map:new("assets/maps/level1_new", "assets/img/tiles.png")
+  self.map = Map:new("assets/maps/level2_new", "assets/img/tiles.png")
   self.camera = Camera:new()
   self.camera:SetMap(self.map)
 
