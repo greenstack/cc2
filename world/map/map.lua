@@ -40,14 +40,14 @@ function Map:new(levelName, tilesetPath, o)
         end
       end
       o.Hitboxes = objects
-    elseif layer.type == "tilelayer" and layer.visible then
-      local l = Layer:new(layer, layerId)
-      o.Layers[l.id] = l
-    elseif layer.name == "complete nodes" then
+    elseif layer.name == "complete nodes" or (layer.properties and layer.properties["graph"]) then
       local l = Layer:new(layer, layerId)
       print("Setting up pathing graph.")
       o.PathingGraph = PathingGraph:new(l)
       o.PathingGraph:prepareDisplay(o)
+    elseif layer.type == "tilelayer" and layer.visible then
+      local l = Layer:new(layer, layerId)
+      o.Layers[l.id] = l
     elseif not layer.visible then
       print("Skipping invisible layer " .. layer.name)
     else
