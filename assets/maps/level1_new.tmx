@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="27" height="21" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="10">
+<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="27" height="21" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="14">
  <tileset firstgid="1" source="city.tsx"/>
  <tileset firstgid="101" source="pathingGraph.tsx"/>
  <layer id="8" name="ground_layer" width="27" height="21">
@@ -59,6 +59,10 @@
   <object id="6" x="323" y="388" width="30" height="29"/>
   <object id="8" x="512.697" y="190.603" width="94.6981" height="97.714"/>
   <object id="9" x="480.729" y="542.855" width="126.063" height="129.079"/>
+  <object id="10" x="-21" y="-19" width="915" height="18"/>
+  <object id="11" x="864" y="-44" width="19" height="733"/>
+  <object id="12" x="-23" y="672" width="910" height="24"/>
+  <object id="13" x="-49" y="-21" width="48" height="703"/>
  </objectgroup>
  <layer id="10" name="high" width="27" height="21">
   <properties>
