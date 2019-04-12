@@ -7,8 +7,8 @@ Camera = {
   -- (map) The map the camera should be drawing.
   Map,
   -- (tilesetbatch) The batch that the camera will draw in the :draw method.
-  -- TODO: Turn this into a table of tilesetbatches.
   TilesetBatch,
+  HighTilesetBatch,
   -- (number) How many tiles to display horizontally.
   TileDisplayWidth = 27,
   -- (number) How many tiles to display vertically.
@@ -22,21 +22,31 @@ Camera = {
 
 -- Causes the camera to update the part of the world it is to be rendering.
 function Camera:UpdateTilesetBatch()
+  self.HighTilesetBatch:clear()
   for layerId, tilesetBatch in pairs(self.TilesetBatch) do
     tilesetBatch:clear()
     for y = 0, self.TileDisplayHeight - 1 do
       for x = 0, self.TileDisplayWidth - 1 do
         if not self.Map.Layers[layerId]:IsTileEmpty(x + math.floor(self.MapX), y + math.floor(self.MapY)) then
-          tilesetBatch:add(
-            self.Map.Tileset:GetTile(self.Map.Layers[layerId]:GetTile(x + math.floor(self.MapX), y + math.floor(self.MapY)).TileId),
-            self.Map.Tileset.TileWidth * (x - 1),
-            self.Map.Tileset.TileHeight * (y - 1)
-          )
+          if self.Map.Layers[layerId].properties["order"] ~= "high" then
+            tilesetBatch:add(
+              self.Map.Tileset:GetTile(self.Map.Layers[layerId]:GetTile(x + math.floor(self.MapX), y + math.floor(self.MapY)).TileId),
+              self.Map.Tileset.TileWidth * (x - 1),
+              self.Map.Tileset.TileHeight * (y - 1)
+            )
+          else
+            self.HighTilesetBatch:add(
+              self.Map.Tileset:GetTile(self.Map.Layers[layerId]:GetTile(x + math.floor(self.MapX), y + math.floor(self.MapY)).TileId),
+              self.Map.Tileset.TileWidth * (x - 1),
+              self.Map.Tileset.TileHeight * (y - 1)
+            )
+          end
         end
       end
     end
     tilesetBatch:flush()
   end
+  self.HighTilesetBatch:flush()
 end
 
 -- Moves the camera through the world, relative to tiles.
@@ -92,6 +102,7 @@ end
 
 -- Causes the camera to render to the screen everything it sees.
 function Camera:Draw(player,entities)
+  local highReserve = {}
   for _, batch in pairs(self.TilesetBatch) do
     if batch ~= nil then
       love.graphics.draw(batch, math.floor(-(self.MapX%1)*self.Map.Tileset.TileWidth), math.floor(-(self.MapY%1)*self.Map.Tileset.TileHeight))
@@ -104,6 +115,8 @@ function Camera:Draw(player,entities)
   for _, entity in ipairs(entities) do
     self:drawEntity(entity)
   end
+
+  love.graphics.draw(self.HighTilesetBatch, math.floor(-(self.MapX%1)*self.Map.Tileset.TileWidth), math.floor(-(self.MapY%1)*self.Map.Tileset.TileHeight))
 
   --Store the screen coordinates for later use
   love.graphics.setColor(1, 1, 1)
@@ -133,6 +146,7 @@ function Camera:SetMap(map)
     print("Setting layer " .. layer.Name .. " tileset batch.")
     self.TilesetBatch[layer.id] = love.graphics.newSpriteBatch(map.Tileset.Image, map.Tileset.ImageWidth * map.Tileset.ImageHeight)
   end
+  self.HighTilesetBatch = love.graphics.newSpriteBatch(map.Tileset.Image, map.Tileset.ImageWidth * map.Tileset.ImageHeight)
   self:UpdateTilesetBatch()
 
   -- Update the shadows shader to contain the right objects.

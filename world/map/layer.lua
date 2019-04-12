@@ -47,5 +47,6 @@ function Layer:new(data, layerId, o)
       o.Grid[x][y] = Tile:new(data.data[(y - 1) * o.LayerWidth + x], layerId)
     end
   end
+  o.properties = data.properties or {}
   return o
 end
