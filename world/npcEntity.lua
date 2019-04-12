@@ -288,7 +288,7 @@ function NPC:update(dt, world)
         self.position.x > world.map.MapWidth + 1 or
         self.position.y < 0 or
         self.position.x > world.map.MapHeight + 1 then
-        print(luke154 .. self.name .. " is lost. at " .. self.position.x .. "," .. self.position.y)
+        --print(luke154 .. self.name .. " is lost. at " .. self.position.x .. "," .. self.position.y)
     end
 
     -- Update the animation state to match the movement state
