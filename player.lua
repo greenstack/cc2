@@ -15,6 +15,8 @@ function player:init()
   self.maxObedience = 100
   self.contacts = 0
   self.contactsGoal = 0
+  self.money = 10
+  self.icecream = 0
   self.paused = false
   self.movement = {x=0,y=0}
   self.debugMode = false

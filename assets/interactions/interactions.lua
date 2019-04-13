@@ -47,7 +47,7 @@ next: the state the option goes to
 --]]
 return {
   {
-    --reqAge = {min=10,max=30},
+    reqType = {"NPC"},
     dialogue = {
       [1] = {
         isPlayerText = true,
@@ -132,6 +132,53 @@ return {
         },
       },
     },
+  },
+  {
+    reqType = {"ShopEntity"},
+    dialogue = {
+      [1] = {
+        isPlayerText = false,
+        text = "Welcome to the ice cream shop! Would you like to buy a delicious treat?",
+        next = 2,
+      },
+      [2] = {
+        isPlayerText = true,
+        options = {
+          {
+            optionText = "Buy ice cream ($5)",
+            next = {
+              {
+                condition = "player.money >= 5",
+                next = 3,
+              },
+              {
+                next = 4,
+              },
+            },
+          },
+          {
+            optionText = "Leave.",
+            next = 5,
+          },
+        },
+      },
+      [3] = {
+        isPlayerText = false,
+        text = "Thanks, enjoy your ice cream, and have a nice day",
+        effects = {
+          money = -5,
+          icecream = 1,
+        },
+      },
+      [4] = {
+        isPlayerText = false,
+        text = "I'm sorry Elder, I don't give credit. Come back when you're a little, mmm... richer!",
+      },
+      [5] = {
+        isPlayerText = false,
+        text = "Well why'd you get in line then?"
+      }
+    }
   },
   --[[{
     reqRelationship = {"single","divorced"},

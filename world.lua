@@ -3,6 +3,7 @@ require "world.map.map"
 require "world.entity"
 require "world.playerEntity"
 require "world.npcEntity"
+require "world.shopEntity"
 require "world.companionEntity"
 require "world.weather"
 require "world.level"
@@ -39,6 +40,10 @@ function world:init()
     self.map.PathingGraph.CompanionStart.LocationX + 0.5, 
     self.map.PathingGraph.CompanionStart.LocationY + 0.5)
   table.insert(self.entities,self.companion)
+  local shopEntity = ShopEntity:new("Icecream Shop",
+    self.map.PathingGraph.CompanionStart.LocationX + 0.5 + 5,
+    self.map.PathingGraph.CompanionStart.LocationY + 0.5 - 1)
+    table.insert(self.entities,shopEntity)
   self.npcs = NPC:generate(self.levelVars.npcCount * 2, self.map.PathingGraph.SpawnNodes)
   print("starting coordinates: " ..  self.map.PathingGraph.PlayerStart.LocationX .. self.map.PathingGraph.PlayerStart.LocationY);
 end

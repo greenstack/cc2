@@ -13,7 +13,7 @@ beep = love.audio.newSource("assets/sound/selection_beep.wav", "static")
 font = love.graphics.newImageFont("assets/font/luafont.png",
   " abcdefghijklmnopqrstuvwxyz" ..
   "ABCDEFGHIJKLMNOPQRSTUVWXYZ0" ..
-  "123456789.,!?-+/():;%&`'*#=[]\"><{}")
+  "123456789.,!?-+/():;%&`'*#=[]\"><{}$")
 arrow = love.graphics.newImage("assets/img/arrow.png")
 
 playerImg = love.graphics.newImage("assets/img/player_portrait.png")

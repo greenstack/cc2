@@ -18,10 +18,9 @@ function ConversationElement:new(name,x,y,enabled,visible,conversation,playerEnt
   return o
 end
 
-function ConversationElement:update(dt,input,playerController)
+function ConversationElement:update(dt,input,player)
   local currentBlock = self.conversation.dialogue[self.state]
   local next = currentBlock.next
-  
 
   if currentBlock.options then
     if input:pressed('up') then
@@ -32,6 +31,8 @@ function ConversationElement:update(dt,input,playerController)
     end
     next = currentBlock.options[self.choice].next
   end
+  
+  local next = self:findNext(currentBlock,player)
 
   if currentBlock.options or self.textProgress >= #self.text then
     self.waiting = true
@@ -40,7 +41,7 @@ function ConversationElement:update(dt,input,playerController)
   if input:consumePressed('talk') then
     if self.waiting then
       if next then
-        self:nextState(next,playerController)
+        self:nextState(next,player)
       else
         self:close() 
       end
@@ -52,7 +53,31 @@ function ConversationElement:update(dt,input,playerController)
   end
 end
 
-function ConversationElement:nextState(state,playerController)
+function ConversationElement:findNext(currentBlock,player)
+  if currentBlock.options then
+    currentBlock = currentBlock.options[self.choice]  
+  end
+  
+  if type(currentBlock.next) == "table" then
+    for k,v in ipairs(currentBlock.next) do
+      if v.condition then
+        local code = load("return " .. v.condition)
+        local err,ret = pcall(code)
+        print(err,ret)
+        if ret then 
+          return v.next 
+        end
+      end
+      if not v.condition then
+        return v.next
+      end
+    end
+  else
+    return currentBlock.next
+  end
+end
+
+function ConversationElement:nextState(state,player)
   self.state = state
   self.textProgress = 0
   self.waiting = false
@@ -69,7 +94,7 @@ function ConversationElement:nextState(state,playerController)
     self.text = self:replaceText(nextBlock.text)
   end
   
-  self:applyEffects(playerController,nextBlock.effects)
+  self:applyEffects(player,nextBlock.effects)
 end
 
 function ConversationElement:close()
@@ -134,9 +159,16 @@ function ConversationElement:draw()
 end
 
 function ConversationElement:replaceText(text)
+  
   text = text:gsub("{playerName}",self.playerEntity.name)
-  text = text:gsub("{name}",self.npc.name)
-  text = text:gsub("{age}",self.npc.age)
+  if self.npc.name then
+    text = text:gsub("{name}",self.npc.name)
+  end
+  
+  if self.npc.age then
+    text = text:gsub("{age}",self.npc.age)
+  end
+  
   return text
 end
 

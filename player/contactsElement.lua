@@ -4,12 +4,16 @@ function ContactsElement:new(name,x,y,enabled,visible,o)
   local o = Element.new(self,name,x,y,enabled,visible,o)
   o.currentContacts = 0
   o.goal = 0
+  o.money = 0
+  o.icecream = 0
   return o
 end
 
 function ContactsElement:update(dt,input,player)
   self.currentContacts = player.contacts
   self.goal = player.contactsGoal
+  self.money = player.money
+  self.icecream = player.icecream
 end
 
 function ContactsElement:draw()
@@ -47,4 +51,6 @@ function ContactsElement:draw()
   -- Text
   love.graphics.setColor(1,1,1)
   love.graphics.print("Contacts: ".. self.currentContacts .. "/" .. self.goal, self.position.x + 30, self.position.y)
+  love.graphics.print("Money: $".. self.money, self.position.x + 30, self.position.y + 62)
+  love.graphics.print("Icecream: " .. self.icecream, self.position.x + 30, self.position.y + 78)
 end

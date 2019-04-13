@@ -50,22 +50,22 @@ function interactions:update(dt,world,playerController,input)
   
   
   if self.selectedEntity and not world.player.interaction and input:consumePressed('talk') then
-    self:startConversation(world.player,playerController,self.selectedEntity)
+    self:startInteraction(world.player,playerController,self.selectedEntity)
   end
   
 end
 
-function interactions:startConversation(player,playerController,npc)
-  local conversation = self:getValidConversation(npc)
+function interactions:startInteraction(player,playerController,entity)
+  local conversation = self:getValidConversation(entity)
   
   if conversation then
-    local conversationElement = ConversationElement:new("conversation",0,0,true,true,conversation,player,npc)
+    local conversationElement = ConversationElement:new("conversation",0,0,true,true,conversation,player,entity)
 
     local gameScreen = playerController:getScreen("gameScreen")
     gameScreen:addElement(conversationElement)
     
     player.interaction = true
-    npc.interaction = true
+    entity.interaction = true
   end
 end
 
