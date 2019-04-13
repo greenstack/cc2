@@ -7,6 +7,7 @@ require "player.mainMenuElement"
 require "player.actionElement"
 require "player.conversationElement"
 require "player.contactsElement"
+require "player.gameOverElement"
 
 player = {}
 
@@ -29,12 +30,21 @@ function player:init()
   gameScreen:addElement(ConsoleElement:new("console",0,0,false,false))
   local mainMenuScreen = Screen:new("mainMenuScreen")
   mainMenuScreen:addElement(MainMenuElement:new("mainMenu",0,0,true,true))
+  local gameOverScreen = Screen:new("gameOverScreen")
+  gameOverScreen:addElement(GameOverElement:new("gameOver"))
   self.screens = {
     gameScreen,
-    mainMenuScreen
+    mainMenuScreen,
+    gameOverScreen
   }
   
   self.screen = self:getScreen("mainMenuScreen")
+end
+
+function player:resetStats()
+  self:setMaxObedience(100)
+  self:setObedience(100)
+  self.contacts = 0
 end
 
 function player:update(dt,input)

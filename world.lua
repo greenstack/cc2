@@ -19,6 +19,10 @@ world = {
   camera = {},
   map = {},
   levelVars = {},
+  playthroughStats = {
+    contactsGoalTotal = 0,
+    contactsTotal = 0
+  },
 }
 
 function world:init(_level)
@@ -41,9 +45,11 @@ function world:init(_level)
     self.map.PathingGraph.CompanionStart.LocationY + 0.5)
   table.insert(self.entities,self.companion)
   self.npcs = NPC:generate(self.levelVars.npcCount * 2, self.map.PathingGraph.SpawnNodes)
+  player.contacts = 0
+  self.playthroughStats.contactsGoalTotal = self.playthroughStats.contactsGoalTotal + self.levelVars.contactGoal
 end
 
-function world:advanceLevel()
+function world:goToLevel(_level)
   -- Reset all variables
   self.player = nil
   self.companion = nil
@@ -51,7 +57,7 @@ function world:advanceLevel()
   self.npcs = {}
   self.spawnedNpcs = 0
 
-  self.level = self.level + 1
+  self.level = _level
   if self.level > 3 then
     return false
   end
@@ -94,14 +100,22 @@ function world:update(dt,playerController)
   if (playerController.obedience == 0) then
     --game over, obedience is 0
     print("gameover, obedience is 0");
+    player.screen = player:getScreen("gameOverScreen")
+    player.screen:getElement("gameOver"):setVictory(false)
+    player.paused = true
+    self.playthroughStats.contactsTotal = self.playthroughStats.contactsTotal + playerController.contacts
   end
   if self.levelVars:after(9, 0, "PM") and 
     (math.floor(self.player.position.x) == self.map.PathingGraph.PlayerStart.LocationX) and 
     (math.floor(self.player.position.y) == self.map.PathingGraph.CompanionStart.LocationY) then
     --successfully return to home after 9:30, go to next level
-    print("level finished successfully");
-    if not self:advanceLevel() then
+    print("level finished successfully")
+    self.playthroughStats.contactsTotal = self.playthroughStats.contactsTotal + playerController.contacts
+    if not self:goToLevel(self.level + 1) then
       -- game victory
+      player.screen = player:getScreen("gameOverScreen")
+      player.screen:getElement("gameOver"):setVictory(true)
+      player.paused = true
     end
   end
 end
