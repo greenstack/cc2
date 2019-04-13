@@ -22,11 +22,111 @@ Possible Requirements:
   - reqContacted
 
 Text in the interactions can make use of the following string substitutions from the npc attributes
+{playerName} is replaced with the player's name
 {name} is replaced with the NPC's name
 {age} is replaced with the NPC's age
+
+Each element of the dialogue array is a different conversation state. Each state should specify
+isPlayerText: whether this is the player speaking, or not.
+text: the text to display
+next: the index of the next state. if nil, will end the conversation instead of proceeding to a new state
+
+text and next are not required if specifying an options state, in which case the state should specify
+the options field which is a table with the following fields
+optionText: the text for the option
+next: the state the option goes to
+
+
 --]]
 return {
   {
+    --reqAge = {min=10,max=30},
+    dialogue = {
+      [1] = {
+        isPlayerText = true,
+        text = "Hey you!",
+        next = 10,
+      },
+      [2] = {
+        isPlayerText = true,
+        text = "My name is {playerName}. What's your name?",
+        next = 6,
+      },
+      [3] = {
+        isPlayerText = true,
+        text = "Did you fall into a sewr? You smell *really* bad.",
+        next = 7,
+        effects = {
+          maxObedience = -30,
+        },
+      },
+      [4] = {
+        isPlayerText = true,
+        text = "Have you heard of the Book of Mormon before? It's a really great book.",
+        next = 8,
+        effects = {
+          obedience = 25,
+        },
+      },
+      [5] = {
+        isPlayerText = true,
+        text = "See my companion over there? He's being a total jerk. Help me.",
+        next = 7,
+      },
+      [6] = {
+        isPlayerText = false,
+        text = "I'm {name}. Nice to meet you. What can I do for you?",
+        next = 9,
+      },
+      [7] = {
+        isPlayerText = false,
+        text = "Wow. I thought missionaries were supposed to be kind. Get lost.",
+      },
+      [8] = {
+        isPlayerText = false,
+        text = "No I have not. It sounds interesting though. Tell me more!",
+        effects = {
+          contacts = 1
+        }
+      },
+      [9] = {
+        isPlayerText = true,
+        text = "Well...",
+        next = 11,
+      },
+      [10] = {
+        isPlayerText = true,
+        options = {
+          {
+            optionText = "What's your name?",
+            next = 2,
+          },
+          {
+            optionText = "You smell funny!",
+            next = 3,
+          },
+          {
+            optionText = "Ask about the Book of Mormon.",
+            next = 4,
+          },
+        },
+      },
+      [11] = {
+        isPlayerText = true,
+        options = {
+          {
+            optionText = "Complain about your companion",
+            next = 5,
+          },
+          {
+            optionText = "Ask about the Book of Mormon",
+            next = 4,
+          },
+        },
+      },
+    },
+  },
+  --[[{
     reqRelationship = {"single","divorced"},
     reqAge = {min=10,max=30},
     reqContacted = false,
@@ -239,5 +339,5 @@ return {
         },
       }
     }
-  }
+  }--]]
 }
