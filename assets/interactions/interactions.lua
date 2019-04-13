@@ -30,6 +30,13 @@ Each element of the dialogue array is a different conversation state. Each state
 isPlayerText: whether this is the player speaking, or not.
 text: the text to display
 next: the index of the next state. if nil, will end the conversation instead of proceeding to a new state
+effects: a table which specifies the effects on the player this state will incur upon entering it. 
+        the keys of this table are directly accessed on the player controller and modified. For example: 
+          effects = {
+            maxObedience = -30,
+          },
+        would translate to 
+          player.maxObedience = player.maxObedience + (-30)
 
 text and next are not required if specifying an options state, in which case the state should specify
 the options field which is a table with the following fields
