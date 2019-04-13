@@ -30,18 +30,18 @@ function love.load()
   gamePlaylist:addSong("themeC", "assets/sound/theme_c.ogg", 187) --287
   gamePlaylist:setDelay(5)
   gamePlaylist:setMode("random")
-  gamePlaylist:setVolume(0)
+  gamePlaylist:setVolume(1)
 
   titlePlaylist = SoundManager:new()
   titlePlaylist:addSong("titleTheme", "assets/sound/theme_title.ogg", 37)
   --titlePlaylist:play("titleTheme")
   titlePlaylist:setMode("loop")
-  titlePlaylist:setVolume(0)
+  titlePlaylist:setVolume(1)
 
   testPlaylist = SoundManager:new()
   testPlaylist:addSong("beta1", "assets/sound/Song-A-Unfinished_1.ogg", 500)
   testPlaylist:play("beta1")
-  testPlaylist:setVolume(0)
+  testPlaylist:setVolume(1)
   titlePlaylist:setMode("loop")
   currentPlaylist = testPlaylist
 

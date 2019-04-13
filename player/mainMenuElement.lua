@@ -4,6 +4,7 @@ function MainMenuElement:new(name,x,y,enabled,visible,o)
   local o = Element.new(self,name,x,y,enabled,visible,o)
   o.options = {
     {text="Start Game",x=355,f=MainMenuElement.startGame},
+    {text="Options",x=365,f=MainMenuElement.optionsWindow},
     {text="Quit",x=380,f=MainMenuElement.quit}
   }
   o.selected = 1
@@ -67,6 +68,13 @@ function MainMenuElement.startGame(player)
   currentPlaylist:stop()
   currentPlaylist = gamePlaylist
   gamePlaylist:play("themeA")
+end
+
+function MainMenuElement.optionsWindow(player)
+  player.screen:getElement("mainMenu"):setEnabled(false)
+  player.screen:getElement("options"):setEnabled(true)
+  player.screen:getElement("options"):setVisible(true)
+  player.screen:getElement("options").wait = true
 end
 
 function MainMenuElement.quit()

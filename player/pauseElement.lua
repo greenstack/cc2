@@ -6,6 +6,7 @@ function PauseElement:new(name,x,y,enabled,visible,o)
     {text="Pokedex",f=PauseElement.option1}, --temporary stuff for fun because why not
     {text="Pokemon",f=PauseElement.option2},
     {text="Save",f=PauseElement.option2},
+    {text="Options",f=PauseElement.optionsWindow},
     {text="Main Menu",f=PauseElement.mainMenu},
     {text="Quit",f=PauseElement.quit}
   }
@@ -47,8 +48,7 @@ function PauseElement:draw()
     if self.selected == k then
       love.graphics.setColor(1,1,1)
       love.graphics.draw(arrow,self.position.x + 20,self.position.y + 50*k + 2)
-      love.graphics.setColor(.8,.8,
-      .7)
+      love.graphics.setColor(.8,.8,.7)
     else
       love.graphics.setColor(.9,.9,.9)
     end
@@ -88,6 +88,12 @@ end
 function PauseElement.option2(player)
   print("option 2")
   player:getScreen("gameScreen"):getElement("console"):log("option 2")
+end
+function PauseElement.optionsWindow(player)
+  player.screen:getElement("options"):setEnabled(true)
+  player.screen:getElement("options"):setVisible(true)
+  player.screen:getElement("options").wait = true
+  player.screen:getElement("pauseMenu"):setEnabled(false)
 end
 function PauseElement.mainMenu(player)
   player.screen = player:getScreen("mainMenuScreen")
