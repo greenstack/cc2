@@ -31,7 +31,6 @@ function Map:new(levelName, tilesetPath, o)
       local objects = {}
       print ("preparing to load in " .. #layer.objects .. " objects")
       for _, obj in ipairs(layer.objects) do
-        print("loading in " .. obj.shape)
         if obj.shape == "rectangle" then
           local rect = Hitbox:new(obj.x, obj.y, obj.width, obj.height, o.Tileset)
           table.insert(objects, rect)
@@ -39,6 +38,7 @@ function Map:new(levelName, tilesetPath, o)
           print("Unsupported object shape: " .. obj.shape)
         end
       end
+      print("Successfully loaded " .. #objects .. " objects")
       o.Hitboxes = objects
     elseif layer.properties and layer.properties["graph"] then
       local l = Layer:new(layer, layerId)

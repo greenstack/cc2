@@ -141,7 +141,7 @@ end
 function Camera:SetMap(map)
   self.Map = map
   self.TilesetBatch = {}
-  print(#map.Layers)
+  print("Map has " .. #map.Layers .. " layers.")
   for _, layer in pairs(map.Layers) do
     print("Setting layer " .. layer.Name .. " tileset batch.")
     self.TilesetBatch[layer.id] = love.graphics.newSpriteBatch(map.Tileset.Image, map.Tileset.ImageWidth * map.Tileset.ImageHeight)
