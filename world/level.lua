@@ -25,16 +25,19 @@ level = {
     levelNumber = 0
 }
 
-function level:getTimeInSeconds()
-    local timeInSeconds = 0;
-    local twelveHours = 43200;
-    local hours = self.hour * 3600
-    local minutes = self.minute * 60
-    if self.ampm ~= "AM" and self.hour < 12 then
-        timeInSeconds = twelveHours
-    end
-    timeInSeconds = timeInSeconds + hours + minutes
-    return timeInSeconds
+function level:getTimeInSeconds(hour, minute, ampm)
+  hour = hour or self.hour
+  minute = minute or self.minute
+  ampm = ampm or self.ampm
+  local timeInSeconds = 0;
+  local twelveHours = 43200;
+  local hours = hour * 3600
+  local minutes = minute * 60
+  if ampm ~= "AM" and hour < 12 then
+      timeInSeconds = twelveHours
+  end
+  timeInSeconds = timeInSeconds + hours + minutes
+  return timeInSeconds
 end
 
 function level:timeInit()
@@ -111,6 +114,15 @@ function level.getNpcCount(level, weather)
     end
     npcCount = math.floor(npcCount * weather.SpawnRateModifier)
     return npcCount
+end
+
+function level:after(hour, minute, ampm)
+  local check = self:getTimeInSeconds(hour, minute, ampm)
+  return check < self:getTimeInSeconds()
+end
+
+function level:timeToString()
+  return string.format("%i:%02s %s", self.hour, self.minute, self.ampm)
 end
 
 --TODO: this data should be specified in a level asset
