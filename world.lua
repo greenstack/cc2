@@ -40,6 +40,7 @@ function world:init()
     self.map.PathingGraph.CompanionStart.LocationY + 0.5)
   table.insert(self.entities,self.companion)
   self.npcs = NPC:generate(self.levelVars.npcCount * 2, self.map.PathingGraph.SpawnNodes)
+  print("starting coordinates: " ..  self.map.PathingGraph.PlayerStart.LocationX .. self.map.PathingGraph.PlayerStart.LocationY);
 end
 
 function world:update(dt,playerController)
@@ -74,7 +75,12 @@ function world:update(dt,playerController)
   self.camera:updatePlayerPos(self.player)
   self.camera:SetPositionCentered(self.player.position.x,self.player.position.y)
   if (playerController.obedience == 0) then
-    --end game, obedience is 0
+    --game over, obedience is 0
+    print("gameover, obedience is 0");
+  end
+  if (self.levelVars.late == true) and (math.floor(self.player.position.x + 0.5) == self.map.PathingGraph.PlayerStart.LocationX) and (math.floor(self.player.position.y + 0.5) == self.map.PathingGraph.CompanionStart.LocationY) then
+    --successfully return to home after 9:30, go to next level
+    print("level finished successfully");
   end
 end
 
@@ -200,6 +206,7 @@ function world:updateTime(dt, playerController)
   if self.levelVars.late == true then
     playerController.obedience = playerController.obedience - self.levelVars.lateDrop
   end
+
 end
 
 function world:spawnDespawnNPCs()
