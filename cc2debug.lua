@@ -5,6 +5,7 @@ FogEnabled = true
 ShowHitboxes = false
 ShowScreenCenter = false
 ShowPathingGraph = false
+ShowPathingGrid = false
 
 function SetWeather(weather)
   world.levelVars:setWeatherPattern(weather)
@@ -32,6 +33,10 @@ end
 
 function TogglePathingGraphDisplay()
   ShowPathingGraph = not ShowPathingGraph
+end
+
+function TogglePathingGridDisplay()
+  ShowPathingGrid = not ShowPathingGrid
 end
 
 TogglePGD = TogglePathingGraphDisplay

@@ -150,6 +150,8 @@ function world:draw()
     love.graphics.rectangle("fill", 1, 1, w, h)
     love.graphics.setShader()
   end
+  
+
 
   --Prints Time to GUI
   love.graphics.print("Time: " .. self.levelVars:timeToString(), 40, 83)

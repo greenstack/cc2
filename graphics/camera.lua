@@ -134,6 +134,12 @@ function Camera:Draw(player,entities)
   if ShowPathingGraph then
     self.Map.PathingGraph:show(-(self.MapX)*self.Map.Tileset.TileWidth,-(self.MapY)*self.Map.Tileset.TileHeight)
   end
+  if ShowPathingGrid then
+    for k,v in pairs(self.Map.PathingGrid) do
+      local nodePos = self:GetScreenPosition(v.x + 0.5,v.y + 0.5)
+      love.graphics.circle("fill",nodePos[1] + .5,nodePos[2] + .5,1)
+    end
+  end
 end
 
 -- Sets the map the camera is rendering.

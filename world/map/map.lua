@@ -59,8 +59,8 @@ function Map:new(levelName, tilesetPath, o)
   
   --generate pathing grid
   o.PathingGrid = {}
-  for x=1, o.MapWidth do
-    for y=1, o.MapHeight do
+  for x=1, o.MapWidth,1 do
+    for y=1, o.MapHeight,1 do
       if world.locationIsPathable(nil,{x=x + 0.5,y=y + 0.5},o.Hitboxes) then
         table.insert(o.PathingGrid,{x=x,y=y})
       end

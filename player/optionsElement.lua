@@ -105,7 +105,6 @@ function OptionsElement.setVolume(type, volume)
     musicVolume = volume
     gamePlaylist:setVolume(musicVolume)
     titlePlaylist:setVolume(musicVolume)
-    testPlaylist:setVolume(musicVolume)
   elseif type == 'sfx' then
     sfxVolume = volume
     beep:setVolume(sfxVolume)
