@@ -25,25 +25,21 @@ function love.load()
   love.keyboard.setKeyRepeat(true)
   SetWeatherShaders()
   gamePlaylist = SoundManager:new()
-  gamePlaylist:addSong("themeA", "assets/sound/theme_a.ogg", 226) --226
-  gamePlaylist:addSong("themeB", "assets/sound/theme_b.ogg", 150) -- 250
-  gamePlaylist:addSong("themeC", "assets/sound/theme_c.ogg", 187) --287
+  gamePlaylist:addSong("themeA", "assets/sound/ComeOnElder.wav", 199)
+  gamePlaylist:addSong("themeB", "assets/sound/GoalChaser.wav", 125)
+  gamePlaylist:addSong("themeC", "assets/sound/OnTheLookout.wav", 121)
+  gamePlaylist:addSong("themeD", "assets/sound/PluggingAway.wav", 146)
   gamePlaylist:setDelay(5)
   gamePlaylist:setMode("random")
-  gamePlaylist:setVolume(0)
+  gamePlaylist:setVolume(1)
 
   titlePlaylist = SoundManager:new()
   titlePlaylist:addSong("titleTheme", "assets/sound/theme_title.ogg", 37)
-  --titlePlaylist:play("titleTheme")
+  titlePlaylist:play("titleTheme")
   titlePlaylist:setMode("loop")
-  titlePlaylist:setVolume(0)
+  titlePlaylist:setVolume(1)
 
-  testPlaylist = SoundManager:new()
-  testPlaylist:addSong("beta1", "assets/sound/Song-A-Unfinished_1.ogg", 500)
-  testPlaylist:play("beta1")
-  testPlaylist:setVolume(0)
-  titlePlaylist:setMode("loop")
-  currentPlaylist = testPlaylist
+  currentPlaylist = titlePlaylist
 
   weatherShader = Weather.Foggy.Shader
 end

@@ -20,14 +20,19 @@ world = {
   camera = {},
   map = {},
   levelVars = {},
+  playthroughStats = {
+    contactsGoalTotal = 0,
+    contactsTotal = 0
+  },
 }
 
-function world:init()
+function world:init(_level)
+  _level = _level or self.level
   math.randomseed(os.time())
 
-  self.levelVars = level:generate(self.level)
+  self.levelVars = level:generate(_level)
   self.weather = self.levelVars.weatherPattern
-  self.map = Map:new("assets/maps/level1_new", "assets/img/tiles.png")
+  self.map = Map:new("assets/maps/level".. _level .."_new", "assets/img/tiles.png")
   self.camera = Camera:new()
   self.camera:SetMap(self.map)
 
@@ -45,7 +50,25 @@ function world:init()
     self.map.PathingGraph.CompanionStart.LocationY + 0.5 - 1)
     table.insert(self.entities,shopEntity)
   self.npcs = NPC:generate(self.levelVars.npcCount * 2, self.map.PathingGraph.SpawnNodes)
-  print("starting coordinates: " ..  self.map.PathingGraph.PlayerStart.LocationX .. self.map.PathingGraph.PlayerStart.LocationY);
+  player.contacts = 0
+  self.playthroughStats.contactsGoalTotal = self.playthroughStats.contactsGoalTotal + self.levelVars.contactGoal
+end
+
+function world:goToLevel(_level)
+  -- Reset all variables
+  self.player = nil
+  self.companion = nil
+  self.entities = {}
+  self.npcs = {}
+  self.spawnedNpcs = 0
+
+  self.level = _level
+  if self.level > 3 then
+    return false
+  end
+  -- Init the level
+  self:init()
+  return true
 end
 
 function world:update(dt,playerController)
@@ -82,10 +105,23 @@ function world:update(dt,playerController)
   if (playerController.obedience == 0) then
     --game over, obedience is 0
     print("gameover, obedience is 0");
+    player.screen = player:getScreen("gameOverScreen")
+    player.screen:getElement("gameOver"):setVictory(false)
+    player.paused = true
+    self.playthroughStats.contactsTotal = self.playthroughStats.contactsTotal + playerController.contacts
   end
-  if (self.levelVars.late == true) and (math.floor(self.player.position.x + 0.5) == self.map.PathingGraph.PlayerStart.LocationX) and (math.floor(self.player.position.y + 0.5) == self.map.PathingGraph.CompanionStart.LocationY) then
+  if self.levelVars:after(9, 0, "PM") and 
+    (math.floor(self.player.position.x) == self.map.PathingGraph.PlayerStart.LocationX) and 
+    (math.floor(self.player.position.y) == self.map.PathingGraph.CompanionStart.LocationY) then
     --successfully return to home after 9:30, go to next level
-    print("level finished successfully");
+    print("level finished successfully")
+    self.playthroughStats.contactsTotal = self.playthroughStats.contactsTotal + playerController.contacts
+    if not self:goToLevel(self.level + 1) then
+      -- game victory
+      player.screen = player:getScreen("gameOverScreen")
+      player.screen:getElement("gameOver"):setVictory(true)
+      player.paused = true
+    end
   end
 end
 
@@ -116,12 +152,8 @@ function world:draw()
   end
 
   --Prints Time to GUI
-  if self.levelVars.minute < 10 then
-    love.graphics.print("Time: " .. self.levelVars.hour .. ":0" .. self.levelVars.minute .. " " .. self.levelVars.ampm, 40, 83)
-  else
-    love.graphics.print("Time: " .. self.levelVars.hour .. ":" .. self.levelVars.minute .. " " .. self.levelVars.ampm, 40, 83)
-  end
-  love.graphics.print("Time (s): " .. self.levelVars:getTimeInSeconds(), 40, 100);
+  love.graphics.print("Time: " .. self.levelVars:timeToString(), 40, 83)
+  --love.graphics.print("Time (s): " .. self.levelVars:getTimeInSeconds(), 40, 100);
   -- DEGUG ELEMENTS --
   -- lines showing the center of the screen for testing
   if ShowScreenCenter then
@@ -130,9 +162,6 @@ function world:draw()
     love.graphics.line(0,h/2,w,h/2)
     love.graphics.setColor(1,1,1)
   end
-
-  
-
 end
 
 function world:setVisibleEntities()

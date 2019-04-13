@@ -7,6 +7,8 @@ require "player.mainMenuElement"
 require "player.actionElement"
 require "player.conversationElement"
 require "player.contactsElement"
+require "player.gameOverElement"
+require "player.optionsElement"
 
 player = {}
 
@@ -23,20 +25,37 @@ function player:init()
   self.inPlay = false
   self.screen = {}
   self.screens = {}
+  masterVolume = 1.0
+  musicVolume = 1.0
+  sfxVolume = 1.0
+  local optionsElement = OptionsElement:new("options",200,150,false,false)
   local gameScreen = Screen:new("gameScreen")
   gameScreen:addElement(ObediometerElement:new("obediometer",10,10,true,true))
   gameScreen:addElement(PauseElement:new("pauseMenu",300,150,false,false))
   gameScreen:addElement(ActionElement:new("action",0,30,false,false))
   gameScreen:addElement(ContactsElement:new("contacts",10,55,true,true))
+  gameScreen:addElement(optionsElement)
   gameScreen:addElement(ConsoleElement:new("console",0,0,false,false))
+  
   local mainMenuScreen = Screen:new("mainMenuScreen")
   mainMenuScreen:addElement(MainMenuElement:new("mainMenu",0,0,true,true))
+  mainMenuScreen:addElement(optionsElement)
+
+  local gameOverScreen = Screen:new("gameOverScreen")
+  gameOverScreen:addElement(GameOverElement:new("gameOver"))
   self.screens = {
     gameScreen,
-    mainMenuScreen
+    mainMenuScreen,
+    gameOverScreen
   }
   
   self.screen = self:getScreen("mainMenuScreen")
+end
+
+function player:resetStats()
+  self:setMaxObedience(100)
+  self:setObedience(100)
+  self.contacts = 0
 end
 
 function player:update(dt,input)

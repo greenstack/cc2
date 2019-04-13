@@ -43,7 +43,6 @@ function Layer:new(data, layerId, o)
   for x = 1, o.LayerWidth do
     o.Grid[x] = {}
     for y = 1, o.LayerHeight do
-      --print(x * layerHeight + y)
       o.Grid[x][y] = Tile:new(data.data[(y - 1) * o.LayerWidth + x], layerId)
     end
   end
