@@ -216,9 +216,6 @@ function NPC:generate(count, nodes)
         else
             index = math.random(1, #nodes)
         end
-
-        print(#nodes)
-
         x = nodes[index].LocationX + 0.5
         y = nodes[index].LocationY + 0.5
         local npc = NPC:new(i, name, x, y, age, gender, mood, receptiveness, relationship, flirtiness, animation, imagename)
