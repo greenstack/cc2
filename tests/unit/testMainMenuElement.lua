@@ -60,12 +60,13 @@ function TestElementMainMenu:testNavigation()
   self:moveDown()
   lu.assertEquals(self.selected, 2, "Moving down does not update selected.")
   self:moveDown()
+  self:moveDown()
   lu.assertEquals(self.selected, 1, "Moving down past number of options does not set selected to 1.")
   self:moveDown()
   self:moveUp()
   lu.assertEquals(self.selected, 1, "Moving up does nt update selected.")
   self:moveUp()
-  lu.assertEquals(self.selected, 2, "Moving up past option 1 does not set selected to last item.")
+  lu.assertEquals(self.selected, 3, "Moving up past option 1 does not set selected to last item.")
 end
 
 function TestElementMainMenu:testStartGame()
@@ -75,6 +76,6 @@ function TestElementMainMenu:testStartGame()
 end
 
 function TestElementMainMenu:testQuitGame()
-  self.options[2].f(MockPlayer)
+  self.options[3].f(MockPlayer)
   lu.assertTrue(MockPlayer.quit, "Selecting quit doesn't call love.event.quit()")
 end
