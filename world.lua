@@ -39,17 +39,18 @@ function world:init(_level)
   -- We want to start both the player and the companion in the middle of their
   -- spawn tile.
   self.player = PlayerEntity:new("You", 
-    self.map.PathingGraph.PlayerStart.LocationX + 0.5, 
-    self.map.PathingGraph.PlayerStart.LocationY + 0.5)
+  self.map.PathingGraph.PlayerStart.LocationX + 0.5, 
+  self.map.PathingGraph.PlayerStart.LocationY + 0.5)
   self.companion = CompanionEntity:new("Elder Meanie", 
-    self.map.PathingGraph.CompanionStart.LocationX + 0.5, 
-    self.map.PathingGraph.CompanionStart.LocationY + 0.5)
+  self.map.PathingGraph.CompanionStart.LocationX + 0.5, 
+  self.map.PathingGraph.CompanionStart.LocationY + 0.5)
   table.insert(self.entities,self.companion)
   local shopEntity = ShopEntity:new("Icecream Shop",
-    self.map.PathingGraph.CompanionStart.LocationX + 0.5 + 5,
-    self.map.PathingGraph.CompanionStart.LocationY + 0.5 - 1)
-    table.insert(self.entities,shopEntity)
-  self.npcs = NPC:generate(self.levelVars.npcCount * 2, self.map.PathingGraph.SpawnNodes)
+  self.map.PathingGraph.CompanionStart.LocationX + 0.5 + 5,
+  self.map.PathingGraph.CompanionStart.LocationY + 0.5 - 1)
+  table.insert(self.entities,shopEntity)
+  self.npcs = NPC:generate(self.levelVars.npcCount, self.map.PathingGraph.SpawnNodes)
+  self.spawnedNpcs = 0
   player.contacts = 0
   self.playthroughStats.contactsGoalTotal = self.playthroughStats.contactsGoalTotal + self.levelVars.contactGoal
 end
@@ -246,12 +247,13 @@ function world:updateTime(dt, playerController)
 end
 
 function world:spawnDespawnNPCs()
+  -- print("Spawned: " .. self.spawnedNpcs .. ", Not spawned: " .. #self.npcs)
   -- temporarily store npcCount in case the npcCount is updated during execution
   local npcCount = self.levelVars.npcCount 
 
   -- Dynamically generate more NPCs if the npcCount increases
-  if (self.spawnedNpcs + #self.npcs) < (npcCount * 2) then
-    local numToAdd = (npcCount * 2) - self.spawnedNpcs
+  if (self.spawnedNpcs + #self.npcs) < npcCount then
+    local numToAdd = (npcCount) - self.spawnedNpcs
     local npcs = NPC:generate(numToAdd, self.map.PathingGraph.SpawnNodes)
 
     for i = 1, #npcs do
