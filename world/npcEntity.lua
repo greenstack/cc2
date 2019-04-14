@@ -182,23 +182,31 @@ function NPC:generate(count, nodes)
     local index
 
     for i = 1, count do
+        age = math.random(minAge, maxAge)
 
         if i <= half then
             name = FEMALE_NAMES[math.random(1, #FEMALE_NAMES)]
             gender = "female"
             -- Choose a random female npc animation set here
-            imagename = "female_" .. (i % 2)
+            imagename = "female_"
+            if age <= 18 then
+              imagename = imagename .. "child_"
+            end
+            imagename = imagename .. (i % 2)
             animation = peachy.new("assets/animation/" .. imagename .. ".json", nil, "Idle")
         else
             name = MALE_NAMES[math.random(1, #MALE_NAMES)]
             gender = "male"
             -- Choose a random male npc animation set here
-            imagename = "male_" .. (i % 2)
+            imagename = "male_"
+            if age <= 18 then
+              imagename = imagename .. "child_"
+            end
+            imagename = imagename .. (i % 2)
             animation = peachy.new("assets/animation/" .. imagename .. ".json", nil, "Idle")
         end
 
         name = name .. " " .. LAST_NAMES[math.random(1, #LAST_NAMES)]
-        age = math.random(minAge, maxAge)
         mood = math.random(minMood, maxMood)
         receptiveness = math.random(minReceptiveness, maxReceptiveness)
         relationship = RELATIONSHIPS[math.random(1, #RELATIONSHIPS)]
