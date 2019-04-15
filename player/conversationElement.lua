@@ -63,7 +63,6 @@ function ConversationElement:findNext(currentBlock,player)
       if v.condition then
         local code = load("return " .. v.condition)
         local err,ret = pcall(code)
-        print(err,ret)
         if ret then 
           return v.next 
         end

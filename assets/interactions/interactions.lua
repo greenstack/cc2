@@ -134,6 +134,42 @@ return {
     },
   },
   {
+    reqType = {"CompanionEntity"},
+    dialogue = {
+      [1] = {
+        isPlayerText = true,
+        options = {
+          {
+            optionText = "Give ice cream.",
+            next = {
+              {
+                condition = "player.icecream >= 1",
+                next = 2,
+              },
+              {
+                next = 3,
+              },
+            },
+          },
+          {
+            optionText = "Withhold ice cream.",
+          },
+        },
+      },
+      [2] = {
+        isPlayerText = false,
+        text = "Thanks, I love ice cream! I still hate you though.",
+        effects = {
+          icecream = -1,
+        },
+      },
+      [3] = {
+        isPlayerText = true,
+        text = "Sorry I don't have any ice cream.",
+      },
+    },
+  },
+  {
     reqType = {"ShopEntity"},
     dialogue = {
       [1] = {

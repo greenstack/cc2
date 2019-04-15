@@ -45,10 +45,13 @@ function world:init(_level)
     self.map.PathingGraph.CompanionStart.LocationX + 0.5, 
     self.map.PathingGraph.CompanionStart.LocationY + 0.5)
   table.insert(self.entities,self.companion)
-  local shopEntity = ShopEntity:new("Icecream Shop",
-    self.map.PathingGraph.CompanionStart.LocationX + 0.5 + 5,
-    self.map.PathingGraph.CompanionStart.LocationY + 0.5 - 1)
-    table.insert(self.entities,shopEntity)
+  
+  if self.map.PathingGraph.ShopLocation then
+    local shopEntity = ShopEntity:new("Icecream Shop",
+      self.map.PathingGraph.ShopLocation.LocationX + 0.5,
+      self.map.PathingGraph.ShopLocation.LocationY + 0.5)
+      table.insert(self.entities,shopEntity)  
+  end
   self.npcs = NPC:generate(self.levelVars.npcCount * 2, self.map.PathingGraph.SpawnNodes)
   player.contacts = 0
   self.playthroughStats.contactsGoalTotal = self.playthroughStats.contactsGoalTotal + self.levelVars.contactGoal
