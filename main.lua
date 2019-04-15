@@ -55,7 +55,7 @@ end
 function love.reset()
   player:init()
   world.entities = {}
-  world:init()
+  world:init(1)
 end
 
 function love.draw()

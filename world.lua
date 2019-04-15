@@ -56,16 +56,17 @@ end
 
 function world:goToLevel(_level)
   -- Reset all variables
+  self.level = _level
+  if self.level > 3 then
+    return false
+  end
+  
   self.player = nil
   self.companion = nil
   self.entities = {}
   self.npcs = {}
   self.spawnedNpcs = 0
 
-  self.level = _level
-  if self.level > 3 then
-    return false
-  end
   -- Init the level
   self:init()
   return true
