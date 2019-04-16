@@ -50,19 +50,22 @@ function GameOverElement:draw()
   love.graphics.setColor(0, 0, 0)
   love.graphics.rectangle("fill", 0, 0, windowWidth, windowHeight)
   love.graphics.setColor(1,1,1)
-  if self.victory then
-    love.graphics.print("You won")
-  else
-    love.graphics.print("game over")
-  end
   love.graphics.push()
   love.graphics.translate(200, 100)
-  love.graphics.print("Contact Goal: " .. world.playthroughStats.contactsGoalTotal, 0, 0)
-  love.graphics.print("Contacts Made: " .. world.playthroughStats.contactsTotal, 0, 16)
-  love.graphics.print("Completion:" .. world.playthroughStats.contactsTotal / world.playthroughStats.contactsGoalTotal * 100 .. "%", 0, 32)
+  if self.victory then
+    love.graphics.print("You Won")
+  else
+    love.graphics.print("Game Over")
+  end
   love.graphics.pop()
   love.graphics.push()
-  love.graphics.translate(500, 100)
+  love.graphics.translate(200, 150)
+  love.graphics.print("Contact Goal: " .. world.playthroughStats.contactsGoalTotal, 0, 0)
+  love.graphics.print("Contacts Made: " .. world.playthroughStats.contactsTotal, 0, 16)
+  love.graphics.print("Completion: " .. world.playthroughStats.contactsTotal / world.playthroughStats.contactsGoalTotal * 100 .. "%", 0, 32)
+  love.graphics.pop()
+  love.graphics.push()
+  love.graphics.translate(500, 50)
   for k,v in pairs(self.options) do
     if self.selected == k then
       love.graphics.setColor(1,1,1)

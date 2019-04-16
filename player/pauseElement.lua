@@ -3,9 +3,7 @@ PauseElement = Element:new("pauseMenu")
 function PauseElement:new(name,x,y,enabled,visible,o)
   local o = Element.new(self,name,x,y,enabled,visible,o)
   o.options = {
-    {text="Pokedex",f=PauseElement.option1}, --temporary stuff for fun because why not
-    {text="Pokemon",f=PauseElement.option2},
-    {text="Save",f=PauseElement.option2},
+    -- {text="Save",f=PauseElement.option2},
     {text="Options",f=PauseElement.optionsWindow},
     {text="Main Menu",f=PauseElement.mainMenu},
     {text="Quit",f=PauseElement.quit}
