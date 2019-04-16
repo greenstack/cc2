@@ -52,7 +52,8 @@ function world:init(_level)
       self.map.PathingGraph.ShopLocation.LocationY + 0.5)
       table.insert(self.entities,shopEntity)  
   end
-  self.npcs = NPC:generate(self.levelVars.npcCount * 2, self.map.PathingGraph.SpawnNodes)
+  self.npcs = NPC:generate(self.levelVars.npcCount, self.map.PathingGraph.SpawnNodes)
+  self.spawnedNpcs = 0
   player.contacts = 0
   self.playthroughStats.contactsGoalTotal = self.playthroughStats.contactsGoalTotal + self.levelVars.contactGoal
 end
@@ -69,7 +70,7 @@ function world:goToLevel(_level)
   self.entities = {}
   self.npcs = {}
   self.spawnedNpcs = 0
-
+  
   -- Init the level
   self:init()
   return true
@@ -254,8 +255,8 @@ function world:spawnDespawnNPCs()
   local npcCount = self.levelVars.npcCount 
 
   -- Dynamically generate more NPCs if the npcCount increases
-  if (self.spawnedNpcs + #self.npcs) < (npcCount * 2) then
-    local numToAdd = (npcCount * 2) - self.spawnedNpcs
+  if (self.spawnedNpcs + #self.npcs) < npcCount then
+    local numToAdd = npcCount - self.spawnedNpcs
     local npcs = NPC:generate(numToAdd, self.map.PathingGraph.SpawnNodes)
 
     for i = 1, #npcs do
